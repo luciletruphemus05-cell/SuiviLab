@@ -109,25 +109,6 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .eb{padding:13px 7px;border-radius:var(--r);border:.5px solid var(--border2);background:var(--bg2);cursor:pointer;text-align:center;font-size:11px;font-weight:500;color:var(--text2);font-family:var(--f)}
 .eb:active{background:var(--bg3);border-color:var(--pc);color:var(--pc)}
 .ei{font-size:22px;display:block;margin-bottom:5px}
-/* Section cards for export */
-.ex-sec-card{position:relative;padding:11px 10px 10px;border-radius:var(--rs);border:1.5px solid var(--border2);background:var(--bg3);cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;transition:all .18s;user-select:none;-webkit-user-select:none}
-.ex-sec-card .ex-sec-icon{font-size:20px;line-height:1}
-.ex-sec-card .ex-sec-label{font-size:11px;font-weight:500;color:var(--text3);transition:color .18s}
-.ex-sec-card .ex-sec-check{position:absolute;top:6px;right:8px;font-size:11px;font-weight:700;color:var(--pc);opacity:0;transition:opacity .18s}
-.ex-sec-card.on{border-color:var(--pc);background:var(--pc-dim)}
-.ex-sec-card.on .ex-sec-label{color:var(--pc)}
-.ex-sec-card.on .ex-sec-check{opacity:1}
-.ex-sec-card:active{transform:scale(.97)}
-.export-preview{font-size:13px;line-height:1.55;color:var(--text)}
-.export-preview h1{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--text)}
-.export-preview h2{font-size:13px;font-weight:700;color:var(--pc);margin:14px 0 6px;padding-bottom:4px;border-bottom:.5px solid var(--border)}
-.export-preview h3{font-size:12px;font-weight:600;margin:10px 0 5px;color:var(--text2)}
-.export-preview table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:10px}
-.export-preview td,.export-preview th{padding:5px 7px;border:.5px solid var(--border2);vertical-align:top}
-.export-preview th{background:var(--bg3);font-weight:600;color:var(--text2)}
-.export-preview p{font-size:11px;color:var(--text2);margin-bottom:6px}
-.export-chart{margin:10px 0;overflow-x:auto}
-.export-chart svg{max-width:100%;height:auto;border-radius:var(--rs);border:.5px solid var(--border)}
 .mw{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:flex-end;backdrop-filter:blur(3px)}
 .mw.open{display:flex}
 .modal{background:var(--bg2);border-radius:18px 18px 0 0;padding:18px 16px;width:100%;max-height:88vh;overflow-y:auto;border-top:.5px solid var(--border2);padding-bottom:calc(18px + var(--sab))}
@@ -273,10 +254,19 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .mini-btn{border:.5px solid var(--border2);background:var(--bg3);color:var(--text2);border-radius:999px;padding:4px 8px;font-size:10px;font-family:var(--f);cursor:pointer}
 .mini-btn:active{border-color:var(--pc);color:var(--pc)}
 .check-flag{display:inline-block;margin-left:6px;background:rgba(186,117,23,.18);color:#e8a23a;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:700}
+
+.ex-sc{padding:8px 10px;border-radius:var(--rs);border:1.5px solid var(--border2);background:var(--bg3);cursor:pointer;font-size:12px;font-weight:500;color:var(--text3);transition:all .18s;user-select:none;text-align:center}
+.ex-sc.on{border-color:var(--pc);background:var(--pc-dim);color:var(--pc)}
+.export-preview h1{font-size:15px;font-weight:700;margin-bottom:8px}
+.export-preview h2{font-size:13px;font-weight:700;color:var(--pc);margin:14px 0 6px;border-bottom:.5px solid var(--border);padding-bottom:3px}
+.export-preview table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:10px}
+.export-preview td,.export-preview th{padding:4px 6px;border:.5px solid var(--border2);vertical-align:top}
+.export-preview th{background:var(--bg3);font-weight:600;color:var(--text2)}
+.export-chart{margin:8px 0;overflow-x:auto}
+.export-chart svg{max-width:100%;height:auto}
 </style>
 </head>
 <body>
-
 <div id="app">
 <div class="topbar">
   <div class="brand">
@@ -390,100 +380,47 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 
 
 <div id="t-export" class="sec content">
-  <!-- ANIMAL + TYPE -->
   <div class="card">
-    <div class="ct"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Exports scientifiques</div>
-    <div class="fl">
-      <div class="fg"><label class="lbl">Animal</label><select id="ex-a" onchange="onExportAnimalChange()"></select></div>
-      <div class="fg"><label class="lbl">Type de rapport</label><select id="ex-type" onchange="onExportTypeChange()">
-        <option value="global">Fiche globale complète</option>
-        <option value="daily">Fiche journalière / vétérinaire</option>
-        <option value="surgery">Rapport chirurgie</option>
-        <option value="recording">Rapport enregistrement</option>
-        <option value="project">Export projet complet</option>
-        <option value="apafis">Résumé APAFiS / registre</option>
-      </select></div>
-    </div>
-    <div class="fl">
-      <div class="fg"><label class="lbl">Date début</label><input type="date" id="ex-start" onchange="rExport()"/></div>
-      <div class="fg"><label class="lbl">Date fin</label><input type="date" id="ex-end" onchange="rExport()"/></div>
+    <div class="ct"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Export scientifique</div>
+    <div class="fl"><div class="fg"><label class="lbl">Animal</label><select id="ex-a" onchange="onExportAnimalChange()"></select></div><div class="fg"><label class="lbl">Type</label><select id="ex-type" onchange="onExportTypeChange()"><option value="global">Fiche globale</option><option value="daily">Journalière</option><option value="surgery">Chirurgie</option><option value="recording">Enregistrement</option><option value="project">Projet complet</option><option value="apafis">APAFiS</option></select></div></div>
+    <div class="fl"><div class="fg"><label class="lbl">Date début</label><input type="date" id="ex-start"/></div><div class="fg"><label class="lbl">Date fin</label><input type="date" id="ex-end"/></div></div>
+    <div class="fg"><label class="lbl">Sections</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px" id="ex-section-cards">
+        <div class="ex-sc on" data-sec="ex-id" onclick="toggleExSec(this)"><span>🪪</span> Identification</div>
+        <div class="ex-sc on" data-sec="ex-daily" onclick="toggleExSec(this)"><span>📅</span> Suivi journalier</div>
+        <div class="ex-sc on" data-sec="ex-graphs" onclick="toggleExSec(this)"><span>📈</span> Graphiques</div>
+        <div class="ex-sc on" data-sec="ex-chir" onclick="toggleExSec(this)"><span>🔬</span> Chirurgies</div>
+        <div class="ex-sc on" data-sec="ex-tr" onclick="toggleExSec(this)"><span>🏃</span> Trainings</div>
+        <div class="ex-sc on" data-sec="ex-rec" onclick="toggleExSec(this)"><span>🎙️</span> Enregistrements</div>
+        <div class="ex-sc on" data-sec="ex-med" onclick="toggleExSec(this)" style="grid-column:span 2"><span>🗂️</span> Médias / données / tags</div>
+      </div>
+      <input type="checkbox" id="ex-id" checked style="display:none"/>
+      <input type="checkbox" id="ex-daily" checked style="display:none"/>
+      <input type="checkbox" id="ex-graphs" checked style="display:none"/>
+      <input type="checkbox" id="ex-chir" checked style="display:none"/>
+      <input type="checkbox" id="ex-tr" checked style="display:none"/>
+      <input type="checkbox" id="ex-rec" checked style="display:none"/>
+      <input type="checkbox" id="ex-med" checked style="display:none"/>
+      <div class="fl">
+        <button type="button" class="btns" style="margin-top:0" onclick="setExportSections('all')">Tout</button>
+        <button type="button" class="btns" style="margin-top:0" onclick="setExportSections('core')">Essentiel</button>
+        <button type="button" class="btns" style="margin-top:0" onclick="setExportSections('none')">Aucun</button>
+      </div>
     </div>
   </div>
-
-  <!-- SECTIONS VISUELLES -->
-  <div class="card">
-    <div class="ct"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Sections à inclure</div>
-    <div style="font-size:11px;color:var(--text2);margin-bottom:10px">Appuie sur les cartes pour les activer ou désactiver. Tu peux en sélectionner plusieurs.</div>
-    <div id="ex-section-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-      <div class="ex-sec-card on" data-sec="ex-id" onclick="toggleExSecCard(this)">
-        <div class="ex-sec-icon">🪪</div>
-        <div class="ex-sec-label">Identification</div>
-        <div class="ex-sec-check">✓</div>
-        <input type="checkbox" id="ex-id" checked style="display:none"/>
-      </div>
-      <div class="ex-sec-card on" data-sec="ex-daily" onclick="toggleExSecCard(this)">
-        <div class="ex-sec-icon">📅</div>
-        <div class="ex-sec-label">Suivi journalier</div>
-        <div class="ex-sec-check">✓</div>
-        <input type="checkbox" id="ex-daily" checked style="display:none"/>
-      </div>
-      <div class="ex-sec-card on" data-sec="ex-graphs" onclick="toggleExSecCard(this)">
-        <div class="ex-sec-icon">📈</div>
-        <div class="ex-sec-label">Graphiques</div>
-        <div class="ex-sec-check">✓</div>
-        <input type="checkbox" id="ex-graphs" checked style="display:none"/>
-      </div>
-      <div class="ex-sec-card on" data-sec="ex-chir" onclick="toggleExSecCard(this)">
-        <div class="ex-sec-icon">🔬</div>
-        <div class="ex-sec-label">Chirurgies</div>
-        <div class="ex-sec-check">✓</div>
-        <input type="checkbox" id="ex-chir" checked style="display:none"/>
-      </div>
-      <div class="ex-sec-card on" data-sec="ex-tr" onclick="toggleExSecCard(this)">
-        <div class="ex-sec-icon">🏃</div>
-        <div class="ex-sec-label">Trainings</div>
-        <div class="ex-sec-check">✓</div>
-        <input type="checkbox" id="ex-tr" checked style="display:none"/>
-      </div>
-      <div class="ex-sec-card on" data-sec="ex-rec" onclick="toggleExSecCard(this)">
-        <div class="ex-sec-icon">🎙️</div>
-        <div class="ex-sec-label">Enregistrements</div>
-        <div class="ex-sec-check">✓</div>
-        <input type="checkbox" id="ex-rec" checked style="display:none"/>
-      </div>
-      <div class="ex-sec-card on" data-sec="ex-med" onclick="toggleExSecCard(this)" style="grid-column:span 2">
-        <div class="ex-sec-icon">🗂️</div>
-        <div class="ex-sec-label">Médias / données / tags</div>
-        <div class="ex-sec-check">✓</div>
-        <input type="checkbox" id="ex-med" checked style="display:none"/>
-      </div>
-    </div>
-    <div style="display:flex;gap:7px">
-      <button type="button" class="btns" style="flex:1;margin-top:0" onclick="setExportSections('all')">Tout inclure</button>
-      <button type="button" class="btns" style="flex:1;margin-top:0" onclick="setExportSections('core')">Essentiel</button>
-      <button type="button" class="btns" style="flex:1;margin-top:0" onclick="setExportSections('none')">Tout décocher</button>
-    </div>
-    <div id="export-section-summary" class="cnot" style="margin-top:8px"></div>
-  </div>
-
-  <!-- BOUTONS EXPORT -->
   <div class="egrid">
-    <button class="eb" onclick="copyExport()"><span class="ei">📋</span>Copier rapport</button>
+    <button class="eb" onclick="copyExport()"><span class="ei">📋</span>Copier</button>
     <button class="eb" onclick="downloadExport('html')"><span class="ei">📝</span>HTML</button>
     <button class="eb" onclick="downloadExport('doc')"><span class="ei">🧾</span>Word</button>
     <button class="eb" onclick="downloadExport('txt')"><span class="ei">📄</span>TXT</button>
-    <button class="eb" onclick="downloadExport('json')"><span class="ei">💾</span>JSON brut</button>
-    <button class="eb" onclick="downloadPerfCSV()"><span class="ei">📈</span>CSV perfs</button>
+    <button class="eb" onclick="downloadExport('json')"><span class="ei">💾</span>JSON</button>
+    <button class="eb" onclick="downloadPerfCSV()"><span class="ei">📈</span>CSV</button>
   </div>
-  <div id="export-download-links" class="cnot" style="margin-top:8px;text-align:center"></div>
-
-  <!-- APERÇU -->
+  <div id="export-download-links" style="font-size:11px;color:var(--text3);text-align:center;margin-top:6px"></div>
   <div class="card" style="margin-top:12px">
-    <div class="ct"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Aperçu du rapport</div>
-    <div id="export-preview-empty" style="text-align:center;padding:20px;color:var(--text3);font-size:13px">Sélectionne un animal pour générer l'aperçu.</div>
-    <div id="export-preview" class="export-preview" style="display:none"></div>
+    <div class="ct">Aperçu</div>
+    <div id="export-preview" class="export-preview"></div>
   </div>
-  <div style="font-size:11px;color:var(--text3);line-height:1.6;text-align:center;margin-top:10px">Le fichier HTML peut être ouvert dans Word puis enregistré en .docx.<br>Pour un PDF, ouvre l'HTML dans le navigateur puis imprime en PDF.</div>
 </div>
 
 
@@ -659,6 +596,7 @@ let cp='LT';
 function sPC(p){const P=PR[p],r=document.documentElement.style;r.setProperty('--pc',P.c);r.setProperty('--pc-dim',P.d);r.setProperty('--pc-mid',P.m);}
 function gD(){try{const d=JSON.parse(localStorage.getItem('sl_clean_20260523')||'null')||boot();return normalizeData(d);}catch(e){return normalizeData(boot());}}
 function sv(d){try{localStorage.setItem('sl_clean_20260523',JSON.stringify(d));}catch(e){toast('Stockage plein');}}
+
 
 function toggleFold(id){
   const el=document.getElementById(id); if(!el)return;
@@ -1348,6 +1286,7 @@ function addWordFile(inp){
   toast('Fiche(s) ajoutee(s)');
 }
 
+
 function ensureMedia(d){if(!d.media)d.media=[];return d;}
 function fileToMedia(f,animal,date,cat,note){return new Promise(resolve=>{
   const base={id:'m'+Date.now()+Math.random().toString(16).slice(2),animal,date,cat:cat||'Autre',note:note||'',name:f.name,type:f.type||'file',size:f.size||0,created:new Date().toISOString()};
@@ -1388,6 +1327,8 @@ function prvMedia(inp,prev){
     else if(f.type.startsWith('video/')){var dv=document.createElement('div');dv.style.cssText='width:60px;height:60px;border-radius:6px;border:.5px solid var(--border2);background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;color:var(--text3);text-align:center';dv.innerHTML='<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--pc);fill:none;stroke-width:2"><polygon points="5 3 19 12 5 21 5 3"/></svg><div style="margin-top:2px">'+f.name.substring(0,10)+'</div>';pv.appendChild(dv);}
   });
 }
+
+
 
 const DEFAULT_DATA_TYPES=['OpenEphys raw','Phenosys / comportement','MATLAB process','Kilosort / SpyKING / Phy','Spike sorting','Phy curated','SLEAP / Open Field','Figures / place fields','Place maps','Fiche Word / PDF','NAS / dossier complet','Autre'];
 function uniqClean(arr){return [...new Set((arr||[]).map(x=>String(x||'').trim()).filter(Boolean))];}
@@ -1490,6 +1431,7 @@ function rLinks(){
 function copyLinkPath(id){const d=ensureLinks(gD()),l=(d.dataLinks||[]).find(x=>x.id===id); if(!l)return; navigator.clipboard?.writeText(l.path).then(()=>toast('Chemin copié')).catch(()=>toast('Copie impossible'));}
 function delLink(id){const d=ensureLinks(gD());d.dataLinks=(d.dataLinks||[]).filter(l=>l.id!==id);sv(d);rLinks();toast('Lien supprimé');}
 
+
 function ensureTags(d){if(!d.tags)d.tags=[];return d;}
 function normTag(t){return (t||'').trim().replace(/^#/,'').replace(/\s+/g,'_').toLowerCase();}
 function tagLabel(t){return '#'+esc(t);}
@@ -1539,6 +1481,7 @@ function rTags(){
   if(!rows.length){out.innerHTML='<div class="empty">Aucun tag correspondant</div>';return;}
   out.innerHTML=rows.map(r=>'<div class="rc"><div class="rc-top"><div><div class="rc-name">'+esc(r.animal)+' <span style="color:var(--text2);font-weight:400">· '+esc(r.kind)+'</span></div><div class="rc-sub">'+esc(tagTargetLabel(r.kind,r.target,d))+'</div></div><span class="bdg binf">tags</span></div><div style="display:flex;flex-wrap:wrap;gap:3px">'+(r.tags||[]).map(t=>'<span class="tag-pill">#'+esc(t)+' <button onclick="delTag(\''+r.id+'\',\''+esc(t)+'\')" style="background:none;border:none;color:inherit;cursor:pointer;font-weight:900">×</button></span>').join('')+'</div></div>').join('');
 }
+
 
 function exportScopeData(){
   const d=ensureTags(ensureLinks(ensureMedia(gD()))),aid=document.getElementById('ex-a')?.value||'',typ=document.getElementById('ex-type')?.value||'global',start=document.getElementById('ex-start')?.value||'',end=document.getElementById('ex-end')?.value||'';
@@ -1592,6 +1535,7 @@ function downloadExport(fmt){
   downloadBlob(base+'.html','text/html;charset=utf-8',doc);
 }
 
+
 function num(v){const n=parseFloat(v);return Number.isFinite(n)?n:null;}
 function mean(arr){const vals=arr.map(num).filter(v=>v!==null);return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;}
 function median(arr){const vals=arr.map(num).filter(v=>v!==null).sort((a,b)=>a-b);if(!vals.length)return null;const m=Math.floor(vals.length/2);return vals.length%2?vals[m]:(vals[m-1]+vals[m])/2;}
@@ -1644,6 +1588,7 @@ function rAnalysis(){
     out.innerHTML=`<div class="card"><div class="ct">Comparaison projet ${esc(cp)}</div><div class="astats"><div class="sm"><div class="smv">${results.length}</div><div class="sml">Animaux</div></div><div class="sm"><div class="smv">${best?best.a.id:'—'}</div><div class="sml">Meilleur taux</div></div><div class="sm"><div class="smv">${most?most.a.id:'—'}</div><div class="sml">AR max</div></div></div><div class="sh">Classement récompenses/min</div>${results.filter(r=>r.meanRate!==null).sort((a,b)=>(b.meanRate||0)-(a.meanRate||0)).map(r=>miniBar(r.a.id,r.meanRate,Math.max(1,...results.map(x=>x.meanRate||0)))).join('')||'<div class="empty">Pas assez de données.</div>'}</div>`+results.map(analysisCard).join('');
   } else out.innerHTML=results.map(analysisCard).join('');
 }
+
 
 function backupPayload(){
   const d=gD();
@@ -1815,7 +1760,7 @@ function normalizeData(d){
   d.animals=d.animals||[];
   d.animals.forEach(a=>{if(a&&(a.deathDate||a.dateDeces||a.dateDécès||a.sacrificeDate||a.dateSacrifice)&&!a.deces)a.deces=a.deathDate||a.dateDeces||a.dateDécès||a.sacrificeDate||a.dateSacrifice;});
   d.history=d.history||[];
-  (d.trainings||[]).forEach(t=>{if(t&&t.cond&&!t.condSpec)try{t.condSpec=condSpecFromName(t.cond);}catch(e){}; if(t&&!t.speedCms&&t.ar&&t.dur){try{const p=calcConditionPerf(t.cond,t.ar,t.dur);t.speedCms=p.speedCms;t.distanceM=p.distanceM;t.rate=t.rate||(p.arMin?p.arMin.toFixed(2):'');}catch(e){}}});
+  (d.trainings||[]).forEach(t=>{if(t&&t.cond&&!t.condSpec)try{t.condSpec=condSpecFromName(t.cond);}catch(e){}});
   return d;
 }
 function collName(type){return {daily:'dailyLogs',training:'trainings',chirurgie:'chirurgies',recording:'recordings',media:'media',link:'dataLinks',tag:'tags'}[type]||type;}
@@ -1899,6 +1844,7 @@ function ensureUsers(d){
   return d;
 }
 
+/* v27 — graphiques avec axes, largeur dynamique et défilement horizontal */
 function axisChart(points,opt={}){
   const data=(points||[]).map((p,i)=>({
     xLabel:String(p.date||p.label||i+1),
@@ -1999,6 +1945,7 @@ function rDash(){
   '<div class="card"><div class="ct">Volume expérimental</div><div class="fc"><span>🔬 '+chs.length+' chirurgies</span><span>📡 '+recs.length+' enregistrements</span><span>🏃 '+trs.length+' trainings</span><span>📋 '+logs.length+' suivis</span></div></div>';
 }
 
+
 function v24WrapSection(title, hint, nodes, open=true){
   const d=document.createElement('details');
   d.className='compact-block';
@@ -2036,6 +1983,8 @@ function applyV24Ergo(){
   }
 }
 
+
+/* === v26 : comparaison de deux animaux dans Stats / Analyse === */
 const _rDash_v26_base = rDash;
 function metricAnimalV26(id,d){
   const a=(d.animals||[]).find(x=>x.id===id)||{id};
@@ -2094,6 +2043,9 @@ function renderCompareAnimalsV26(){
 }
 rDash=function(){_rDash_v26_base();renderCompareAnimalsV26();};
 
+
+
+/* === v31 : conditions structurées + protocole enregistrement par condition === */
 const SL_COND_LIBRARY=[
   {id:'1m_vr',name:'1m VR',label:'1 m VR · sans objet',kind:'VR',visualTrackCm:100,trackLengthCm:100,wheelGainCm:100,gain:1,objects:false,notes:'Environnement VR linéaire classique sans objet.'},
   {id:'60cm_vr',name:'60cm VR',label:'60 cm VR · sans objet',kind:'VR',visualTrackCm:60,trackLengthCm:60,wheelGainCm:60,gain:.6,objects:false,notes:'Track raccourci à 60 cm.'},
@@ -2221,6 +2173,8 @@ function applyV31Tweaks(){
   const perfCard=document.querySelector('#t-recording .card:nth-of-type(5) .ct'); if(perfCard)perfCard.lastChild.textContent='Performance par condition & signal global';
 }
 
+
+/* === v33 : gestion des conditions + export CSV performances === */
 function getAllCondLibrary(){
   const d=(typeof gD==='function')?gD():{};
   const custom=(d.conditionLibrary||[]).filter(Boolean);
@@ -2296,6 +2250,91 @@ tab=function(n){_tab_v33(n); if(n==='conditions')rConditions();};
 const _normalizeData_v33=normalizeData;
 normalizeData=function(d){d=_normalizeData_v33(d); d.conditionLibrary=d.conditionLibrary||[]; return d;};
 
+
+
+/* === v36 : correctifs export, dates automatiques et CSV filtré === */
+function exportSectionIds(){return ['ex-id','ex-daily','ex-chir','ex-tr','ex-rec','ex-med'];}
+function setExportSections(mode){
+  const ids=exportSectionIds();
+  const core=new Set(['ex-id','ex-daily','ex-tr','ex-rec']);
+  ids.forEach(id=>{const el=document.getElementById(id); if(!el)return; el.checked=mode==='all'||(mode==='core'&&core.has(id));});
+  rExport();
+}
+function allAnimalEntryDates(animalId){
+  const d=gD(); const dates=[];
+  ['dailyLogs','trainings','chirurgies','recordings','media','dataLinks'].forEach(k=>{
+    (d[k]||[]).forEach(x=>{if(x.animal===animalId&&x.date)dates.push(x.date);});
+  });
+  return dates.sort();
+}
+function setExportDateRangeForAnimal(force=false){
+  const aid=document.getElementById('ex-a')?.value||'';
+  const startEl=document.getElementById('ex-start'), endEl=document.getElementById('ex-end');
+  if(!aid||!startEl||!endEl)return;
+  const dates=allAnimalEntryDates(aid);
+  if(!dates.length)return;
+  if(force||!startEl.value)startEl.value=dates[0];
+  if(force||!endEl.value)endEl.value=dates[dates.length-1];
+}
+function onExportAnimalChange(){setExportDateRangeForAnimal(true); rExport();}
+
+const _exportScopeData_v36=exportScopeData;
+exportScopeData=function(){
+  const d=ensureTags(ensureLinks(ensureMedia(gD()))),aid=document.getElementById('ex-a')?.value||'',typ=document.getElementById('ex-type')?.value||'global',start=document.getElementById('ex-start')?.value||'',end=document.getElementById('ex-end')?.value||'';
+  const inDate=o=>(!start||(o.date||'')>=start)&&(!end||(o.date||'')<=end);
+  let animals=typ==='project'?d.animals.filter(a=>a.proj===cp):d.animals.filter(a=>a.id===aid);
+  if(!animals.length&&d.animals.length)animals=[d.animals.find(a=>a.proj===cp)||d.animals[0]];
+  const ids=animals.map(a=>a.id);
+  return {d,typ,animals,logs:(d.dailyLogs||[]).filter(x=>ids.includes(x.animal)&&inDate(x)),trs:(d.trainings||[]).filter(x=>ids.includes(x.animal)&&inDate(x)),chs:(d.chirurgies||[]).filter(x=>ids.includes(x.animal)&&inDate(x)),recs:(d.recordings||[]).filter(x=>ids.includes(x.animal)&&inDate(x)),med:(d.media||[]).filter(x=>ids.includes(x.animal)&&inDate(x)),links:(d.dataLinks||[]).filter(x=>ids.includes(x.animal)&&inDate(x)),tags:(d.tags||[]).filter(x=>ids.includes(x.animal))};
+};
+
+rExport=function(){
+  const d=gD(),pa=(d.animals||[]).filter(a=>a.proj===cp).map(a=>a.id);
+  const sel=document.getElementById('ex-a');
+  if(sel){
+    const cur=sel.value;
+    sel.innerHTML=pa.map(x=>'<option value="'+x+'">'+x+'</option>').join('');
+    sel.value=(cur&&pa.includes(cur))?cur:(pa[0]||'');
+    setExportDateRangeForAnimal(false);
+  }
+  const out=document.getElementById('export-preview');if(out)out.innerHTML=buildExportHTML();
+};
+
+async function copyExport(){
+  const txt=exportPlainText();
+  try{
+    if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(txt);toast('✓ Rapport copié');return;}
+  }catch(e){}
+  const ta=document.createElement('textarea');ta.value=txt;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');toast('✓ Rapport copié');}catch(e){toast('Copie impossible : utilise le téléchargement TXT');}
+  ta.remove();
+}
+function downloadBlob(name,type,content){
+  const b=new Blob([content],{type});const u=URL.createObjectURL(b);const a=document.createElement('a');
+  a.href=u;a.download=name;a.style.display='none';document.body.appendChild(a);a.click();
+  setTimeout(()=>{a.remove();URL.revokeObjectURL(u);},800);
+}
+function downloadExport(fmt){
+  const S=exportScopeData(),base=(S.typ==='project'?'SuiviLab_'+cp:'SuiviLab_'+(S.animals[0]?.id||'animal'))+'_'+td();
+  if(fmt==='json')return downloadBlob(base+'.json','application/json;charset=utf-8',JSON.stringify(S,null,2));
+  if(fmt==='txt')return downloadBlob(base+'.txt','text/plain;charset=utf-8','\ufeff'+exportPlainText());
+  const doc='<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+base+'</title><style>body{font-family:Arial,sans-serif;line-height:1.35}table{border-collapse:collapse;width:100%;margin:8px 0 16px}td,th{border:1px solid #999;padding:5px;vertical-align:top}th{background:#eee}h1{color:#111}h2{color:#1D9E75;margin-top:22px}</style></head><body>'+buildExportHTML()+'</body></html>';
+  const ext=fmt==='doc'?'doc':'html';
+  downloadBlob(base+'.'+ext,'text/html;charset=utf-8','\ufeff'+doc);
+}
+function downloadPerfCSV(){
+  const S=exportScopeData(); const rows=[];
+  rows.push(['type','animal','date','condition','track_cm','gain','objects','ar','duration_min','ar_per_min','speed_cm_s','distance_m','signal','notes']);
+  (S.trs||[]).forEach(t=>{const p=t.condSpec||condSpecFromName(t.cond);rows.push(['training',t.animal,t.date,t.cond,p.trackLengthCm,p.gain,p.objects?'oui':'non',t.ar,t.dur,t.rate,t.speedCms?Number(t.speedCms).toFixed(3):'',t.distanceM?Number(t.distanceM).toFixed(3):'', '', t.notes||'']);});
+  (S.recs||[]).forEach(r=>{(r.protocol&&r.protocol.length?r.protocol:[{cond:r.cond,ar:r.ar,dur:r.dur,rate:r.rate,speedCms:r.speedCms,distanceM:r.distanceM,notes:r.notes}]).forEach(c=>{const p=c.condSpec||condSpecFromName(c.cond);rows.push(['recording',r.animal,r.date,c.cond,p.trackLengthCm,p.gain,p.objects?'oui':'non',c.ar,c.dur,c.rate,c.speedCms?Number(c.speedCms).toFixed(3):'',c.distanceM?Number(c.distanceM).toFixed(3):'',r.signal||'',(c.notes||r.notes||'')]);});});
+  const csv=rows.map(r=>r.map(escapeCSV).join(';')).join('\n');
+  const base=(S.typ==='project'?'SuiviLab_'+cp:'SuiviLab_'+(S.animals[0]?.id||'animal'))+'_performances_'+td()+'.csv';
+  downloadBlob(base,'text/csv;charset=utf-8','\ufeff'+csv);
+  toast('✓ CSV performances exporté');
+}
+
+
+/* === v37 : stabilisation export + synchronisation projet/animal === */
 (function(){
   const VERSION='v37_export_stable_sync';
   window.exportSectionIds=function(){return ['ex-id','ex-daily','ex-chir','ex-tr','ex-rec','ex-med'];};
@@ -2505,6 +2544,8 @@ normalizeData=function(d){d=_normalizeData_v33(d); d.conditionLibrary=d.conditio
   window.addEventListener('load',function(){try{ensureExportUI();rExport({reason:'load'});}catch(e){}});
 })();
 
+
+/* === v38 : vérification/correction inclusion suivis journaliers dans l'export === */
 (function(){
   const VERSION='v38_export_suivis_journaliers';
 
@@ -2629,6 +2670,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   applyV24Ergo(); let dd=ensureUsers(gD());sv(dd);syncProjects();sPC('LT');refreshSurgeryTypes();pS();rA();rCL();bSG();uSD();rExport();rUsers();rBackup();rBackupIndicator(); if(typeof fillDataTypeSelects==='function')fillDataTypeSelects(); if(typeof rAnalysis==='function')rAnalysis(); if(typeof rSearch==='function')rSearch(); if(typeof rTags==='function')rTags(); if(typeof applyV31Tweaks==='function')applyV31Tweaks(); if(typeof rConditions==='function')rConditions(); const cm=document.getElementById('cal-month'); if(cm&&!cm.value)cm.value=calMonthDefault();
 });
 
+
+/* === v39 : graphes dans export + responsables LT/ER corrigés === */
 (function(){
   const VERSION='v39_export_graphes_responsables';
 
@@ -2761,210 +2804,197 @@ document.addEventListener('DOMContentLoaded',()=>{
   try{fixProjectResponsables();}catch(e){}
 })();
 
-(function(){
 
-  window.toggleExSecCard=function(card){
-    card.classList.toggle('on');
-    const id=card.dataset.sec;
-    const input=document.getElementById(id);
-    if(input) input.checked=card.classList.contains('on');
-    refreshExportSectionVisuals?.();
-    rExport({keepAnimal:true,keepDates:true,reason:'section-change'});
-  };
 
-  function syncSectionCards(){
-    document.querySelectorAll('#ex-section-cards .ex-sec-card').forEach(card=>{
-      const id=card.dataset.sec;
-      const input=document.getElementById(id);
-      if(input) card.classList.toggle('on',!!input.checked);
-    });
-  }
+/* ===== SuiviLab patch: export fixes + visual section selector ===== */
 
-  const _oldSetExportSections=window.setExportSections;
-  window.setExportSections=function(mode){
+// Responsables
+window.projectRespFor = function(p) {
+  if(p==='LT') return 'Lucile Truphemus';
+  if(p==='ER') return 'Jérôme Epsztein et Robbe';
+  const d=gD(); return d.projects?.[p]?.resp || p;
+};
 
-    const ids=['ex-id','ex-daily','ex-graphs','ex-chir','ex-tr','ex-rec','ex-med'];
-    const core=new Set(['ex-id','ex-daily','ex-tr','ex-rec']);
-    ids.forEach(id=>{
-      const el=document.getElementById(id);
-      if(el) el.checked=(mode==='all')||(mode==='core'&&core.has(id));
-    });
-    syncSectionCards();
-    refreshExportSectionVisuals?.();
-    rExport({keepAnimal:true,keepDates:true,reason:'sections'});
-  };
+// Section card toggle (NO dispatchEvent to avoid loops)
+window.toggleExSec = function(card) {
+  card.classList.toggle('on');
+  const input = document.getElementById(card.dataset.sec);
+  if(input) input.checked = card.classList.contains('on');
+  rExportSafe();
+};
 
-  window.exportSectionIds=function(){
-    return ['ex-id','ex-daily','ex-graphs','ex-chir','ex-tr','ex-rec','ex-med'];
-  };
-  window.sectionLabel=function(id){
-    return ({'ex-id':'Identification','ex-daily':'Suivi journalier','ex-graphs':'Graphiques',
-      'ex-chir':'Chirurgies','ex-tr':'Trainings','ex-rec':'Enregistrements','ex-med':'Médias / données / tags'}[id]||id);
-  };
+// Safe setExportSections
+window.setExportSections = function(mode) {
+  const ids = ['ex-id','ex-daily','ex-graphs','ex-chir','ex-tr','ex-rec','ex-med'];
+  const core = new Set(['ex-id','ex-daily','ex-tr','ex-rec']);
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.checked = mode==='all' || (mode==='core' && core.has(id));
+  });
+  document.querySelectorAll('#ex-section-cards .ex-sc').forEach(card => {
+    const input = document.getElementById(card.dataset.sec);
+    card.classList.toggle('on', !!(input && input.checked));
+  });
+  rExportSafe();
+};
 
-  function updatePreviewVisibility(html){
-    const empty=document.getElementById('export-preview-empty');
-    const preview=document.getElementById('export-preview');
-    if(!preview) return;
-    const hasContent=html&&html.trim()&&!html.includes('Aucun animal sélectionné');
-    if(hasContent){
-      preview.style.display='block';
-      if(empty) empty.style.display='none';
-      preview.innerHTML=html;
-    } else {
-      preview.style.display='none';
-      if(empty) empty.style.display='block';
-      preview.innerHTML='';
+// secOn helper
+window.secOn = function(id) {
+  const e = document.getElementById(id); return !e || !!e.checked;
+};
+
+// Auto-date for export
+function getAnimalDateRange(aid) {
+  const d = gD(); const dates = [];
+  ['dailyLogs','trainings','chirurgies','recordings'].forEach(k => {
+    (d[k]||[]).forEach(x => { if(x.animal===aid && x.date) dates.push(x.date); });
+  });
+  return dates.sort();
+}
+
+window.onExportAnimalChange = function() {
+  const aid = document.getElementById('ex-a')?.value || '';
+  const dates = getAnimalDateRange(aid);
+  const s = document.getElementById('ex-start'), e = document.getElementById('ex-end');
+  if(s && dates.length) s.value = dates[0];
+  if(e && dates.length) e.value = dates[dates.length-1];
+  rExportSafe();
+};
+window.onExportTypeChange = function() { rExportSafe(); };
+
+// SVG line chart
+function makeChart(title, rows, yGet, unit, color) {
+  const data = rows.map((r,i)=>({i,date:r.date||'',y:parseFloat(yGet(r))})).filter(p=>isFinite(p.y));
+  if(data.length < 2) return '<p style="font-size:11px;color:#888">Pas assez de données : '+title+'</p>';
+  const W=680,H=220,ml=52,mr=16,mt=28,mb=40;
+  const ys=data.map(p=>p.y); let yn=Math.min(...ys),yx=Math.max(...ys);
+  if(yn===yx){yn-=1;yx+=1;} const pad=(yx-yn)*0.1; yn-=pad; yx+=pad;
+  const xi=i=>ml+(data.length===1?0:(i/(data.length-1))*(W-ml-mr));
+  const yi=v=>mt+(yx-v)/(yx-yn)*(H-mt-mb);
+  const pts=data.map((p,idx)=>xi(idx)+','+yi(p.y)).join(' ');
+  const ticks=[0,.5,1].map(t=>yn+t*(yx-yn));
+  const fmt=v=>isFinite(v)?Number(v).toFixed(1):'?';
+  return '<div class="export-chart"><b style="font-size:12px">'+title+'</b><br><svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'"><rect width="'+W+'" height="'+H+'" fill="#fff"/>'+
+    ticks.map(v=>'<line x1="'+ml+'" y1="'+yi(v).toFixed(0)+'" x2="'+(W-mr)+'" y2="'+yi(v).toFixed(0)+'" stroke="#eee" stroke-width="1"/><text x="4" y="'+(yi(v)+4).toFixed(0)+'" font-size="10" fill="#666">'+fmt(v)+unit+'</text>').join('')+
+    '<line x1="'+ml+'" y1="'+mt+'" x2="'+ml+'" y2="'+(H-mb)+'" stroke="#ccc"/><line x1="'+ml+'" y1="'+(H-mb)+'" x2="'+(W-mr)+'" y2="'+(H-mb)+'" stroke="#ccc"/>'+
+    '<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round"/>'+
+    data.map((p,idx)=>'<circle cx="'+xi(idx).toFixed(0)+'" cy="'+yi(p.y).toFixed(0)+'" r="3" fill="'+color+'"/>').join('')+
+    '<text x="'+ml+'" y="'+(H-8)+'" font-size="9" fill="#888">'+data[0].date+'</text>'+
+    '<text x="'+(W-mr-60)+'" y="'+(H-8)+'" font-size="9" fill="#888">'+data[data.length-1].date+'</text>'+
+    '</svg></div>';
+}
+
+// Build export HTML
+window.buildExportHTML = function() {
+  const S = exportScopeData();
+  const title = S.typ==='project' ? 'Export projet '+S.project : 'Fiche '+(S.animals[0]?.id||'');
+  let h = '<h1>'+title+'</h1><p>Généré le '+fd(td())+'</p>';
+  if(S.dateStart||S.dateEnd) h += '<p>Période : '+(S.dateStart?fd(S.dateStart):'début')+' → '+(S.dateEnd?fd(S.dateEnd):'fin')+'</p>';
+  if(!S.animals.length) return h+'<p>Aucun animal.</p>';
+  S.animals.forEach(a => {
+    h += '<h2>'+a.id+' · Projet '+a.proj+'</h2>';
+    if(secOn('ex-id')) h += htmlTable(['Champ','Valeur'],[
+      ['Responsable',projectRespFor(a.proj)],['Âge',animalAgeLabel(a)],
+      ['Statut',animalStatusLabel(a)||'Actif'],['Date fin',animalEndDate(a)?fd(animalEndDate(a)):''],
+      ['Espèce',a.sp],['Sexe',a.sx],['Souche',a.line],['Cage',a.cage],
+      ['Protocole',a.proto],['Poids initial',a.wi?a.wi+' g':''],
+      ['Seuil 80%',a.wi?(a.wi*0.8).toFixed(2)+' g':''],['Notes',a.notes||'']
+    ]);
+    const logs=(S.logs||[]).filter(x=>x.animal===a.id).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
+    const trs=(S.trs||[]).filter(x=>x.animal===a.id).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
+    if(secOn('ex-daily') && logs.length) h += '<h2>Suivi journalier ('+logs.length+')</h2>'+htmlTable(
+      ['Date','Poids brut','Poids réel','%','Eau','Score NC3Rs','Observations'],
+      logs.map(l=>[fd(l.date),l.weight?l.weight+' g':'',
+        realAnimalWeight(a,l.weight)?realAnimalWeight(a,l.weight).toFixed(2)+' g':'',
+        a.wi&&l.weight?(realAnimalWeight(a,l.weight)||l.weight)/a.wi*100<200?((realAnimalWeight(a,l.weight)||l.weight)/a.wi*100).toFixed(1)+'%':'':'',
+        l.water!=null?l.water+' mL':'',l.scoreTotal!=null?l.scoreTotal+'/16':'',l.notes||''])
+    );
+    if(secOn('ex-graphs') && (logs.length>=2 || trs.length>=2)) {
+      h += '<h2>Graphiques</h2>';
+      if(logs.length>=2) h += makeChart('Poids réel',logs,l=>realAnimalWeight(a,l.weight)||l.weight,' g','#1D9E75');
+      if(logs.length>=2) h += makeChart('Score NC3Rs',logs,l=>l.scoreTotal,'/16','#D4537E');
+      if(trs.length>=2) h += makeChart('AR/min',trs,t=>t.rate||(t.dur&&t.ar?t.ar/t.dur:null),' AR/min','#378ADD');
     }
-  }
-
-  window.buildExportHTML=function(){
-    const S=exportScopeData();
-    const title=S.typ==='project'?'Export projet '+cp:'Fiche '+(S.animals[0]?.id||'animal');
-    const today=fd(td());
-    let h='<h1>'+esc(title)+'</h1><p>Document confidentiel – Usage interne – Généré le '+today+'</p>';
-    if(S.dateStart||S.dateEnd)
-      h+='<p>Période : '+esc(S.dateStart?fd(S.dateStart):'début')+' → '+esc(S.dateEnd?fd(S.dateEnd):'fin')+'</p>';
-    h+='<p><strong>Contrôle export :</strong> '+(S.logs||[]).length+' suivi(s) journalier(s), '+(S.trs||[]).length+' training(s), '+(S.chs||[]).length+' chirurgie(s), '+(S.recs||[]).length+' enregistrement(s).</p>';
-    if(!S.animals.length) return h+'<p>Aucun animal sélectionné.</p>';
-    S.animals.forEach(a=>{
-      h+='<h2>Animal '+esc(a.id)+' · Projet '+esc(a.proj)+'</h2>';
-      if(secOn('ex-id'))h+=htmlTable(['Champ','Valeur'],[
-        ['Responsable',projectRespFor(a.proj)],['Âge',animalAgeLabel(a)],['Statut',animalStatusLabel(a)||'Actif'],
-        ['Date fin/décès',animalEndDate(a)?fd(animalEndDate(a)):''],['Espèce',a.sp],['Sexe',a.sx],
-        ['Souche',a.line],['Cage',a.cage],['Protocole',a.proto],
-        ['Poids initial',a.wi?`${a.wi} g`:''],['Seuil 80 %',a.wi?`${(a.wi*0.8).toFixed(2)} g`:''],
-        ['Matériel déduit',hardwareWeight(a)?hardwareWeight(a).toFixed(2)+' g':''],['Notes',a.notes||'']
+    const chs=(S.chs||[]).filter(x=>x.animal===a.id).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
+    if(secOn('ex-chir') && chs.length) h += '<h2>Chirurgies</h2>'+htmlTable(
+      ['Date','Type','Poids','Anesthésie','Notes'],
+      chs.map(c=>[fd(c.date),c.type,c.weight?c.weight+' g':'',c.anesth+(c.anesthDose?' '+c.anesthDose+'ml':''),c.notes||''])
+    );
+    const recs=(S.recs||[]).filter(x=>x.animal===a.id).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
+    if(secOn('ex-rec') && recs.length) h += '<h2>Enregistrements</h2>'+htmlTable(
+      ['Date','Électrode','Zone','Shanks','Signal','Notes'],
+      recs.map(r=>[fd(r.date),r.elec,r.zone,(r.shanksFunc||'?')+'/'+(r.shanksTotal||'?'),r.signal,r.notes||''])
+    );
+    if(secOn('ex-tr') && trs.length) h += '<h2>Trainings</h2>'+htmlTable(
+      ['Date','Condition','Durée','AR','Récomp/min','Notes'],
+      trs.map(t=>[fd(t.date),t.cond,t.dur?t.dur+' min':'',t.ar,t.rate,t.notes||''])
+    );
+    if(secOn('ex-med')) {
+      const med=(S.med||[]).filter(x=>x.animal===a.id);
+      const links=(S.links||[]).filter(x=>x.animal===a.id);
+      if(med.length||links.length) h += '<h2>Médias & données</h2>'+htmlTable(['Type','Date','Détail'],[
+        ...med.map(m=>['Média '+(m.cat||''),fd(m.date),(m.files||[]).length+' fichier(s)'+(m.note?' · '+m.note:'')]),
+        ...links.map(l=>['Données '+(l.type||''),fd(l.date),(l.path||'')+(l.note?' · '+l.note:'')])
       ]);
-      const logs=(S.logs||[]).filter(x=>x.animal===a.id).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
-      const trs=(S.trs||[]).filter(x=>x.animal===a.id).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
-      if(secOn('ex-daily')){
-        h+='<h2>Suivi journalier ('+logs.length+')</h2>';
-        if(logs.length){
-          h+=htmlTable(['Date','Poids brut','Poids réel','% poids initial','Eau','Restriction','Score NC3Rs','Statut','Observations'],
-            logs.map(l=>[fd(l.date),l.weight?l.weight+' g':'',
-              realAnimalWeight(a,l.weight)?realAnimalWeight(a,l.weight).toFixed(2)+' g':'',
-              a.wi&&l.weight?(realAnimalWeight(a,l.weight)?(realAnimalWeight(a,l.weight)/a.wi*100).toFixed(1):(l.weight/a.wi*100).toFixed(1))+' %':'',
-              l.water!=null?l.water+' mL':'',l.restriction||'',l.scoreTotal!=null?l.scoreTotal+'/16':'',
-              l.status?animalStatusLabel({status:l.status}):'',l.notes||'']));
-        } else { h+='<p>Aucun suivi journalier dans cette période.</p>'; }
-      }
-      if(secOn('ex-graphs')){
-        const toNum=v=>{const n=parseFloat(v);return Number.isFinite(n)?n:null;};
-        const fmtN=(v,d=2)=>v===null||v===undefined||Number.isNaN(v)?'—':Number(v).toFixed(d);
-        const miniTrend=vals=>{const c=vals.map(toNum).filter(v=>v!==null);if(!c.length)return '—';const ch='▁▂▃▄▅▆▇█';const mn=Math.min(...c),mx=Math.max(...c);if(mn===mx)return ch[3].repeat(Math.min(c.length,8));return c.map(v=>ch[Math.max(0,Math.min(7,Math.round((v-mn)/(mx-mn)*7)))]).join('');};
-        const statLine=(label,vals,unit)=>{const c=vals.map(toNum).filter(v=>v!==null);if(!c.length)return [label,'Aucune donnée'];const mn=Math.min(...c),mx=Math.max(...c),last=c[c.length-1],first=c[0],delta=last-first;return [label,`n=${c.length} · début ${fmtN(first)}${unit} · fin ${fmtN(last)}${unit} · Δ ${delta>=0?'+':''}${fmtN(delta)}${unit}`];};
-        const realWs=logs.map(l=>realAnimalWeight(a,l.weight));
-        const scores=logs.map(l=>l.scoreTotal);
-        const arVals=trs.map(t=>t.ar);
-        const rateVals=trs.map(t=>t.rate||(t.dur&&t.ar?t.ar/t.dur:null));
-        h+='<h2>Graphiques de suivi</h2>';
-        if(logs.length||trs.length){
-          h+=htmlTable(['Mesure','Résumé'],[statLine('Poids réel',realWs,' g'),statLine('Score NC3Rs',scores,'/16'),statLine('Allers-retours',arVals,' AR'),statLine('Performance',rateVals,' AR/min'),['Tendance poids',miniTrend(realWs)],['Tendance NC3Rs',miniTrend(scores)],['Tendance perf.',miniTrend(rateVals)]]);
-          const svgChart=(title,rows,yGet,unit,color)=>{
-            const data=(rows||[]).map((r,i)=>({i,date:r.date||'',y:toNum(yGet(r))})).filter(p=>p.y!==null);
-            if(data.length<2)return '<p style="font-size:11px;color:#777">Pas assez de données : '+esc(title)+'.</p>';
-            const W=680,H=240,ml=56,mr=16,mt=32,mb=44;
-            const ys=data.map(p=>p.y);let ymin=Math.min(...ys),ymax=Math.max(...ys);if(ymin===ymax){ymin-=1;ymax+=1;}const pad=(ymax-ymin)*0.1;ymin-=pad;ymax+=pad;
-            const xi=i=>ml+(data.length===1?0:(i/(data.length-1))*(W-ml-mr));
-            const yi=v=>mt+(ymax-v)/(ymax-ymin)*(H-mt-mb);
-            const pts=data.map((p,idx)=>xi(idx)+','+yi(p.y)).join(' ');
-            const ticks=[0,.25,.5,.75,1].map(t=>ymin+t*(ymax-ymin));
-            return `<div class="export-chart"><h3>${esc(title)}</h3><svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="#fff"/>${ticks.map(v=>`<line x1="${ml}" y1="${yi(v).toFixed(1)}" x2="${W-mr}" y2="${yi(v).toFixed(1)}" stroke="#eee" stroke-width="1"/><text x="6" y="${(yi(v)+4).toFixed(1)}" font-size="11" fill="#666">${fmtN(v,1)}${esc(unit)}</text>`).join('')}<line x1="${ml}" y1="${mt}" x2="${ml}" y2="${H-mb}" stroke="#ccc"/><line x1="${ml}" y1="${H-mb}" x2="${W-mr}" y2="${H-mb}" stroke="#ccc"/><polyline points="${pts}" fill="none" stroke="${color||'#1D9E75'}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${data.map((p,idx)=>`<circle cx="${xi(idx).toFixed(1)}" cy="${yi(p.y).toFixed(1)}" r="3.5" fill="${color||'#1D9E75'}"/>`).join('')}<text x="${ml}" y="${H-12}" font-size="10" fill="#888">${esc(fd(data[0].date))}</text><text x="${W-mr-80}" y="${H-12}" font-size="10" fill="#888">${esc(fd(data[data.length-1].date))}</text></svg></div>`;
-          };
-          h+=svgChart('Évolution du poids réel',logs,l=>realAnimalWeight(a,l.weight),' g','#1D9E75');
-          h+=svgChart('Score NC3Rs',logs,l=>l.scoreTotal,'/16','#D4537E');
-          h+=svgChart('Performance : AR/min',trs,t=>t.rate||(t.dur&&t.ar?t.ar/t.dur:null),' AR/min','#378ADD');
-          h+=svgChart('Allers-retours par session',trs,t=>t.ar,' AR','#7B5EA7');
-        } else { h+='<p>Aucune donnée disponible pour les graphiques.</p>'; }
-      }
-      const chs=(S.chs||[]).filter(x=>x.animal===a.id).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
-      if(secOn('ex-chir')){
-        h+='<h2>Chirurgies</h2>';
-        if(chs.length) h+=htmlTable(['Date','Type','Poids','Anesthésie','Dose','Bupré','Début-fin','Notes'],chs.map(c=>[fd(c.date),c.type,c.weight?c.weight+' g':'',c.anesth,c.dose?c.dose+' ml':(c.anesthDose?c.anesthDose+' ml':''),c.bupre?c.bupre+' ml':'',(c.start||c.hDebut||'')+' '+(c.end||c.hFin||''),c.notes||'']));
-        else h+='<p>Aucune chirurgie dans cette période.</p>';
-      }
-      if(secOn('ex-tr')){
-        h+='<h2>Trainings VR / comportement</h2>';
-        if(trs.length) h+=htmlTable(['Date','Condition','Durée','AR','Récomp/min','Vitesse','Engagement','Observations'],trs.map(t=>[fd(t.date),t.cond,t.dur?t.dur+' min':'',t.ar,t.rate,t.speedCms?Number(t.speedCms).toFixed(2)+' cm/s':'',t.engagement,t.notes||'']));
-        else h+='<p>Aucun training dans cette période.</p>';
-      }
-      const recs=(S.recs||[]).filter(x=>x.animal===a.id).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
-      if(secOn('ex-rec')){
-        h+='<h2>Enregistrements</h2>';
-        if(recs.length) h+=htmlTable(['Date','Électrode','Zone','Shanks','Profondeur','AR/durée','Signal','Protocole','Commentaires'],recs.map(r=>[fd(r.date),r.elec,r.zone,(r.shanksFunc||'—')+'/'+(r.shanksTotal||'—'),r.depth?r.depth+' µm':'',(r.ar||'—')+' / '+(r.dur||'—')+' min',r.signal,(r.protocol||[]).map(p=>(p.n||p.ar||'?')+'× '+(p.cond||'')).join('; '),r.notes||'']));
-        else h+='<p>Aucun enregistrement dans cette période.</p>';
-      }
-      if(secOn('ex-med')){
-        const med=(S.med||[]).filter(x=>x.animal===a.id);
-        const links=(S.links||[]).filter(x=>x.animal===a.id);
-        const tags=(S.tags||[]).filter(x=>x.animal===a.id);
-        h+='<h2>Médias, données et tags</h2>';
-        if(med.length||links.length||tags.length){
-          h+=htmlTable(['Type','Date','Détail'],[
-            ...med.map(m=>['Média '+(m.cat||''),fd(m.date),(m.files||[]).length+' fichier(s) · '+(m.note||'')]),
-            ...links.map(l=>['Données '+(l.type||''),fd(l.date),(l.path||'')+' '+(l.note||'')]),
-            ...tags.map(t=>['Tags',t.kind,(t.tags||[]).map(x=>'#'+x).join(', ')])
-          ]);
-        } else { h+='<p>Aucun média, données ou tag pour cet animal.</p>'; }
-      }
-    });
-    h+='<h2>Bilan / signature</h2><p>Responsable : ____________________ &nbsp;&nbsp; Date : ____________ &nbsp;&nbsp; Visa vétérinaire : ____________________</p>';
-    return h;
-  };
-
-  const _oldRExport=window.rExport;
-  window.rExport=function(opts={}){
-    syncSectionCards();
-    ensureExportUI?.();
-    try{ensureExportDateListeners?.();}catch(e){}
-    const before=document.getElementById('ex-a')?.value||'';
-    const aid=refreshExportAnimalSelect?.(opts.preferredAnimal||before)||before;
-
-    try{
-      const {start,end}=exportDateInputs?.()??{start:document.getElementById('ex-start'),end:document.getElementById('ex-end')};
-      const looksDefault=!isManualRange?.();
-      if(opts.reason==='project'||opts.reason==='load'||opts.reason==='animal'||looksDefault||!opts.keepDates){
-        if(start)delete start.dataset.manualRange;
-        if(end)delete end.dataset.manualRange;
-        setExportDateRangeForAnimal?.(true);
-      }
-    }catch(e){}
-
-    try{
-      const html=buildExportHTML();
-      updatePreviewVisibility(html);
-    }catch(e){
-      const preview=document.getElementById('export-preview');
-      if(preview){preview.style.display='block';preview.innerHTML='<p style="color:#f07070">Erreur lors de la génération de l\'aperçu : '+esc(String(e))+'</p>';}
     }
-    refreshExportSectionVisuals?.();
-    return aid;
-  };
+  });
+  h += '<h2>Signature</h2><p>Responsable : _______________ &nbsp; Date : ___________ &nbsp; Visa : _______________</p>';
+  return h;
+};
 
-  window.downloadExport=function(fmt){
-    const S=exportScopeData();
-    const base=((S.typ==='project')?'SuiviLab_'+cp:'SuiviLab_'+(S.animals[0]?.id||'animal'))+'_'+td();
-    if(fmt==='json')return downloadBlob(base+'.json','application/json;charset=utf-8','\ufeff'+JSON.stringify(S,null,2));
-    if(fmt==='txt'){
-      const div=document.createElement('div');div.innerHTML=buildExportHTML();
-      return downloadBlob(base+'.txt','text/plain;charset=utf-8','\ufeff'+(div.innerText||div.textContent||'').replace(/\n{3,}/g,'\n\n'));
+// Safe rExport (no recursive calls, no ensureExportUI loops)
+let _rExportRunning = false;
+window.rExportSafe = function() {
+  if(_rExportRunning) return;
+  _rExportRunning = true;
+  try {
+    // Update animal select
+    const d = gD(), sel = document.getElementById('ex-a');
+    if(sel) {
+      const pa = (d.animals||[]).filter(a=>a.proj===cp).map(a=>a.id);
+      const cur = sel.value;
+      sel.innerHTML = pa.map(x=>'<option value="'+x+'">'+x+'</option>').join('');
+      if(cur && pa.includes(cur)) sel.value = cur;
     }
-    const style=`body{font-family:Arial,sans-serif;line-height:1.4;color:#111;max-width:900px;margin:0 auto;padding:20px}
-table{border-collapse:collapse;width:100%;margin:8px 0 18px}td,th{border:1px solid #bbb;padding:6px 8px;vertical-align:top;font-size:12px}
-th{background:#f0f0f0;font-weight:700}h1{color:#111;font-size:20px}h2{color:#1D9E75;margin-top:24px;font-size:15px;border-bottom:2px solid #1D9E75;padding-bottom:4px}
-h3{font-size:13px;margin:14px 0 6px;color:#333}.export-chart{page-break-inside:avoid;margin:16px 0}.export-chart h3{color:#333}
-.export-chart svg{max-width:100%;height:auto;border:1px solid #ddd;border-radius:4px}p{font-size:12px;color:#444;margin-bottom:8px}`;
-    const doc='<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+base+'</title><style>'+style+'</style></head><body>'+buildExportHTML()+'</body></html>';
-    if(fmt==='doc')return downloadBlob(base+'.doc','application/msword;charset=utf-8','\ufeff'+doc);
-    return downloadBlob(base+'.html','text/html;charset=utf-8','\ufeff'+doc);
-  };
+    // Update preview
+    const out = document.getElementById('export-preview');
+    if(out) out.innerHTML = buildExportHTML();
+    // Update download links hint
+    const dl = document.getElementById('export-download-links');
+    if(dl) dl.textContent = '';
+  } catch(e) {
+    const out = document.getElementById('export-preview');
+    if(out) out.innerHTML = '<p style="color:#f07070">Erreur aperçu: '+e.message+'</p>';
+  } finally {
+    _rExportRunning = false;
+  }
+};
 
-  window.addEventListener('load',()=>setTimeout(()=>{
-    try{syncSectionCards();rExport({reason:'load'});}catch(e){}
-  },120));
+// Override rExport to use safe version
+const _origRExport = window.rExport;
+window.rExport = function(opts) {
+  // Run original for animal select population
+  try { if(_origRExport) _origRExport(opts); } catch(e) {}
+  // Then safe preview update
+  window.rExportSafe();
+};
 
-})();
+// Fix project responsables on load
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    try {
+      const d = gD();
+      d.projects = d.projects || {};
+      d.projects.LT = Object.assign({}, d.projects.LT, {resp:'Lucile Truphemus'});
+      d.projects.ER = Object.assign({}, d.projects.ER, {resp:'Jérôme Epsztein et Robbe'});
+      sv(d);
+      syncProjects && syncProjects();
+      rExportSafe();
+    } catch(e) {}
+  }, 200);
+});
+
+
 </script>
 </body>
 </html>
