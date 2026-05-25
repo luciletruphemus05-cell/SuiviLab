@@ -3124,6 +3124,96 @@ setInterval(async function() {
   } catch(e) {}
 }, 30000);
 
+
+/* ===== SUPABASE STORAGE - Upload médias ===== */
+
+async function uploadMediaToSupabase(file, animalId) {
+  const ext = file.name.split('.').pop() || 'bin';
+  const filename = animalId + '_' + Date.now() + '.' + ext;
+  const url = 'https://ypesszqdfiyotqpwoibf.supabase.co/storage/v1/object/media/' + filename;
+  
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwZXNzenFkZml5b3RxcHdvaWJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3Mjk1ODUsImV4cCI6MjA5NTMwNTU4NX0.kg2cjX_yG1zTZHK7Fy0ULQoRZnjIHNfv3B9TARYDFAc',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwZXNzenFkZml5b3RxcHdvaWJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3Mjk1ODUsImV4cCI6MjA5NTMwNTU4NX0.kg2cjX_yG1zTZHK7Fy0ULQoRZnjIHNfv3B9TARYDFAc',
+      'Content-Type': file.type || 'application/octet-stream',
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+  
+  if(!r.ok) throw new Error('Upload failed: ' + r.status);
+  
+  // Return public URL
+  return 'https://ypesszqdfiyotqpwoibf.supabase.co/storage/v1/object/public/media/' + filename;
+}
+
+// Override prvMedia to upload to Supabase Storage instead of base64
+const _origPrvMedia = window.prvMedia;
+window.prvMedia = async function(inputId, previewId) {
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  if(!input || !input.files || !input.files.length) return;
+  
+  // Get current animal
+  const animalSelectors = {'d-media': 'da', 'tr-media': 'tra', 'r-media': 'ra', 'med-files': 'med-a'};
+  const animalSel = document.getElementById(animalSelectors[inputId] || 'da');
+  const animalId = animalSel?.value || 'unknown';
+  
+  if(preview) preview.innerHTML = '<div style="font-size:11px;color:var(--text2);padding:8px">⬆️ Upload en cours...</div>';
+  
+  const urls = [];
+  for(const file of input.files) {
+    try {
+      // Check size - Supabase free tier: 50MB per file
+      if(file.size > 45 * 1024 * 1024) {
+        toast('Fichier trop grand (max 45MB) : ' + file.name);
+        continue;
+      }
+      const url = await uploadMediaToSupabase(file, animalId);
+      urls.push({name: file.name, url, type: file.type});
+    } catch(e) {
+      console.error('Upload error:', e);
+      // Fallback to base64 for small files
+      if(file.size < 2 * 1024 * 1024) {
+        await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = ev => { urls.push({name: file.name, url: ev.target.result, type: file.type}); resolve(); };
+          reader.readAsDataURL(file);
+        });
+      } else {
+        toast('Erreur upload : ' + file.name);
+      }
+    }
+  }
+  
+  // Store URLs in input dataset for later use
+  input.dataset.uploadedUrls = JSON.stringify(urls);
+  
+  // Show preview
+  if(preview) {
+    preview.innerHTML = urls.map(f => {
+      if(f.type && f.type.startsWith('image/')) {
+        return '<div style="position:relative;display:inline-block;margin:3px"><img src="' + f.url + '" style="width:72px;height:72px;object-fit:cover;border-radius:6px;border:.5px solid var(--border2)"/><div style="font-size:9px;color:var(--text3);text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + f.name + '</div></div>';
+      } else {
+        return '<div style="display:inline-block;margin:3px;padding:6px 10px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--text2)">📎 ' + f.name + '</div>';
+      }
+    }).join('') || '<div style="font-size:11px;color:var(--text3);padding:4px">Aucun fichier</div>';
+  }
+  
+  if(urls.length > 0) toast('✓ ' + urls.length + ' fichier(s) uploadé(s)');
+};
+
+// Helper to get uploaded URLs from input
+window.getUploadedUrls = function(inputId) {
+  const input = document.getElementById(inputId);
+  if(!input || !input.dataset.uploadedUrls) return [];
+  try { return JSON.parse(input.dataset.uploadedUrls); } catch(e) { return []; }
+};
+
+toast('☁️ Stockage médias connecté');
+
 </script>
 </body>
 </html>
