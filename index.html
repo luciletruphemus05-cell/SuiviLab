@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/>
@@ -271,7 +271,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 <div class="topbar">
   <div class="brand">
     <div class="logo">🔬</div>
-    <button id="backup-indicator" class="backup-ind none" onclick="tab('backup')" title="Sauvegarde non vérifiée">💾</button>
+    <button id="backup-indicator" class="backup-ind none" onclick="checkBackupPassword()" title="Sauvegarde non vérifiée">💾</button>
     <span class="title">SuiviLab</span>
   </div>
   <div class="ppills">
@@ -1535,7 +1535,7 @@ function exportScopeData(){
 function secOn(id){const e=document.getElementById(id);return !e||e.checked;}
 function htmlTable(headers,rows){if(!rows.length)return '<p style="color:var(--text2)">Aucune donnée.</p>';return '<table><thead><tr>'+headers.map(h=>'<th>'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c??'—')+'</td>').join('')+'</tr>').join('')+'</tbody></table>';}
 function buildExportHTML(){
-  const S=exportScopeData(),title=S.typ==='project'?'Export projet '+cp:'Fiche '+(S.animals[0]?.id||'animal'),today=fd(td());let h='<h1>'+esc(title)+'</h1><p>Document confidentiel – Usage interne – Généré le '+today+'</p>';
+  const S=exportScopeData(),title=S.typ==='project'?'Export projet '+cp:'Fiche '+(S.animals[0]?.id||'animal'),today=fd(td());let h='<h1>'+esc(title)+'</h1><p>SuiviLab Epsztein Team – Généré le '+today+'</p>';
   S.animals.forEach(a=>{
     h+='<h2>Animal '+esc(a.id)+' · Projet '+esc(a.proj)+'</h2>';
     if(secOn('ex-id'))h+=htmlTable(['Champ','Valeur'],[['Responsable',projectRespFor(a.proj)],['Âge',animalAgeLabel(a)],['Statut',animalStatusLabel(a)||'Actif'],['Date fin/décès',animalEndDate(a)?fd(animalEndDate(a)):''],['Espèce',a.sp],['Sexe',a.sx],['Souche',a.line],['Cage',a.cage],['Protocole',a.proto],['Poids initial',a.wi?`${a.wi} g`:'' ],['Seuil 80 %',a.wi?`${(a.wi*0.8).toFixed(2)} g`:'' ],['Matériel déduit',hardwareWeight(a)?hardwareWeight(a).toFixed(2)+' g':'' ],['Notes',a.notes||'']]);
@@ -1556,7 +1556,7 @@ function buildExportHTML(){
       ]);
     }
   });
-  h+='<h2>Bilan / signature</h2><p>Responsable : ____________________ &nbsp;&nbsp; Date : ____________ &nbsp;&nbsp; Visa vétérinaire : ____________________</p>';
+  h+='<h2>Bilan / signature</h2><p>Responsable : ____________________ &nbsp;&nbsp; Date : ____________</p>';
   return h;
 }
 function exportPlainText(){const div=document.createElement('div');div.innerHTML=buildExportHTML();return div.innerText.replace(/\n{3,}/g,'\n\n');}
@@ -2463,7 +2463,7 @@ function downloadPerfCSV(){
 
   window.buildExportHTML=function(){
     const S=exportScopeData(),title=S.typ==='project'?'Export projet '+cp:'Fiche '+(S.animals[0]?.id||'animal'),today=fd(td());
-    let h='<h1>'+esc(title)+'</h1><p>Document confidentiel – Usage interne – Généré le '+today+'</p>';
+    let h='<h1>'+esc(title)+'</h1><p>SuiviLab Epsztein Team – Généré le '+today+'</p>';
     if(S.dateStart||S.dateEnd) h+='<p>Période : '+esc(S.dateStart?fd(S.dateStart):'début')+' → '+esc(S.dateEnd?fd(S.dateEnd):'fin')+'</p>';
     if(!S.animals.length) return h+'<p>Aucun animal sélectionné.</p>';
     S.animals.forEach(a=>{
@@ -2486,7 +2486,7 @@ function downloadPerfCSV(){
         ]);
       }
     });
-    h+='<h2>Bilan / signature</h2><p>Responsable : ____________________ &nbsp;&nbsp; Date : ____________ &nbsp;&nbsp; Visa vétérinaire : ____________________</p>';
+    h+='<h2>Bilan / signature</h2><p>Responsable : ____________________ &nbsp;&nbsp; Date : ____________</p>';
     return h;
   };
 
@@ -2652,7 +2652,7 @@ function downloadPerfCSV(){
   const baseBuildExportHTML=window.buildExportHTML;
   window.buildExportHTML=function(){
     const S=exportScopeData(),title=S.typ==='project'?'Export projet '+cp:'Fiche '+(S.animals[0]?.id||'animal'),today=fd(td());
-    let h='<h1>'+esc(title)+'</h1><p>Document confidentiel – Usage interne – Généré le '+today+'</p>';
+    let h='<h1>'+esc(title)+'</h1><p>SuiviLab Epsztein Team – Généré le '+today+'</p>';
     if(S.dateStart||S.dateEnd)h+='<p>Période : '+esc(S.dateStart?fd(S.dateStart):'début')+' → '+esc(S.dateEnd?fd(S.dateEnd):'fin')+'</p>';
     h+='<p><strong>Contrôle export :</strong> '+(S.logs||[]).length+' suivi(s) journalier(s), '+(S.trs||[]).length+' training(s), '+(S.chs||[]).length+' chirurgie(s), '+(S.recs||[]).length+' enregistrement(s) inclus dans cette période.</p>';
     if(!S.animals.length)return h+'<p>Aucun animal sélectionné.</p>';
@@ -2676,7 +2676,7 @@ function downloadPerfCSV(){
         ]);
       }
     });
-    h+='<h2>Bilan / signature</h2><p>Responsable : ____________________ &nbsp;&nbsp; Date : ____________ &nbsp;&nbsp; Visa vétérinaire : ____________________</p>';
+    h+='<h2>Bilan / signature</h2><p>Responsable : ____________________ &nbsp;&nbsp; Date : ____________</p>';
     return h;
   };
 
@@ -2793,7 +2793,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const previousBuild=window.buildExportHTML;
   window.buildExportHTML=function(){
     const S=exportScopeData(),title=S.typ==='project'?'Export projet '+cp:'Fiche '+(S.animals[0]?.id||'animal'),today=fd(td());
-    let h='<h1>'+esc(title)+'</h1><p>Document confidentiel – Usage interne – Généré le '+today+'</p>';
+    let h='<h1>'+esc(title)+'</h1><p>SuiviLab Epsztein Team – Généré le '+today+'</p>';
     if(S.dateStart||S.dateEnd)h+='<p>Période : '+esc(S.dateStart?fd(S.dateStart):'début')+' → '+esc(S.dateEnd?fd(S.dateEnd):'fin')+'</p>';
     h+='<p><strong>Contrôle export :</strong> '+(S.logs||[]).length+' suivi(s) journalier(s), '+(S.trs||[]).length+' training(s), '+(S.chs||[]).length+' chirurgie(s), '+(S.recs||[]).length+' enregistrement(s) inclus dans cette période.</p>';
     if(!S.animals.length)return h+'<p>Aucun animal sélectionné.</p>';
@@ -2820,7 +2820,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         ]);
       }
     });
-    h+='<h2>Bilan / signature</h2><p>Responsable : ____________________ &nbsp;&nbsp; Date : ____________ &nbsp;&nbsp; Visa vétérinaire : ____________________</p>';
+    h+='<h2>Bilan / signature</h2><p>Responsable : ____________________ &nbsp;&nbsp; Date : ____________</p>';
     return h;
   };
 
@@ -2990,7 +2990,7 @@ window.buildExportHTML = function() {
       }
     }
   });
-  h += '<h2>Signature</h2><p>Responsable : _______________ &nbsp; Date : ___________ &nbsp; Visa : _______________</p>';
+  h += '<h2>Signature</h2><p>Responsable : _______________ &nbsp; Date : ___________</p>';
   return h;
 };
 
@@ -3432,10 +3432,11 @@ window.exportLatex = function() {
 \\usepackage[utf8]{inputenc}
 \\usepackage[T1]{fontenc}
 \\usepackage[french]{babel}
-\\usepackage[margin=2cm]{geometry}
+\\usepackage[top=2cm,bottom=2cm,left=1.5cm,right=1.5cm]{geometry}
 \\usepackage{booktabs}
 \\usepackage{tabularx}
 \\usepackage{longtable}
+\\usepackage{ltablex}
 \\usepackage{array}
 \\usepackage{xcolor}
 \\usepackage{hyperref}
@@ -3443,6 +3444,8 @@ window.exportLatex = function() {
 \\usepackage{fancyhdr}
 \\usepackage{titlesec}
 \\usepackage{parskip}
+\\usepackage{ragged2e}
+\\keepXColumns
 
 \\definecolor{labgreen}{RGB}{29,158,117}
 \\definecolor{labgray}{RGB}{80,80,90}
@@ -3450,7 +3453,7 @@ window.exportLatex = function() {
 \\pagestyle{fancy}
 \\fancyhf{}
 \\rhead{\\textcolor{labgray}{\\small SuiviLab -- ${escLaTeX(projResp)}}}
-\\lhead{\\textcolor{labgray}{\\small Confidentiel -- Usage interne}}
+\\lhead{\\textcolor{labgray}{\\small SuiviLab Epsztein Team}}
 \\rfoot{\\thepage}
 \\lfoot{\\textcolor{labgray}{\\small Généré le ${escLaTeX(today)}}}
 
@@ -3598,7 +3601,7 @@ window.exportLatex = function() {
     tex += `\\section{Validation}\n\n`;
     tex += `\\vspace{1cm}\n`;
     tex += `\\begin{tabular}{lll}\n`;
-    tex += `Responsable : \\underline{\\hspace{5cm}} & Date : \\underline{\\hspace{3cm}} & Visa vétérinaire : \\underline{\\hspace{3cm}} \\\\\n`;
+    tex += `Responsable : \\underline{\\hspace{5cm}} & Date : \\underline{\\hspace{3cm}} \\\\\n`;
     tex += `\\end{tabular}\n\n`;
   });
 
@@ -3616,6 +3619,23 @@ window.exportLatex = function() {
   toast('✓ Fichier .tex téléchargé — ouvre-le sur Overleaf !');
 };
 
+
+
+/* ===== MOT DE PASSE BACKUP ===== */
+let _backupUnlocked = false;
+
+window.checkBackupPassword = function() {
+  if(_backupUnlocked) { tab('backup'); return; }
+  const input = prompt('🔒 Accès restreint\nEntrez le code d\'accès (chiffres uniquement) :');
+  if(input === null) return; // cancelled
+  if(input === '078154') {
+    _backupUnlocked = true;
+    tab('backup');
+    toast('✓ Accès autorisé');
+  } else {
+    alert('❌ Code incorrect. Accès refusé.');
+  }
+};
 
 </script>
 </body>
