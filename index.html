@@ -3214,6 +3214,84 @@ window.getUploadedUrls = function(inputId) {
 
 toast('☁️ Stockage médias connecté');
 
+
+/* ===== COMPRESSION MÉDIAS AVANT UPLOAD ===== */
+
+async function compressImage(file, maxWidthPx=1920, qualityJpeg=0.82) {
+  // Only compress images
+  if(!file.type.startsWith('image/')) return file;
+  // Don't compress tiny files
+  if(file.size < 200 * 1024) return file;
+  
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if(w > maxWidthPx) { h = Math.round(h * maxWidthPx / w); w = maxWidthPx; }
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      
+      canvas.toBlob(blob => {
+        if(!blob || blob.size >= file.size) {
+          resolve(file); // keep original if compression didn't help
+        } else {
+          const compressed = new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), {type:'image/jpeg'});
+          const ratio = Math.round((1 - compressed.size/file.size)*100);
+          console.log(`Compressed ${file.name}: ${(file.size/1024).toFixed(0)}KB → ${(compressed.size/1024).toFixed(0)}KB (-${ratio}%)`);
+          resolve(compressed);
+        }
+      }, 'image/jpeg', qualityJpeg);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
+
+async function compressVideo(file, maxSizeMb=20) {
+  // Can't compress video in browser without WebCodecs (not widely supported)
+  // Just warn if too big
+  if(file.size > maxSizeMb * 1024 * 1024) {
+    toast('⚠️ Vidéo trop lourde (' + (file.size/1024/1024).toFixed(0) + 'MB). Max conseillé : ' + maxSizeMb + 'MB');
+  }
+  return file;
+}
+
+// Override uploadMediaToSupabase to compress first
+const _origUpload = window.uploadMediaToSupabase;
+window.uploadMediaToSupabase = async function(file, animalId) {
+  let processed = file;
+  
+  if(file.type.startsWith('image/')) {
+    toast('🗜️ Compression image...');
+    processed = await compressImage(file);
+    const savedKB = Math.round((file.size - processed.size) / 1024);
+    if(savedKB > 10) toast('✓ Image compressée (-' + savedKB + 'KB)');
+  } else if(file.type.startsWith('video/')) {
+    processed = await compressVideo(file);
+  }
+  
+  return _origUpload(processed, animalId);
+};
+
+// Show file size info in preview
+const _origPrvMedia2 = window.prvMedia;
+window.prvMedia = async function(inputId, previewId) {
+  const input = document.getElementById(inputId);
+  if(input && input.files && input.files.length) {
+    const totalMB = Array.from(input.files).reduce((s,f) => s + f.size, 0) / 1024 / 1024;
+    if(totalMB > 0.1) {
+      const preview = document.getElementById(previewId);
+      if(preview) preview.innerHTML = '<div style="font-size:11px;color:var(--text3);padding:4px">📦 ' + totalMB.toFixed(1) + 'MB · compression en cours...</div>';
+    }
+  }
+  return _origPrvMedia2(inputId, previewId);
+};
+
 </script>
 </body>
 </html>
