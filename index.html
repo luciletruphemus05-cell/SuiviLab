@@ -501,7 +501,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <button class="more-tile" onclick="tab('search')"><span class="more-ico">🔎</span><div class="more-title">Recherche / Tags</div><div class="more-sub">Recherche globale et annotations</div></button>
     <button class="more-tile" onclick="tab('export')"><span class="more-ico">📤</span><div class="more-title">Export</div><div class="more-sub">Rapports et fiches</div></button>
     <button class="more-tile" onclick="tab('conditions')"><span class="more-ico">🧩</span><div class="more-title">Conditions</div><div class="more-sub">Paramètres VR/gain</div></button>
-    <button class="more-tile" onclick="tab('backup')"><span class="more-ico">💾</span><div class="more-title">Backup</div><div class="more-sub">Sauvegarde JSON</div></button>
+    <button class="more-tile" onclick="checkBackupPassword()"><span class="more-ico">💾</span><div class="more-title">Backup</div><div class="more-sub">Sauvegarde JSON</div></button>
     <button class="more-tile" onclick="tab('history')"><span class="more-ico">🕘</span><div class="more-title">Historique</div><div class="more-sub">Modifications récentes</div></button>
   </div>
 </div>
@@ -3622,17 +3622,13 @@ window.exportLatex = function() {
 
 
 /* ===== MOT DE PASSE BACKUP ===== */
-let _backupUnlocked = false;
-
 window.checkBackupPassword = function() {
-  if(_backupUnlocked) { tab('backup'); return; }
-  const input = prompt('🔒 Accès restreint\nEntrez le code d\'accès (chiffres uniquement) :');
-  if(input === null) return; // cancelled
+  const input = prompt('🔒 Accès restreint — Backup\nCode d\'accès requis :');
+  if(input === null) return; // annulé
   if(input === '078154') {
-    _backupUnlocked = true;
     tab('backup');
     toast('✓ Accès autorisé');
-  } else {
+  } else if(input !== null) {
     alert('❌ Code incorrect. Accès refusé.');
   }
 };
