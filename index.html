@@ -1035,7 +1035,7 @@ function savR(){
   // Save attached media to gallery
   const _rInp = document.getElementById('r-media');
   if(_rInp && _rInp.files && _rInp.files.length) {
-    saveTabMedia('r-media', animal, date, 'Enregistrement').then(()=>{ if(typeof rMedia==='function') rMedia(); }).catch(e=>console.warn(e));
+    saveTabMedia('r-media', animal, date, 'Enregistrement').then(()=>{ if(typeof rMedia==='function') rMedia(); });
   }
   cL=[];rCL();rR();bSC();toast('✓ Enregistrement sauvegardé');
 }
@@ -2978,11 +2978,8 @@ window.buildExportHTML = function() {
         if(med.length) {
           h += htmlTable(['Date','Catégorie','Fichier','Aperçu'],
             med.map(m=>{
-              const imgSrc = m.url || m.data || '';
-              const isImg = imgSrc && (imgSrc.includes('supabase') || imgSrc.startsWith('data:image'));
-              const preview = isImg 
-                ? '<img src="'+imgSrc+'" style="max-width:160px;max-height:120px;border-radius:4px;border:0.5px solid #ccc" crossorigin="anonymous"/><br><a href="'+imgSrc+'" download="'+(m.name||'media')+'" style="font-size:10px">⬇ Télécharger</a>'
-                : (imgSrc ? '<a href="'+imgSrc+'" target="_blank">🔗 Ouvrir</a>' : '—');
+              const isImg = m.url&&(m.url.includes('supabase')||m.url.startsWith('data:image'));
+              const preview = isImg ? '<img src="'+(m.url||m.data||'')+'" style="max-width:120px;max-height:80px;border-radius:4px;border:0.5px solid #ccc"/>' : (m.url?'<a href="'+m.url+'">Ouvrir</a>':'—');
               return [fd(m.date), m.cat||'', m.name||'', preview];
             })
           );
@@ -3114,11 +3111,15 @@ async function syncToSupabase(data) {
 }
 
 async function loadFromSupabase() {
+  // Skip Supabase if running as local file (Edge blocks cross-origin fetch from file://)
+  if(location.protocol === 'file:') {
+    showSyncStatus('error', 'Local');
+    return null;
+  }
   try {
     const rows = await sbFetch('GET');
     if(rows && rows[0] && rows[0].data) {
       const remote = rows[0].data;
-      // Merge: use remote if it has animals, else keep local
       if(remote.animals && remote.animals.length > 0) {
         localStorage.setItem('sl_clean_20260523', JSON.stringify(remote));
         return remote;
@@ -3131,11 +3132,11 @@ async function loadFromSupabase() {
   return null;
 }
 
-// Override sv() to also sync to Supabase
+// Override sv() to also sync to Supabase (skip if local file)
 const _origSv = window.sv || function(){};
 window.sv = function(data) {
   _origSv(data);
-  // Debounce sync: wait 1.5s after last save before syncing
+  if(location.protocol === 'file:') return; // No sync from local files
   clearTimeout(_syncTimeout);
   _syncTimeout = setTimeout(() => syncToSupabase(data), 1500);
 };
@@ -3349,7 +3350,7 @@ window.prvMedia = async function(inputId, previewId) {
 
 
 /* ===== Sauvegarde médias depuis onglets Saisie/Training/Enreg ===== */
-async async function saveTabMedia(inputId, animal, date, cat) {
+async function saveTabMedia(inputId, animal, date, cat) {
   const inp = document.getElementById(inputId);
   if(!inp || !inp.files || !inp.files.length) return;
   const d = ensureMedia ? ensureMedia(gD()) : gD();
@@ -3614,6 +3615,7 @@ window.exportLatex = function() {
   setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
   toast('✓ Fichier .tex téléchargé — ouvre-le sur Overleaf !');
 };
+
 
 </script>
 </body>
