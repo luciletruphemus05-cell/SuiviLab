@@ -415,7 +415,6 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <button class="eb" onclick="downloadExport('txt')"><span class="ei">📄</span>TXT</button>
     <button class="eb" onclick="downloadExport('json')"><span class="ei">💾</span>JSON</button>
     <button class="eb" onclick="downloadPerfCSV()"><span class="ei">📈</span>CSV</button>
-    <button class="eb" onclick="exportLatex()" style="grid-column:span 2;border-color:var(--pc);color:var(--pc)"><span class="ei">🎓</span>LaTeX / Overleaf</button>
   </div>
   <div id="export-download-links" style="font-size:11px;color:var(--text3);text-align:center;margin-top:6px"></div>
   <div class="card" style="margin-top:12px">
@@ -1035,7 +1034,7 @@ function savR(){
   // Save attached media to gallery
   const _rInp = document.getElementById('r-media');
   if(_rInp && _rInp.files && _rInp.files.length) {
-    saveTabMedia('r-media', animal, date, 'Enregistrement').then(()=>{ if(typeof rMedia==='function') rMedia(); });
+    saveTabMedia('r-media', animal, date, 'Enregistrement').then(()=>{ if(typeof rMedia==='function') rMedia(); }).catch(e=>console.warn(e));
   }
   cL=[];rCL();rR();bSC();toast('✓ Enregistrement sauvegardé');
 }
@@ -2978,8 +2977,11 @@ window.buildExportHTML = function() {
         if(med.length) {
           h += htmlTable(['Date','Catégorie','Fichier','Aperçu'],
             med.map(m=>{
-              const isImg = m.url&&(m.url.includes('supabase')||m.url.startsWith('data:image'));
-              const preview = isImg ? '<img src="'+(m.url||m.data||'')+'" style="max-width:120px;max-height:80px;border-radius:4px;border:0.5px solid #ccc"/>' : (m.url?'<a href="'+m.url+'">Ouvrir</a>':'—');
+              const imgSrc = m.url || m.data || '';
+              const isImg = imgSrc && (imgSrc.includes('supabase') || imgSrc.startsWith('data:image'));
+              const preview = isImg 
+                ? '<img src="'+imgSrc+'" style="max-width:160px;max-height:120px;border-radius:4px;border:0.5px solid #ccc" crossorigin="anonymous"/><br><a href="'+imgSrc+'" download="'+(m.name||'media')+'" style="font-size:10px">⬇ Télécharger</a>'
+                : (imgSrc ? '<a href="'+imgSrc+'" target="_blank">🔗 Ouvrir</a>' : '—');
               return [fd(m.date), m.cat||'', m.name||'', preview];
             })
           );
@@ -3111,15 +3113,11 @@ async function syncToSupabase(data) {
 }
 
 async function loadFromSupabase() {
-  // Skip Supabase if running as local file (Edge blocks cross-origin fetch from file://)
-  if(location.protocol === 'file:') {
-    showSyncStatus('error', 'Local');
-    return null;
-  }
   try {
     const rows = await sbFetch('GET');
     if(rows && rows[0] && rows[0].data) {
       const remote = rows[0].data;
+      // Merge: use remote if it has animals, else keep local
       if(remote.animals && remote.animals.length > 0) {
         localStorage.setItem('sl_clean_20260523', JSON.stringify(remote));
         return remote;
@@ -3132,11 +3130,11 @@ async function loadFromSupabase() {
   return null;
 }
 
-// Override sv() to also sync to Supabase (skip if local file)
+// Override sv() to also sync to Supabase
 const _origSv = window.sv || function(){};
 window.sv = function(data) {
   _origSv(data);
-  if(location.protocol === 'file:') return; // No sync from local files
+  // Debounce sync: wait 1.5s after last save before syncing
   clearTimeout(_syncTimeout);
   _syncTimeout = setTimeout(() => syncToSupabase(data), 1500);
 };
@@ -3350,7 +3348,7 @@ window.prvMedia = async function(inputId, previewId) {
 
 
 /* ===== Sauvegarde médias depuis onglets Saisie/Training/Enreg ===== */
-async function saveTabMedia(inputId, animal, date, cat) {
+async async function saveTabMedia(inputId, animal, date, cat) {
   const inp = document.getElementById(inputId);
   if(!inp || !inp.files || !inp.files.length) return;
   const d = ensureMedia ? ensureMedia(gD()) : gD();
@@ -3368,254 +3366,6 @@ async function saveTabMedia(inputId, animal, date, cat) {
   const preview = document.getElementById(inputId.replace('media','mp').replace('files','preview').replace('-files','-mp'));
   if(preview) preview.innerHTML = '';
 }
-
-
-/* ===== EXPORT LaTeX / Overleaf ===== */
-
-function escLaTeX(str) {
-  if(!str && str !== 0) return '';
-  return String(str)
-    .replace(/\\/g, '\\textbackslash{}')
-    .replace(/&/g, '\\&')
-    .replace(/%/g, '\\%')
-    .replace(/\$/g, '\\$')
-    .replace(/#/g, '\\#')
-    .replace(/_/g, '\\_')
-    .replace(/\{/g, '\\{')
-    .replace(/\}/g, '\\}')
-    .replace(/~/g, '\\textasciitilde{}')
-    .replace(/\^/g, '\\textasciicircum{}')
-    .replace(/→/g, '$\\rightarrow$')
-    .replace(/[^\x00-\x7F]/g, c => {
-      const map = {'é':'\\\'e','è':'\\`e','ê':'\\^e','ë':'\\"e','à':'\\`a','â':'\\^a','ù':'\\`u','û':'\\^u','î':'\\^i','ï':'\\"i','ô':'\\^o','œ':'\\oe{}','æ':'\\ae{}','ç':'\\c{c}','É':'\\\'E','È':'\\`E','À':'\\`A','Ç':'\\c{C}'};
-      return map[c] || c;
-    });
-}
-
-function latexTable(headers, rows) {
-  const cols = 'l'.repeat(headers.length);
-  let t = `\\begin{tabular}{${cols}}\n\\hline\n`;
-  t += headers.map(h => `\\textbf{${escLaTeX(h)}}`).join(' & ') + ' \\\\\n\\hline\n';
-  rows.forEach(row => {
-    t += row.map(c => escLaTeX(c)).join(' & ') + ' \\\\\n';
-  });
-  t += '\\hline\n\\end{tabular}';
-  return t;
-}
-
-function latexSparkline(values, unit) {
-  const nums = values.map(v => parseFloat(v)).filter(v => isFinite(v));
-  if(nums.length < 2) return '';
-  const mn = Math.min(...nums), mx = Math.max(...nums);
-  const range = mx - mn || 1;
-  const W = 60, H = 15;
-  // Simple ASCII sparkline for LaTeX
-  const steps = Math.min(nums.length, 20);
-  const sampled = nums.filter((_, i) => i % Math.ceil(nums.length / steps) === 0);
-  const bars = '▁▂▃▄▅▆▇█';
-  const spark = sampled.map(v => bars[Math.round((v - mn) / range * 7)]).join('');
-  return `\\texttt{${escLaTeX(spark)}} (${escLaTeX(mn.toFixed(1))}--${escLaTeX(mx.toFixed(1))} ${escLaTeX(unit)})`;
-}
-
-window.exportLatex = function() {
-  const S = exportScopeData();
-  if(!S.animals.length) { toast('Sélectionne un animal'); return; }
-
-  const today = fd(td());
-  const projResp = S.animals[0] ? projectRespFor(S.animals[0].proj) : '';
-
-  let tex = `% ============================================================
-% SuiviLab – Fiche expérimentale
-% Générée le ${today}
-% ============================================================
-\\documentclass[11pt,a4paper]{article}
-\\usepackage[utf8]{inputenc}
-\\usepackage[T1]{fontenc}
-\\usepackage[french]{babel}
-\\usepackage[margin=2cm]{geometry}
-\\usepackage{booktabs}
-\\usepackage{tabularx}
-\\usepackage{longtable}
-\\usepackage{array}
-\\usepackage{xcolor}
-\\usepackage{hyperref}
-\\usepackage{graphicx}
-\\usepackage{fancyhdr}
-\\usepackage{titlesec}
-\\usepackage{parskip}
-
-\\definecolor{labgreen}{RGB}{29,158,117}
-\\definecolor{labgray}{RGB}{80,80,90}
-
-\\pagestyle{fancy}
-\\fancyhf{}
-\\rhead{\\textcolor{labgray}{\\small SuiviLab -- ${escLaTeX(projResp)}}}
-\\lhead{\\textcolor{labgray}{\\small Confidentiel -- Usage interne}}
-\\rfoot{\\thepage}
-\\lfoot{\\textcolor{labgray}{\\small Généré le ${escLaTeX(today)}}}
-
-\\titleformat{\\section}{\\large\\bfseries\\color{labgreen}}{}{0em}{}[\\titlerule]
-\\titleformat{\\subsection}{\\normalsize\\bfseries\\color{labgray}}{}{0em}{}
-
-\\begin{document}
-
-`;
-
-  S.animals.forEach((a, ai) => {
-    const logs = (S.logs||[]).filter(x=>x.animal===a.id).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
-    const trs  = (S.trs||[]).filter(x=>x.animal===a.id).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
-    const chs  = (S.chs||[]).filter(x=>x.animal===a.id).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
-    const recs = (S.recs||[]).filter(x=>x.animal===a.id).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
-    const med  = (S.med||[]).filter(x=>x.animal===a.id);
-
-    if(ai > 0) tex += '\n\\newpage\n\n';
-
-    tex += `{\\LARGE\\bfseries\\color{labgreen} Animal ${escLaTeX(a.id)}}\\quad{\\large\\color{labgray} Projet ${escLaTeX(a.proj)}}\n\n\\vspace{0.3cm}\n\n`;
-
-    // Identification
-    tex += `\\section{Identification}\n\n`;
-    tex += `\\begin{tabular}{ll}\n`;
-    const idRows = [
-      ['Responsable', projectRespFor(a.proj)],
-      ['Espèce', a.sp||''], ['Sexe', a.sx||''],
-      ['Souche', a.line||''], ['Cage', a.cage||''],
-      ['Protocole', a.proto||''],
-      ['Date naissance', a.dob ? fd(a.dob) : ''],
-      ['Âge', animalAgeLabel(a)],
-      ['Poids initial', a.wi ? a.wi+' g' : ''],
-      ['Seuil 80\\%', a.wi ? (a.wi*0.8).toFixed(2)+' g' : ''],
-      ['Statut', animalStatusLabel(a)||'Actif'],
-      ['Date fin/décès', animalEndDate(a) ? fd(animalEndDate(a)) : ''],
-      ['Modèle', a.model||''], ['Notes', a.notes||''],
-    ].filter(r => r[1]);
-    idRows.forEach(([k,v]) => {
-      tex += `\\textbf{${escLaTeX(k)}} & ${escLaTeX(v)} \\\\\n`;
-    });
-    tex += `\\end{tabular}\n\n`;
-
-    // Suivi journalier
-    if(logs.length) {
-      tex += `\\section{Suivi journalier (${logs.length} entrées)}\n\n`;
-      // Trend summary
-      const realWs = logs.map(l => realAnimalWeight(a, l.weight)).filter(v=>v!==null);
-      const scores = logs.map(l => l.scoreTotal).filter(v=>v!=null);
-      if(realWs.length) tex += `Poids réel : ${latexSparkline(realWs, 'g')}\\\\\n`;
-      if(scores.length) tex += `Score NC3Rs : ${latexSparkline(scores, '/16')}\\\\\n`;
-      tex += `\n\\vspace{0.3cm}\n\n`;
-      tex += `\\begin{longtable}{lllllll}\n\\toprule\n`;
-      tex += `\\textbf{Date} & \\textbf{Poids brut} & \\textbf{Poids réel} & \\textbf{\\%} & \\textbf{Eau} & \\textbf{NC3Rs} & \\textbf{Notes} \\\\\n\\midrule\n\\endhead\n`;
-      logs.forEach(l => {
-        const rw = realAnimalWeight(a, l.weight);
-        const pct = a.wi && rw ? (rw/a.wi*100).toFixed(1)+'\\%' : '';
-        tex += [
-          escLaTeX(fd(l.date)),
-          escLaTeX(l.weight ? l.weight+' g' : ''),
-          escLaTeX(rw ? rw.toFixed(2)+' g' : ''),
-          pct,
-          escLaTeX(l.water != null ? l.water+' mL' : ''),
-          escLaTeX(l.scoreTotal != null ? l.scoreTotal+'/16' : ''),
-          escLaTeX((l.notes||'').substring(0,40))
-        ].join(' & ') + ' \\\\\n';
-      });
-      tex += `\\bottomrule\n\\end{longtable}\n\n`;
-    }
-
-    // Chirurgies
-    if(chs.length) {
-      tex += `\\section{Chirurgies}\n\n`;
-      tex += `\\begin{tabular}{lllll}\n\\toprule\n`;
-      tex += `\\textbf{Date} & \\textbf{Type} & \\textbf{Poids} & \\textbf{Anesthésie} & \\textbf{Notes} \\\\\n\\midrule\n`;
-      chs.forEach(c => {
-        tex += [
-          escLaTeX(fd(c.date)), escLaTeX(c.type),
-          escLaTeX(c.weight ? c.weight+' g' : ''),
-          escLaTeX((c.anesth||'')+(c.anesthDose?' '+c.anesthDose+'ml':'')),
-          escLaTeX((c.notes||'').substring(0,40))
-        ].join(' & ') + ' \\\\\n';
-      });
-      tex += `\\bottomrule\n\\end{tabular}\n\n`;
-    }
-
-    // Enregistrements
-    if(recs.length) {
-      tex += `\\section{Enregistrements}\n\n`;
-      tex += `\\begin{tabular}{llllll}\n\\toprule\n`;
-      tex += `\\textbf{Date} & \\textbf{Électrode} & \\textbf{Zone} & \\textbf{Shanks} & \\textbf{Signal} & \\textbf{Notes} \\\\\n\\midrule\n`;
-      recs.forEach(r => {
-        tex += [
-          escLaTeX(fd(r.date)), escLaTeX(r.elec), escLaTeX(r.zone),
-          escLaTeX((r.shanksFunc||'?')+'/'+(r.shanksTotal||'?')),
-          escLaTeX(r.signal),
-          escLaTeX((r.notes||'').substring(0,50))
-        ].join(' & ') + ' \\\\\n';
-      });
-      tex += `\\bottomrule\n\\end{tabular}\n\n`;
-    }
-
-    // Trainings
-    if(trs.length) {
-      tex += `\\section{Trainings (${trs.length} sessions)}\n\n`;
-      const rates = trs.map(t => t.rate).filter(v=>v);
-      if(rates.length) tex += `Performance : ${latexSparkline(rates, ' AR/min')}\\\\\n\n`;
-      tex += `\\begin{longtable}{lllllll}\n\\toprule\n`;
-      tex += `\\textbf{Date} & \\textbf{Condition} & \\textbf{Durée} & \\textbf{AR} & \\textbf{AR/min} & \\textbf{Engagement} & \\textbf{Notes} \\\\\n\\midrule\n\\endhead\n`;
-      trs.forEach(t => {
-        tex += [
-          escLaTeX(fd(t.date)), escLaTeX(t.cond),
-          escLaTeX(t.dur ? t.dur+' min' : ''),
-          escLaTeX(t.ar||''), escLaTeX(t.rate||''),
-          escLaTeX(t.engage||''),
-          escLaTeX((t.notes||'').substring(0,30))
-        ].join(' & ') + ' \\\\\n';
-      });
-      tex += `\\bottomrule\n\\end{longtable}\n\n`;
-    }
-
-    // Médias
-    if(med.length) {
-      tex += `\\section{Médias}\n\n`;
-      tex += `\\begin{tabular}{lll}\n\\toprule\n`;
-      tex += `\\textbf{Date} & \\textbf{Catégorie} & \\textbf{Fichier / URL} \\\\\n\\midrule\n`;
-      med.forEach(m => {
-        const url = m.url || m.data || '';
-        const urlStr = url.startsWith('http') ? `\\href{${url}}{${escLaTeX(m.name||'Voir')}}` : escLaTeX(m.name||'');
-        tex += `${escLaTeX(fd(m.date))} & ${escLaTeX(m.cat||'')} & ${urlStr} \\\\\n`;
-      });
-      tex += `\\bottomrule\n\\end{tabular}\n\n`;
-      // Images from Supabase as includegraphics
-      const imgs = med.filter(m => m.url && m.url.includes('supabase') && (m.type||'').startsWith('image'));
-      if(imgs.length) {
-        tex += `\\vspace{0.5cm}\n`;
-        imgs.forEach(m => {
-          tex += `% Image: ${escLaTeX(m.name||'')}\n`;
-          tex += `% Pour inclure : \\includegraphics[width=0.4\\textwidth]{${escLaTeX(m.name||'image')}}\n`;
-          tex += `% Téléchargez l'image depuis : ${m.url}\n\n`;
-        });
-      }
-    }
-
-    // Signature
-    tex += `\\section{Validation}\n\n`;
-    tex += `\\vspace{1cm}\n`;
-    tex += `\\begin{tabular}{lll}\n`;
-    tex += `Responsable : \\underline{\\hspace{5cm}} & Date : \\underline{\\hspace{3cm}} & Visa vétérinaire : \\underline{\\hspace{3cm}} \\\\\n`;
-    tex += `\\end{tabular}\n\n`;
-  });
-
-  tex += `\n\\end{document}\n`;
-
-  // Download the .tex file
-  const blob = new Blob([tex], {type: 'text/plain;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'SuiviLab_' + (S.animals[0]?.id||'export') + '_' + td() + '.tex';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
-  toast('✓ Fichier .tex téléchargé — ouvre-le sur Overleaf !');
-};
-
 
 </script>
 </body>
