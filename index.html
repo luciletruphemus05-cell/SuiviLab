@@ -1288,11 +1288,33 @@ function addWordFile(inp){
 
 
 function ensureMedia(d){if(!d.media)d.media=[];return d;}
-function fileToMedia(f,animal,date,cat,note){return new Promise(resolve=>{
-  const base={id:'m'+Date.now()+Math.random().toString(16).slice(2),animal,date,cat:cat||'Autre',note:note||'',name:f.name,type:f.type||'file',size:f.size||0,created:new Date().toISOString()};
-  const max=1500000;
-  if((f.type||'').startsWith('image/') && f.size<=max){const r=new FileReader();r.onload=()=>resolve({...base,data:r.result});r.onerror=()=>resolve(base);r.readAsDataURL(f);} else resolve(base);
-});}
+async function fileToMedia(f,animal,date,cat,note){
+  const base={id:'m'+Date.now()+Math.random().toString(16).slice(2),animal,date,cat:cat||'Autre',note:note||''  ,name:f.name,type:f.type||'file',size:f.size||0,created:new Date().toISOString()};
+  // Try Supabase Storage first for all files
+  try {
+    let fileToUp = f;
+    // Compress images before upload
+    if((f.type||'').startsWith('image/') && f.size > 200*1024) {
+      try { fileToUp = await compressImage(f); } catch(e) {}
+    }
+    const url = await uploadMediaToSupabase(fileToUp, animal);
+    return {...base, data: url, url: url, storedOnline: true};
+  } catch(e) {
+    // Fallback: base64 for small images
+    if((f.type||'').startsWith('image/') && f.size <= 1500000) {
+      return new Promise(resolve => {
+        const r = new FileReader();
+        r.onload = () => resolve({...base, data: r.result});
+        r.onerror = () => resolve(base);
+        r.readAsDataURL(f);
+      });
+    }
+    // For large files that failed upload, store metadata only with error info
+    console.warn('Media upload failed:', e);
+    toast('⚠️ Upload échoué pour ' + f.name + ' - vérifier connexion');
+    return base;
+  }
+}
 async function savMedia(){
   const a=document.getElementById('med-a')?.value, date=document.getElementById('med-date')?.value||td(), cat=document.getElementById('med-cat')?.value||'Autre', note=document.getElementById('med-note')?.value||'';
   const inp=document.getElementById('med-files');
