@@ -3145,6 +3145,11 @@ async function syncToSupabase(data) {
 }
 
 async function loadFromSupabase() {
+  // If localStorage already has animals data, skip Supabase load (don't block UI)
+  try {
+    const ex=JSON.parse(localStorage.getItem('sl_clean_20260523')||'null');
+    if(ex && (ex.animals||[]).length>0){ showSyncStatus('ok'); return null; }
+  } catch(e){}
   // Skip Supabase if running as local file (Edge blocks cross-origin fetch from file://)
   if(location.protocol === 'file:') {
     showSyncStatus('error', 'Local');
@@ -3193,14 +3198,14 @@ window.addEventListener('load', async function() {
   }, 500);
 });
 
-// Poll for changes every 30s (poor man's realtime)
+// Poll for changes every 5min (light sync)
 setInterval(async function() {
+  if(location.protocol === 'file:') return;
   try {
     const rows = await sbFetch('GET');
     if(rows && rows[0] && rows[0].data) {
       const remote = rows[0].data;
       const local = JSON.parse(localStorage.getItem('sl_clean_20260523') || '{}');
-      // Simple check: if remote has more animals or logs, use remote
       const rCount = (remote.animals||[]).length + (remote.dailyLogs||[]).length;
       const lCount = (local.animals||[]).length + (local.dailyLogs||[]).length;
       if(rCount > lCount) {
@@ -3212,7 +3217,7 @@ setInterval(async function() {
       }
     }
   } catch(e) {}
-}, 30000);
+}, 300000);
 
 
 /* ===== SUPABASE STORAGE - Upload médias ===== */
