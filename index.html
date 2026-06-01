@@ -1693,8 +1693,16 @@ function importBackupFile(ev){
       const data=validateImportedBackup(obj);
       const n=(data.animals||[]).length;
       if(!confirm('Importer cette sauvegarde et remplacer la base actuelle ?\nAnimaux détectés : '+n))return;
-      sv(data); syncProjects(); refreshSurgeryTypes(); pS(); rA(); rCL(); bSG(); uSD(); rExport(); rUsers(); rAnalysis(); rBackup();
-      toast('Sauvegarde importée');
+      toast('Import en cours… patiente quelques secondes ⏳');
+      // Write to localStorage only (no Supabase yet)
+      try{localStorage.setItem('sl_clean_20260523',JSON.stringify(data));}catch(e){toast('Stockage plein');}
+      // Defer all UI renders to avoid freezing
+      setTimeout(()=>{ syncProjects(); refreshSurgeryTypes(); }, 100);
+      setTimeout(()=>{ pS(); rA(); }, 300);
+      setTimeout(()=>{ rCL(); bSG(); uSD(); }, 600);
+      setTimeout(()=>{ rExport(); rUsers(); rAnalysis(); rBackup(); }, 900);
+      // Supabase sync last, after UI is done
+      setTimeout(()=>{ if(location.protocol!=='file:'){syncToSupabase(data);} toast('Sauvegarde importée ✓'); }, 1500);
     }catch(err){alert('Import impossible : '+err.message);}
     ev.target.value='';
   };
