@@ -603,24 +603,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 const PR={LT:{c:'#1D9E75',d:'rgba(29,158,117,.12)',m:'rgba(29,158,117,.25)'},LK:{c:'#378ADD',d:'rgba(55,138,221,.12)',m:'rgba(55,138,221,.25)'},ER:{c:'#D4537E',d:'rgba(212,83,126,.12)',m:'rgba(212,83,126,.25)'},PP:{c:'#7B5EA7',d:'rgba(123,94,167,.12)',m:'rgba(123,94,167,.25)'}};
 let cp='LT';
 function sPC(p){const P=PR[p],r=document.documentElement.style;r.setProperty('--pc',P.c);r.setProperty('--pc-dim',P.d);r.setProperty('--pc-mid',P.m);}
-function gD(){try{const d=JSON.parse(localStorage.getItem('sl_clean_20260523')||'null');if(d)return normalizeData(d);}catch(e){}return normalizeData(boot());}
-async function loadSeedIfEmpty(){
-  if(localStorage.getItem('sl_clean_20260523')) return;
-  try{
-    const ctrl=new AbortController();
-    const t=setTimeout(()=>ctrl.abort(),3000);
-    const r=await fetch('seed.json',{signal:ctrl.signal});
-    clearTimeout(t);
-    if(!r.ok) return;
-    const seed=await r.json();
-    localStorage.setItem('sl_clean_20260523',JSON.stringify(seed));
-    let dd=ensureUsers(gD());sv(dd);syncProjects();sPC('LT');refreshSurgeryTypes();pS();rA();rCL();bSG();uSD();rExport();rUsers();rBackup();rBackupIndicator();
-    if(typeof rAnalysis==='function')rAnalysis();
-    if(typeof rSearch==='function')rSearch();
-    if(typeof rTags==='function')rTags();
-    if(typeof rConditions==='function')rConditions();
-  }catch(e){console.warn('seed.json:',e);}
-}
+function gD(){try{const d=JSON.parse(localStorage.getItem('sl_clean_20260523')||'null')||boot();return normalizeData(d);}catch(e){return normalizeData(boot());}}
 function sv(d){try{localStorage.setItem('sl_clean_20260523',JSON.stringify(d));}catch(e){toast('Stockage plein');}}
 
 
@@ -2740,7 +2723,6 @@ function downloadPerfCSV(){
 })();
 
 document.addEventListener('DOMContentLoaded',()=>{
-  loadSeedIfEmpty(); // fire & forget — re-renders itself if seed loads
   ['dd','trd','rd','cd','med-date','ln-date','ex-start','ex-end','cal-plan-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=td();});
   applyV24Ergo(); let dd=ensureUsers(gD());sv(dd);syncProjects();sPC('LT');refreshSurgeryTypes();pS();rA();rCL();bSG();uSD();rExport();rUsers();rBackup();rBackupIndicator(); if(typeof fillDataTypeSelects==='function')fillDataTypeSelects(); if(typeof rAnalysis==='function')rAnalysis(); if(typeof rSearch==='function')rSearch(); if(typeof rTags==='function')rTags(); if(typeof applyV31Tweaks==='function')applyV31Tweaks(); if(typeof rConditions==='function')rConditions(); const cm=document.getElementById('cal-month'); if(cm&&!cm.value)cm.value=calMonthDefault();
 });
@@ -3145,11 +3127,6 @@ async function syncToSupabase(data) {
 }
 
 async function loadFromSupabase() {
-  // If localStorage already has animals data, skip Supabase load (don't block UI)
-  try {
-    const ex=JSON.parse(localStorage.getItem('sl_clean_20260523')||'null');
-    if(ex && (ex.animals||[]).length>0){ showSyncStatus('ok'); return null; }
-  } catch(e){}
   // Skip Supabase if running as local file (Edge blocks cross-origin fetch from file://)
   if(location.protocol === 'file:') {
     showSyncStatus('error', 'Local');
@@ -3198,14 +3175,14 @@ window.addEventListener('load', async function() {
   }, 500);
 });
 
-// Poll for changes every 5min (light sync)
+// Poll for changes every 30s (poor man's realtime)
 setInterval(async function() {
-  if(location.protocol === 'file:') return;
   try {
     const rows = await sbFetch('GET');
     if(rows && rows[0] && rows[0].data) {
       const remote = rows[0].data;
       const local = JSON.parse(localStorage.getItem('sl_clean_20260523') || '{}');
+      // Simple check: if remote has more animals or logs, use remote
       const rCount = (remote.animals||[]).length + (remote.dailyLogs||[]).length;
       const lCount = (local.animals||[]).length + (local.dailyLogs||[]).length;
       if(rCount > lCount) {
@@ -3217,7 +3194,7 @@ setInterval(async function() {
       }
     }
   } catch(e) {}
-}, 300000);
+}, 30000);
 
 
 /* ===== SUPABASE STORAGE - Upload médias ===== */
