@@ -1694,15 +1694,12 @@ function importBackupFile(ev){
       const n=(data.animals||[]).length;
       if(!confirm('Importer cette sauvegarde et remplacer la base actuelle ?\nAnimaux détectés : '+n))return;
       toast('Import en cours… patiente quelques secondes ⏳');
-      // Write to localStorage only (no Supabase yet)
       try{localStorage.setItem('sl_clean_20260523',JSON.stringify(data));}catch(e){toast('Stockage plein');}
-      // Defer all UI renders to avoid freezing
-      setTimeout(()=>{ syncProjects(); refreshSurgeryTypes(); }, 100);
-      setTimeout(()=>{ pS(); rA(); }, 300);
-      setTimeout(()=>{ rCL(); bSG(); uSD(); }, 600);
-      setTimeout(()=>{ rExport(); rUsers(); rAnalysis(); rBackup(); }, 900);
-      // Supabase sync last, after UI is done
-      setTimeout(()=>{ if(location.protocol!=='file:'){syncToSupabase(data);} toast('Sauvegarde importée ✓'); }, 1500);
+      setTimeout(()=>{ syncProjects(); refreshSurgeryTypes(); }, 200);
+      setTimeout(()=>{ pS(); rA(); }, 500);
+      setTimeout(()=>{ rCL(); bSG(); uSD(); }, 900);
+      setTimeout(()=>{ rExport(); rUsers(); rAnalysis(); rBackup(); toast('✓ Sauvegarde importée'); }, 1300);
+      setTimeout(()=>{ syncToSupabase(data); }, 3000);
     }catch(err){alert('Import impossible : '+err.message);}
     ev.target.value='';
   };
@@ -3166,44 +3163,11 @@ window.sv = function(data) {
   _syncTimeout = setTimeout(() => syncToSupabase(data), 1500);
 };
 
-// On load: pull from Supabase first
-window.addEventListener('load', async function() {
-  setTimeout(async function() {
-    const remote = await loadFromSupabase();
-    if(remote) {
-      // Refresh UI with remote data
-      try {
-        syncProjects && syncProjects();
-        pS && pS();
-        rA && rA();
-        rCL && rCL();
-        rUsers && rUsers();
-        showSyncStatus('ok');
-      } catch(e) {}
-    }
-  }, 500);
-});
+// Auto-load from Supabase disabled to prevent freeze on large DBs
+// Data is loaded from localStorage on startup; Supabase syncs on save only
+window.addEventListener('load', function() { showSyncStatus('ok'); });
 
-// Poll for changes every 30s (poor man's realtime)
-setInterval(async function() {
-  try {
-    const rows = await sbFetch('GET');
-    if(rows && rows[0] && rows[0].data) {
-      const remote = rows[0].data;
-      const local = JSON.parse(localStorage.getItem('sl_clean_20260523') || '{}');
-      // Simple check: if remote has more animals or logs, use remote
-      const rCount = (remote.animals||[]).length + (remote.dailyLogs||[]).length;
-      const lCount = (local.animals||[]).length + (local.dailyLogs||[]).length;
-      if(rCount > lCount) {
-        localStorage.setItem('sl_clean_20260523', JSON.stringify(remote));
-        syncProjects && syncProjects();
-        pS && pS();
-        rA && rA();
-        showSyncStatus('ok');
-      }
-    }
-  } catch(e) {}
-}, 30000);
+// 30s polling disabled to prevent freeze
 
 
 /* ===== SUPABASE STORAGE - Upload médias ===== */
