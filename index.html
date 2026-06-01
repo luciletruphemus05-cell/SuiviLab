@@ -464,6 +464,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <button class="eb" onclick="document.getElementById('bk-file').click()"><span class="ei">📥</span>Importer JSON</button>
     <button class="eb" onclick="resetDatabaseSafe()"><span class="ei">♻️</span>Base intégrée</button>
     <button class="eb" onclick="normalizeNow()"><span class="ei">🧹</span>Normaliser</button>
+    <button class="eb" onclick="cleanImportNotes()"><span class="ei">✨</span>Nettoyer notes d'import</button>
   </div>
   <div class="card"><div class="ct">À quoi servent ces boutons ?</div><div style="font-size:11px;color:var(--text2);line-height:1.55"><b>Base intégrée</b> restaure la base d’exemple incluse dans cette version de l’application : à utiliser seulement pour repartir de zéro ou tester l’app. <br><br><b>Normaliser</b> harmonise les labels déjà saisis, par exemple les variations de conditions ou de catégories, afin que les filtres, graphes et comparaisons regroupent correctement les mêmes éléments.</div></div>
   <input type="file" id="bk-file" accept="application/json,.json" style="display:none" onchange="importBackupFile(event)"/>
@@ -918,7 +919,7 @@ function rA(){
     else if(days>=3)dc=`<span class="dchip" style="background:rgba(186,117,23,.15);color:#e8a23a">${days}j</span>`;
     else dc=`<span class="dchip" style="background:rgba(99,153,34,.15);color:#8fce4a">${days}j</span>`;
     const age=animalAgeLabel(a), status=animalStatusLabel(a);
-    return `<div class="acard${animalInactive(a)?' inactive':''}"><div class="ac-top"><div class="av">${init}</div><div style="flex:1;min-width:0"><div class="aname">${a.id}${age?`<span class="age-pill">${age}</span>`:''}${status?` <span class="status-badge">${status}</span>`:''}</div><div class="asub">${a.sp} · ${a.sx} · Cage ${a.cage||'—'}${a.experboard?' · EB#'+a.experboard:''}${a.numero?' · '+a.numero:''}${hardwareWeight(a)>0?' · 🎩 '+hardwareWeight(a).toFixed(2)+'g':''} · ${chirs.length} chir · ${recs.length} enreg.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${badges}</div></div><div class="astats"><div class="sm"><div class="smv">${w?w+'g':'—'}</div><div class="sml">Poids</div></div><div class="sm"><div class="smv">${lt?lt.ar:'—'}</div><div class="sml">Derniers AR</div></div><div class="sm" style="display:flex;flex-direction:column;align-items:center;justify-content:center">${dc}<div class="sml" style="margin-top:3px">Pesée</div></div></div></div>`;
+    return `<div class="acard${animalInactive(a)?' inactive':''}"><div class="ac-top"><div class="av">${init}</div><div style="flex:1;min-width:0"><div class="aname">${a.id}${age?`<span class="age-pill">${age}</span>`:''}${status?` <span class="status-badge">${status}</span>`:''}</div><div class="asub">${a.sp} · ${a.sx} · Cage ${a.cage||'—'}${a.experboard?' · EB#'+a.experboard:''}${a.numero?' · '+a.numero:''}${hardwareWeight(a)>0?' · 🎩 '+hardwareWeight(a).toFixed(2)+'g':''} · ${chirs.length} chir · ${recs.length} enreg.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${badges}</div></div><div class="astats"><div class="sm"><div class="smv">${w?w+'g':'—'}</div><div class="sml">Poids</div></div><div class="sm"><div class="smv">${lt?lt.ar:'—'}</div><div class="sml">Derniers AR</div></div><div class="sm" style="display:flex;flex-direction:column;align-items:center;justify-content:center">${dc}<div class="sml" style="margin-top:3px">Pesée</div></div></div><div class="row-actions" style="margin-top:8px"><button class="mini-btn" onclick="editAnimal('${a.id}')">Modifier</button><button class="mini-btn" onclick="deleteAnimal('${a.id}')">Supprimer</button></div></div>`;
   }).join('');
 }
 let chirF='Tous';
@@ -1235,17 +1236,66 @@ function cpF(){
 function shD(){const d=gD();const txt=JSON.stringify(d,null,2);if(navigator.share){navigator.share({title:'SuiviLab',text:txt}).catch(()=>{});}else{navigator.clipboard?.writeText(txt).then(()=>toast('✓ Données JSON copiées')).catch(()=>toast('Partage non disponible'));}}
 function openM(id){document.getElementById(id).classList.add('open');if(id==='modal-nc3rs')openNC3Rs();}
 function clM(id){document.getElementById(id).classList.remove('open');}
+let _editingAnimalId=null;
 function savA(){
   const id=document.getElementById('ni').value.trim();if(!id){toast('ID requis');return;}
-  const d=gD();if(d.animals.find(a=>a.id===id)){toast('ID déjà utilisé');return;}
+  const d=gD();
   const proj=document.getElementById('npr').value;
   const status=(document.getElementById('n-status')||{value:'active'}).value;
   const endDate=(document.getElementById('n-end')||{value:''}).value||'';
   const statusNote=(document.getElementById('n-status-note')||{value:''}).value||'';
   const isEnded=status==='dead'||status==='sacrificed'||status==='excluded';
-  d.animals.push(markUser({id,proj,sp:document.getElementById('nsp').value,sx:document.getElementById('nsx').value,dob:document.getElementById('nd').value||'',status, statusNote, deces:(isEnded||endDate)?endDate:'',wi:parseFloat(document.getElementById('nwi').value)||null,wpc:parseFloat(document.getElementById('nwp').value)||null,line:document.getElementById('nl').value,cage:document.getElementById('nc').value,hasHat:document.getElementById('n-hat').value==='1',hatWeight:parseFloat(document.getElementById('n-hat-w').value)||0,cementWeight:parseFloat(document.getElementById('n-cement-w')?.value)||0,implantWeight:parseFloat(document.getElementById('n-implant-w')?.value)||0,hardwareNote:(document.getElementById('n-hardware-note')?.value||''),proto:document.getElementById('np').value,experboard:(document.getElementById('neb')||{value:''}).value,numero:(document.getElementById('nnum')||{value:''}).value,notes:document.getElementById('nno').value,created:td()},d));
-  sv(d);clM('ma');if(proj===cp)rA();pS();toast('✓ Animal ajouté');['ni','nd','nwi','nwp','nl','nc','np','nno','n-end','n-status-note'].forEach(x=>{const e=document.getElementById(x);if(e)e.value='';});const ns=document.getElementById('n-status');if(ns)ns.value='active';
+  const fields={proj,sp:document.getElementById('nsp').value,sx:document.getElementById('nsx').value,dob:document.getElementById('nd').value||'',status, statusNote, deces:(isEnded||endDate)?endDate:'',wi:parseFloat(document.getElementById('nwi').value)||null,wpc:parseFloat(document.getElementById('nwp').value)||null,line:document.getElementById('nl').value,cage:document.getElementById('nc').value,hasHat:document.getElementById('n-hat').value==='1',hatWeight:parseFloat(document.getElementById('n-hat-w').value)||0,cementWeight:parseFloat(document.getElementById('n-cement-w')?.value)||0,implantWeight:parseFloat(document.getElementById('n-implant-w')?.value)||0,hardwareNote:(document.getElementById('n-hardware-note')?.value||''),proto:document.getElementById('np').value,experboard:(document.getElementById('neb')||{value:''}).value,numero:(document.getElementById('nnum')||{value:''}).value,notes:document.getElementById('nno').value};
+  if(_editingAnimalId){
+    const a=d.animals.find(x=>x.id===_editingAnimalId);if(!a){toast('Animal introuvable');return;}
+    if(id!==_editingAnimalId&&d.animals.find(x=>x.id===id)){toast('ID déjà utilisé');return;}
+    const oldId=a.id;
+    Object.assign(a,fields,{id});
+    if(id!==oldId){['dailyLogs','trainings','chirurgies','recordings','media','dataLinks'].forEach(k=>{(d[k]||[]).forEach(it=>{if(it.animal===oldId)it.animal=id;});});}
+    sv(d);clM('ma');_editingAnimalId=null;rA();pS();toast('✓ Fiche modifiée');
+  }else{
+    if(d.animals.find(a=>a.id===id)){toast('ID déjà utilisé');return;}
+    d.animals.push(markUser(Object.assign({id},fields,{created:td()}),d));
+    sv(d);clM('ma');if(proj===cp)rA();pS();toast('✓ Animal ajouté');
+  }
+  ['ni','nd','nwi','nwp','nl','nc','np','nno','n-end','n-status-note'].forEach(x=>{const e=document.getElementById(x);if(e)e.value='';});const ns=document.getElementById('n-status');if(ns)ns.value='active';
 }
+function editAnimal(animalId){
+  const d=gD(),a=d.animals.find(x=>x.id===animalId);if(!a){toast('Animal introuvable');return;}
+  _editingAnimalId=animalId;
+  const set=(elId,val)=>{const e=document.getElementById(elId);if(e)e.value=(val===null||val===undefined)?'':val;};
+  set('ni',a.id);set('nsp',a.sp||'Souris');set('nsx',a.sx||'F');set('nd',a.dob||'');set('nwi',a.wi);set('nwp',a.wpc);set('nl',a.line||'');set('nc',a.cage||'');
+  set('n-hat',a.hasHat?'1':'0');const hw=document.getElementById('n-hat-w');if(hw){hw.value=a.hatWeight||'';hw.disabled=!a.hasHat;}
+  set('n-cement-w',a.cementWeight);set('n-implant-w',a.implantWeight);set('n-hardware-note',a.hardwareNote||'');
+  set('neb',a.experboard||'');set('nnum',a.numero||'');set('np',a.proto||'');set('npr',a.proj||cp);
+  set('n-status',a.status||'active');set('n-end',a.deces||'');set('n-status-note',a.statusNote||'');set('nno',a.notes||'');
+  const modal=document.getElementById('ma');const h2=modal&&modal.querySelector('.mh h2');if(h2)h2.textContent='Modifier la fiche';const btn=modal&&modal.querySelector('.btnp');if(btn)btn.textContent='Enregistrer les modifications';
+  openM('ma');
+}
+function deleteAnimal(animalId){
+  const d=gD(),a=d.animals.find(x=>x.id===animalId);if(!a){toast('Animal introuvable');return;}
+  const nLogs=(d.dailyLogs||[]).filter(l=>l.animal===animalId).length;
+  const nTr=(d.trainings||[]).filter(t=>t.animal===animalId).length;
+  const nCh=(d.chirurgies||[]).filter(c=>c.animal===animalId).length;
+  const nRec=(d.recordings||[]).filter(r=>r.animal===animalId).length;
+  if(!confirm('Supprimer définitivement '+animalId+' et toutes ses données ?\n\n'+nLogs+' suivi(s), '+nTr+' training(s), '+nCh+' chirurgie(s), '+nRec+' enregistrement(s).\n\nCette action est irréversible. Pense à sauvegarder un JSON avant.'))return;
+  d.animals=d.animals.filter(x=>x.id!==animalId);
+  ['dailyLogs','trainings','chirurgies','recordings','media','dataLinks'].forEach(k=>{if(d[k])d[k]=d[k].filter(it=>it.animal!==animalId);});
+  sv(d);rA();pS();toast('✓ '+animalId+' supprimé');
+}
+// Reset edit mode when opening the modal via "Ajouter un animal"
+const _origOpenM_anim=window.openM;
+window.openM=function(id){
+  if(id==='ma'&&!_editingAnimalId){
+    ['ni','nd','nwi','nwp','nl','nc','np','nno','n-end','n-status-note','n-hat-w','n-cement-w','n-implant-w','n-hardware-note','neb','nnum'].forEach(x=>{const e=document.getElementById(x);if(e)e.value='';});
+    const ns=document.getElementById('n-status');if(ns)ns.value='active';const nh=document.getElementById('n-hat');if(nh){nh.value='0';}const hw=document.getElementById('n-hat-w');if(hw)hw.disabled=true;
+    const modal=document.getElementById('ma');const h2=modal&&modal.querySelector('.mh h2');if(h2)h2.textContent='Ajouter un animal';const btn=modal&&modal.querySelector('.btnp');if(btn)btn.textContent='Créer la fiche';
+  }
+  return _origOpenM_anim(id);
+};
+// Reset edit flag when modal closed
+const _origClM_anim=window.clM;
+window.clM=function(id){if(id==='ma')_editingAnimalId=null;return _origClM_anim(id);};
 
 let _sc='#E85D3F';
 function selC(el){document.querySelectorAll('.pjc').forEach(e=>e.style.borderColor='transparent');el.style.borderColor='white';_sc=el.dataset.col;}
@@ -1453,6 +1503,20 @@ function applyNormalization(d){
 }
 function normalizeNow(){
   const d=applyNormalization(gD()); sv(d); syncProjects(); refreshSurgeryTypes(); pS(); rA(); rCL(); bSG(); uSD(); rExport(); rUsers(); rBackup(); if(typeof rDash==='function')rDash(); if(typeof rAnalysis==='function')rAnalysis(); if(typeof rSearch==='function')rSearch(); if(typeof rTags==='function')rTags(); if(typeof rLinks==='function')rLinks(); toast('✓ Base normalisée');
+}
+function cleanImportNotes(){
+  if(!confirm('Retirer la mention « Import depuis index/fiches fournies » de toutes les notes ?'))return;
+  const d=gD();let n=0;
+  const clean=s=>{
+    if(typeof s!=='string')return s;
+    const before=s;
+    let out=s.replace(/Import depuis index\s*\/\s*fiches fournies\.?/gi,'').replace(/\s{2,}/g,' ').trim();
+    if(out!==before)n++;
+    return out;
+  };
+  ['dailyLogs','trainings','chirurgies','recordings','media','dataLinks'].forEach(k=>{(d[k]||[]).forEach(it=>{if(it.notes)it.notes=clean(it.notes);});});
+  (d.animals||[]).forEach(a=>{if(a.notes)a.notes=clean(a.notes);});
+  sv(d);rA();pS();if(typeof rBackup==='function')rBackup();toast('✓ '+n+' note(s) nettoyée(s)');
 }
 
 function ensureLinks(d){if(!d.dataLinks)d.dataLinks=[];return ensureCustomDataTypes(d);}
