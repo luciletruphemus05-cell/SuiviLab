@@ -1693,13 +1693,11 @@ function importBackupFile(ev){
       const data=validateImportedBackup(obj);
       const n=(data.animals||[]).length;
       if(!confirm('Importer cette sauvegarde et remplacer la base actuelle ?\nAnimaux détectés : '+n))return;
-      toast('Import en cours… patiente quelques secondes ⏳');
-      try{localStorage.setItem('sl_clean_20260523',JSON.stringify(data));}catch(e){toast('Stockage plein');}
-      setTimeout(()=>{ syncProjects(); refreshSurgeryTypes(); }, 200);
-      setTimeout(()=>{ pS(); rA(); }, 500);
-      setTimeout(()=>{ rCL(); bSG(); uSD(); }, 900);
-      setTimeout(()=>{ rExport(); rUsers(); rAnalysis(); rBackup(); toast('✓ Sauvegarde importée'); }, 1300);
-      setTimeout(()=>{ syncToSupabase(data); }, 3000);
+      try{localStorage.setItem('sl_clean_20260523',JSON.stringify(data));}catch(e){toast('Stockage plein');return;}
+      toast('Import en cours…');
+      setTimeout(()=>{syncProjects();refreshSurgeryTypes();pS();},100);
+      setTimeout(()=>{rA();rCL();rUsers();},400);
+      setTimeout(()=>{bSG();uSD();rExport();rAnalysis();rBackup();toast('\u2713 '+n+' animaux importés');},700);
     }catch(err){alert('Import impossible : '+err.message);}
     ev.target.value='';
   };
@@ -3154,20 +3152,11 @@ async function loadFromSupabase() {
   return null;
 }
 
-// Override sv() to also sync to Supabase (skip if local file)
-const _origSv = window.sv || function(){};
-window.sv = function(data) {
-  _origSv(data);
-  if(location.protocol === 'file:') return; // No sync from local files
-  clearTimeout(_syncTimeout);
-  _syncTimeout = setTimeout(() => syncToSupabase(data), 1500);
-};
+// Supabase auto-sync désactivé
 
-// Auto-load from Supabase disabled to prevent freeze on large DBs
-// Data is loaded from localStorage on startup; Supabase syncs on save only
 window.addEventListener('load', function() { showSyncStatus('ok'); });
 
-// 30s polling disabled to prevent freeze
+// Polling désactivé
 
 
 /* ===== SUPABASE STORAGE - Upload médias ===== */
