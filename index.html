@@ -1693,11 +1693,8 @@ function importBackupFile(ev){
       const data=validateImportedBackup(obj);
       const n=(data.animals||[]).length;
       if(!confirm('Importer cette sauvegarde et remplacer la base actuelle ?\nAnimaux détectés : '+n))return;
-      try{localStorage.setItem('sl_clean_20260523',JSON.stringify(data));}catch(e){toast('Stockage plein');return;}
-      toast('Import en cours…');
-      setTimeout(()=>{syncProjects();refreshSurgeryTypes();pS();},100);
-      setTimeout(()=>{rA();rCL();rUsers();},400);
-      setTimeout(()=>{bSG();uSD();rExport();rAnalysis();rBackup();toast('\u2713 '+n+' animaux importés');},700);
+      try{localStorage.setItem('sl_clean_20260523',JSON.stringify(data));}catch(e){alert('Stockage plein');return;}
+      setTimeout(()=>{ location.reload(); }, 200);
     }catch(err){alert('Import impossible : '+err.message);}
     ev.target.value='';
   };
