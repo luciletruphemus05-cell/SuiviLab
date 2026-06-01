@@ -607,11 +607,19 @@ function gD(){try{const d=JSON.parse(localStorage.getItem('sl_clean_20260523')||
 async function loadSeedIfEmpty(){
   if(localStorage.getItem('sl_clean_20260523')) return;
   try{
-    const r=await fetch('seed.json');
+    const ctrl=new AbortController();
+    const t=setTimeout(()=>ctrl.abort(),3000);
+    const r=await fetch('seed.json',{signal:ctrl.signal});
+    clearTimeout(t);
     if(!r.ok) return;
     const seed=await r.json();
     localStorage.setItem('sl_clean_20260523',JSON.stringify(seed));
-  }catch(e){console.warn('seed.json not found',e);}
+    let dd=ensureUsers(gD());sv(dd);syncProjects();sPC('LT');refreshSurgeryTypes();pS();rA();rCL();bSG();uSD();rExport();rUsers();rBackup();rBackupIndicator();
+    if(typeof rAnalysis==='function')rAnalysis();
+    if(typeof rSearch==='function')rSearch();
+    if(typeof rTags==='function')rTags();
+    if(typeof rConditions==='function')rConditions();
+  }catch(e){console.warn('seed.json:',e);}
 }
 function sv(d){try{localStorage.setItem('sl_clean_20260523',JSON.stringify(d));}catch(e){toast('Stockage plein');}}
 
@@ -2731,8 +2739,8 @@ function downloadPerfCSV(){
   window.addEventListener('load',()=>setTimeout(()=>{try{ensureExportDateListeners();rExport({reason:'load'});}catch(e){}},50));
 })();
 
-document.addEventListener('DOMContentLoaded',async()=>{
-  await loadSeedIfEmpty();
+document.addEventListener('DOMContentLoaded',()=>{
+  loadSeedIfEmpty(); // fire & forget — re-renders itself if seed loads
   ['dd','trd','rd','cd','med-date','ln-date','ex-start','ex-end','cal-plan-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=td();});
   applyV24Ergo(); let dd=ensureUsers(gD());sv(dd);syncProjects();sPC('LT');refreshSurgeryTypes();pS();rA();rCL();bSG();uSD();rExport();rUsers();rBackup();rBackupIndicator(); if(typeof fillDataTypeSelects==='function')fillDataTypeSelects(); if(typeof rAnalysis==='function')rAnalysis(); if(typeof rSearch==='function')rSearch(); if(typeof rTags==='function')rTags(); if(typeof applyV31Tweaks==='function')applyV31Tweaks(); if(typeof rConditions==='function')rConditions(); const cm=document.getElementById('cal-month'); if(cm&&!cm.value)cm.value=calMonthDefault();
 });
