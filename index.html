@@ -3068,95 +3068,15 @@ window.addEventListener('load', function() {
 
 
 
-/* ===== SUPABASE SYNC ===== */
-const SB_URL = 'https://ypesszqdfiyotqpwoibf.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwZXNzenFkZml5b3RxcHdvaWJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3Mjk1ODUsImV4cCI6MjA5NTMwNTU4NX0.kg2cjX_yG1zTZHK7Fy0ULQoRZnjIHNfv3B9TARYDFAc';
-
-async function sbFetch(method, body=null) {
-  const opts = {
-    method,
-    headers: {
-      'apikey': SB_KEY,
-      'Authorization': 'Bearer ' + SB_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': method==='POST' ? 'resolution=merge-duplicates' : ''
-    }
-  };
-  if(body) opts.body = JSON.stringify(body);
-  const r = await fetch(SB_URL + '/rest/v1/suivilab_data', opts);
-  if(!r.ok) throw new Error('Supabase ' + method + ': ' + r.status);
-  const text = await r.text();
-  if(!text || text.trim() === '') return [];
-  try { return JSON.parse(text); } catch(e) { return []; }
-}
-
+/* ===== SUPABASE SYNC — désactivé ===== */
+const SB_URL = '';
+const SB_KEY = '';
+async function sbFetch() { return []; }
 let _syncTimeout = null;
-let _syncStatus = 'ok'; // 'ok' | 'syncing' | 'error'
-
-function showSyncStatus(status, msg) {
-  _syncStatus = status;
-  let el = document.getElementById('sync-badge');
-  if(!el) {
-    el = document.createElement('div');
-    el.id = 'sync-badge';
-    el.style.cssText = 'position:fixed;bottom:calc(60px + env(safe-area-inset-bottom));right:12px;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;z-index:999;transition:all .3s';
-    document.body.appendChild(el);
-  }
-  if(status === 'syncing') {
-    el.style.background = 'rgba(55,138,221,.2)';
-    el.style.color = '#6ab4f5';
-    el.textContent = '↑ Sync...';
-  } else if(status === 'ok') {
-    el.style.background = 'rgba(99,153,34,.2)';
-    el.style.color = '#8fce4a';
-    el.textContent = '✓ Sync';
-    setTimeout(() => { if(el) el.style.opacity='0'; }, 2000);
-  } else {
-    el.style.background = 'rgba(226,75,74,.2)';
-    el.style.color = '#f07070';
-    el.textContent = '⚠ ' + (msg||'Hors ligne');
-  }
-  el.style.opacity = '1';
-}
-
-async function syncToSupabase(data) {
-  showSyncStatus('syncing');
-  try {
-    await sbFetch('POST', [{ id: 'main', data: data, updated_at: new Date().toISOString() }]);
-    showSyncStatus('ok');
-  } catch(e) {
-    showSyncStatus('error', e.message);
-    console.warn('Supabase sync error:', e);
-  }
-}
-
-async function loadFromSupabase() {
-  // Skip Supabase if running as local file (Edge blocks cross-origin fetch from file://)
-  if(location.protocol === 'file:') {
-    showSyncStatus('error', 'Local');
-    return null;
-  }
-  try {
-    const rows = await sbFetch('GET');
-    if(rows && rows[0] && rows[0].data) {
-      const remote = rows[0].data;
-      if(remote.animals && remote.animals.length > 0) {
-        localStorage.setItem('sl_clean_20260523', JSON.stringify(remote));
-        return remote;
-      }
-    }
-  } catch(e) {
-    console.warn('Supabase load error:', e);
-    showSyncStatus('error', 'Hors ligne');
-  }
-  return null;
-}
-
-// Supabase auto-sync désactivé
-
-window.addEventListener('load', function() { showSyncStatus('ok'); });
-
-// Polling désactivé
+function showSyncStatus(s) {}
+async function syncToSupabase() {}
+async function loadFromSupabase() { return null; }
+window.addEventListener('load', function() {});
 
 
 /* ===== SUPABASE STORAGE - Upload médias ===== */
