@@ -1299,10 +1299,23 @@ window.clM=function(id){if(id==='ma')_editingAnimalId=null;return _origClM_anim(
 
 let _sc='#E85D3F';
 function selC(el){document.querySelectorAll('.pjc').forEach(e=>e.style.borderColor='transparent');el.style.borderColor='white';_sc=el.dataset.col;}
+let _editingProjCode=null;
 function savProj(){
+  const d=gD(); if(!d.projects)d.projects={};
+  if(_editingProjCode){
+    const m=d.projects[_editingProjCode];if(!m){toast('Projet introuvable');return;}
+    m.name=document.getElementById('pj-name').value||('Projet '+_editingProjCode);
+    m.resp=document.getElementById('pj-resp').value;
+    m.desc=document.getElementById('pj-desc').value;
+    m.color=_sc;
+    const rv=parseInt(_sc.slice(1,3),16),gv=parseInt(_sc.slice(3,5),16),bv=parseInt(_sc.slice(5,7),16);
+    PR[_editingProjCode]={c:_sc,d:'rgba('+rv+','+gv+','+bv+',.12)',m:'rgba('+rv+','+gv+','+bv+',.25)'};
+    sv(d);clM('modal-proj');_editingProjCode=null;syncProjects();sPC(cp);rPjBanner();toast('✓ Projet modifié');
+    ['pj-code','pj-name','pj-resp','pj-desc'].forEach(x=>document.getElementById(x).value='');
+    return;
+  }
   const code=document.getElementById('pj-code').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4);
   if(code.length<2){toast('Code 2-4 caracteres requis');return;}
-  const d=gD(); if(!d.projects)d.projects={};
   if(d.projects[code]||PR[code]){toast('Code deja utilise');return;}
   const rv=parseInt(_sc.slice(1,3),16),gv=parseInt(_sc.slice(3,5),16),bv=parseInt(_sc.slice(5,7),16);
   PR[code]={c:_sc,d:'rgba('+rv+','+gv+','+bv+',.12)',m:'rgba('+rv+','+gv+','+bv+',.25)'};
@@ -1310,6 +1323,45 @@ function savProj(){
   sv(d);clM('modal-proj');syncProjects();toast('Projet '+code+' cree !');
   ['pj-code','pj-name','pj-resp','pj-desc'].forEach(x=>document.getElementById(x).value='');
 }
+function editProject(){
+  const d=gD(),m=(d.projects&&d.projects[cp])||{};
+  _editingProjCode=cp;
+  const set=(elId,val)=>{const e=document.getElementById(elId);if(e)e.value=val||'';};
+  set('pj-code',cp);set('pj-name',m.name||'');set('pj-resp',m.resp||'');set('pj-desc',m.desc||'');
+  const codeEl=document.getElementById('pj-code');if(codeEl)codeEl.disabled=true;
+  _sc=m.color||'#E85D3F';
+  document.querySelectorAll('.pjc').forEach(s=>{s.classList.toggle('on',s.dataset.col===_sc);s.style.border=s.dataset.col===_sc?'3px solid var(--text)':'3px solid transparent';});
+  const modal=document.getElementById('modal-proj');const h2=modal&&modal.querySelector('.mh h2');if(h2)h2.textContent='Modifier le projet';const btn=modal&&modal.querySelector('.btnp');if(btn)btn.textContent='Enregistrer';
+  openM('modal-proj');
+}
+function deleteProject(){
+  const d=gD();
+  const code=prompt('Pour supprimer le projet '+cp+', entre le code de sécurité :');
+  if(code===null)return;
+  if(code!=='078154'){toast('Code incorrect');return;}
+  const nA=(d.animals||[]).filter(a=>a.proj===cp).length;
+  if(!confirm('Supprimer définitivement le projet '+cp+' ?\n\n'+nA+' animal(aux) appartiennent à ce projet et NE seront PAS supprimés (ils resteront sans projet). Seul le projet et ses infos seront effacés.\n\nContinuer ?'))return;
+  if(d.projects&&d.projects[cp])delete d.projects[cp];
+  delete PR[cp];
+  const remaining=Object.keys(PR);
+  const newCp=remaining[0]||'LT';
+  sv(d);
+  cp=newCp;
+  syncProjects();sPC(cp);rPjBanner();pS();rA();if(typeof rTr==='function')rTr();if(typeof rR==='function')rR();if(typeof rCh==='function')rCh();
+  toast('✓ Projet supprimé');
+}
+// Reset project edit mode when opening modal fresh / closing
+const _origOpenM_proj=window.openM;
+window.openM=function(id){
+  if(id==='modal-proj'&&!_editingProjCode){
+    ['pj-code','pj-name','pj-resp','pj-desc'].forEach(x=>{const e=document.getElementById(x);if(e)e.value='';});
+    const codeEl=document.getElementById('pj-code');if(codeEl)codeEl.disabled=false;
+    const modal=document.getElementById('modal-proj');const h2=modal&&modal.querySelector('.mh h2');if(h2)h2.textContent='Nouveau projet';const btn=modal&&modal.querySelector('.btnp');if(btn)btn.textContent='Créer le projet';
+  }
+  return _origOpenM_proj(id);
+};
+const _origClM_proj=window.clM;
+window.clM=function(id){if(id==='modal-proj'){_editingProjCode=null;const codeEl=document.getElementById('pj-code');if(codeEl)codeEl.disabled=false;}return _origClM_proj(id);};
 function openNC3Rs(){
   const el=document.getElementById('nc3rs-content');if(!el||el.innerHTML.length>100)return;
   el.innerHTML=NC3RS_REF.map(c=>{
@@ -1340,8 +1392,9 @@ function rDailyList(){
 function rPjBanner(){
   const b=document.getElementById('pj-banner');if(!b)return;
   const d=gD(),m=d.projects&&d.projects[cp];
-  if(!m||(!m.name&&!m.desc)){b.innerHTML='';return;}
-  b.innerHTML='<div style="background:var(--pc-dim);border:.5px solid var(--pc-mid);border-radius:var(--r);padding:10px 13px;margin-bottom:11px"><div style="font-size:13px;font-weight:600;color:var(--pc);margin-bottom:'+(m.desc?'4px':'0')+'">'+m.name+(m.resp?' <span style="font-size:11px;font-weight:400;color:var(--text2)">· '+m.resp+'</span>':'')+'</div>'+(m.desc?'<div style="font-size:12px;color:var(--text2);line-height:1.5">'+m.desc+'</div>':'')+'</div>';
+  const actions='<div style="display:flex;gap:7px;margin-top:9px"><button class="mini-btn" onclick="editProject()">Modifier le projet</button><button class="mini-btn" onclick="deleteProject()">Supprimer le projet</button></div>';
+  if(!m||(!m.name&&!m.desc)){b.innerHTML='<div style="background:var(--pc-dim);border:.5px solid var(--pc-mid);border-radius:var(--r);padding:10px 13px;margin-bottom:11px"><div style="font-size:13px;font-weight:600;color:var(--pc)">Projet '+esc(cp)+'</div>'+actions+'</div>';return;}
+  b.innerHTML='<div style="background:var(--pc-dim);border:.5px solid var(--pc-mid);border-radius:var(--r);padding:10px 13px;margin-bottom:11px"><div style="font-size:13px;font-weight:600;color:var(--pc);margin-bottom:'+(m.desc?'4px':'0')+'">'+m.name+(m.resp?' <span style="font-size:11px;font-weight:400;color:var(--text2)">· '+m.resp+'</span>':'')+'</div>'+(m.desc?'<div style="font-size:12px;color:var(--text2);line-height:1.5">'+m.desc+'</div>':'')+actions+'</div>';
 }
 
 function shClaude(){
