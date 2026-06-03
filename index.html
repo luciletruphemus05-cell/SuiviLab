@@ -1875,7 +1875,7 @@ function importBackupFile(ev){
       // L'import fait autorité : on le pousse vers Supabase avant de recharger
       if(location.protocol!=='file:'){
         toast('Import en cours, envoi au cloud…');
-        try{_lastPushStr='';await pushToSupabase(data);}catch(e){}
+        try{_lastSyncContent='';await pushToSupabase(data);}catch(e){}
       }
       setTimeout(()=>{ location.reload(); }, 200);
     }catch(err){alert('Import impossible : '+err.message);}
@@ -3252,7 +3252,7 @@ window.addEventListener('load', function() {
 const SB_URL = 'https://ypesszqdfiyotqpwoibf.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwZXNzenFkZml5b3RxcHdvaWJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3Mjk1ODUsImV4cCI6MjA5NTMwNTU4NX0.kg2cjX_yG1zTZHK7Fy0ULQoRZnjIHNfv3B9TARYDFAc';
 const SB_TABLE = 'suivilab_data';
-let _sbBusy=false, _pushTimer=null, _lastPushStr='';
+let _sbBusy=false, _pushTimer=null, _lastSyncContent='';
 
 // fetch avec timeout — une requête bloquée n'immobilise jamais l'app
 function sbFetchTimeout(url, opts, ms){
@@ -3269,6 +3269,13 @@ function showSyncStatus(s){
   else if(s==='err'){el.title='Hors-ligne (données locales OK)';}
 }
 
+// "contenu" = données sans le marqueur de temps, pour détecter les vrais changements
+function contentKey(d){
+  if(!d)return '';
+  const c=Object.assign({},d);delete c._syncTs;
+  return JSON.stringify(c);
+}
+
 // PULL : récupère la dernière ligne distante
 async function loadFromSupabase(){
   if(location.protocol==='file:')return null;
@@ -3281,24 +3288,25 @@ async function loadFromSupabase(){
   }catch(e){return null;}
 }
 
-// PUSH : envoie la base (debounced, non bloquant)
+// PUSH : envoie la base (debounced, non bloquant). Dernière modif = gagnante.
 async function pushToSupabase(data){
   if(location.protocol==='file:')return;
-  const payload=JSON.stringify(data);
-  if(payload===_lastPushStr)return;        // rien n'a changé
-  if(_sbBusy)return;                         // évite les envois concurrents
+  const ck=contentKey(data);
+  if(ck===_lastSyncContent)return;           // contenu inchangé → rien à envoyer
+  if(_sbBusy)return;                          // évite les envois concurrents
   _sbBusy=true;showSyncStatus('sync');
   try{
+    data._syncTs=Date.now();                  // horodatage de cette modification
     const body=JSON.stringify({id:'main',data:data});
     const r=await sbFetchTimeout(SB_URL+'/rest/v1/'+SB_TABLE+'?on_conflict=id',{
       method:'POST',headers:sbHeaders({'Prefer':'resolution=merge-duplicates'}),body:body
     },12000);
-    if(r.ok){_lastPushStr=payload;showSyncStatus('ok');}
+    if(r.ok){_lastSyncContent=ck;showSyncStatus('ok');}
     else{showSyncStatus('err');}
   }catch(e){showSyncStatus('err');}
   finally{_sbBusy=false;}
 }
-// déclenché par sv() — voir override plus bas
+// déclenché par sv() — envoie les données courantes 2,5s après la dernière modif
 function syncToSupabase(data){
   clearTimeout(_pushTimer);
   _pushTimer=setTimeout(()=>pushToSupabase(gD()),2500);
@@ -3308,7 +3316,7 @@ function syncToSupabase(data){
 function applyRemoteData(remote){
   _dataCache=normalizeData(remote);
   try{localStorage.setItem('sl_clean_20260523',JSON.stringify(_dataCache));}catch(e){}
-  _lastPushStr=JSON.stringify(_dataCache);
+  _lastSyncContent=contentKey(_dataCache);
   try{
     syncProjects();if(typeof rPjBanner==='function')setTimeout(rPjBanner,50);
     pS();rA();
@@ -3316,9 +3324,7 @@ function applyRemoteData(remote){
     if(typeof rUsers==='function')rUsers();if(typeof rBackup==='function')rBackup();
   }catch(e){}
 }
-
-// compte les éléments pour décider qui est "le plus à jour" en secours
-function dbCount(d){d=d||{};return (d.animals||[]).length+(d.dailyLogs||[]).length+(d.trainings||[]).length+(d.chirurgies||[]).length+(d.recordings||[]).length;}
+function syncTs(d){return (d&&d._syncTs)||0;}
 
 // override sv() pour pousser vers Supabase après chaque sauvegarde locale
 const _svLocal_sb=window.sv;
@@ -3328,17 +3334,17 @@ window.sv=function(d){_svLocal_sb(d);syncToSupabase(d);};
 window.addEventListener('load',function(){
   if(location.protocol==='file:'){showSyncStatus('ok');return;}
   showSyncStatus('sync');
+  _lastSyncContent=contentKey(gD());           // référence de départ = état local
   setTimeout(async function(){
     const remote=await loadFromSupabase();
     if(remote&&remote.data){
       const local=gD();
-      // au démarrage, on privilégie le distant s'il contient autant ou plus de données
-      if(dbCount(remote.data)>=dbCount(local)){applyRemoteData(remote.data);}
-      else{ _lastPushStr=''; syncToSupabase(local); } // local plus riche → on pousse
+      // dernière modification gagne ; à égalité d'horodatage on garde le local
+      if(syncTs(remote.data)>syncTs(local)){applyRemoteData(remote.data);}
+      else if(contentKey(remote.data)!==contentKey(local)){ syncToSupabase(local); }
       showSyncStatus('ok');
     }else{
-      // pas de distant : on initialise avec le local
-      _lastPushStr=''; syncToSupabase(gD()); showSyncStatus('ok');
+      syncToSupabase(gD()); showSyncStatus('ok');   // pas de distant → on initialise
     }
   },800);
 });
@@ -3348,9 +3354,9 @@ setInterval(async function(){
   if(location.protocol==='file:'||_sbBusy)return;
   const remote=await loadFromSupabase();
   if(!remote||!remote.data)return;
-  const remoteStr=JSON.stringify(remote.data);
-  const localStr=JSON.stringify(gD());
-  if(remoteStr!==localStr && dbCount(remote.data)>=dbCount(gD())){
+  const local=gD();
+  // on applique le distant seulement s'il est plus récent que le local
+  if(syncTs(remote.data)>syncTs(local) && contentKey(remote.data)!==contentKey(local)){
     applyRemoteData(remote.data);
     toast('Données mises à jour depuis un autre appareil');
   }
