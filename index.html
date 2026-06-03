@@ -1865,13 +1865,18 @@ function validateImportedBackup(obj){
 function importBackupFile(ev){
   const f=ev.target.files&&ev.target.files[0]; if(!f)return;
   const reader=new FileReader();
-  reader.onload=()=>{
+  reader.onload=async ()=>{
     try{
       const obj=JSON.parse(reader.result);
       const data=validateImportedBackup(obj);
       const n=(data.animals||[]).length;
       if(!confirm('Importer cette sauvegarde et remplacer la base actuelle ?\nAnimaux détectés : '+n))return;
       try{localStorage.setItem('sl_clean_20260523',JSON.stringify(data));}catch(e){alert('Stockage plein');return;}
+      // L'import fait autorité : on le pousse vers Supabase avant de recharger
+      if(location.protocol!=='file:'){
+        toast('Import en cours, envoi au cloud…');
+        try{_lastPushStr='';await pushToSupabase(data);}catch(e){}
+      }
       setTimeout(()=>{ location.reload(); }, 200);
     }catch(err){alert('Import impossible : '+err.message);}
     ev.target.value='';
@@ -3243,15 +3248,113 @@ window.addEventListener('load', function() {
 
 
 
-/* ===== SUPABASE SYNC — désactivé ===== */
-const SB_URL = '';
-const SB_KEY = '';
-async function sbFetch() { return []; }
-let _syncTimeout = null;
-function showSyncStatus(s) {}
-async function syncToSupabase() {}
-async function loadFromSupabase() { return null; }
-window.addEventListener('load', function() {});
+/* ===== SUPABASE SYNC — réécrit, non bloquant ===== */
+const SB_URL = 'https://ypesszqdfiyotqpwoibf.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwZXNzenFkZml5b3RxcHdvaWJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3Mjk1ODUsImV4cCI6MjA5NTMwNTU4NX0.kg2cjX_yG1zTZHK7Fy0ULQoRZnjIHNfv3B9TARYDFAc';
+const SB_TABLE = 'suivilab_data';
+let _sbBusy=false, _pushTimer=null, _lastPushStr='';
+
+// fetch avec timeout — une requête bloquée n'immobilise jamais l'app
+function sbFetchTimeout(url, opts, ms){
+  const ctrl=new AbortController();
+  const t=setTimeout(()=>ctrl.abort(), ms||8000);
+  return fetch(url,{...opts,signal:ctrl.signal}).finally(()=>clearTimeout(t));
+}
+function sbHeaders(extra){return Object.assign({'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},extra||{});}
+
+function showSyncStatus(s){
+  const el=document.getElementById('backup-indicator');if(!el)return;
+  if(s==='ok'){el.style.opacity='1';el.title='Synchronisé ✓';}
+  else if(s==='sync'){el.style.opacity='.5';el.title='Synchronisation…';}
+  else if(s==='err'){el.title='Hors-ligne (données locales OK)';}
+}
+
+// PULL : récupère la dernière ligne distante
+async function loadFromSupabase(){
+  if(location.protocol==='file:')return null;
+  try{
+    const r=await sbFetchTimeout(SB_URL+'/rest/v1/'+SB_TABLE+'?id=eq.main&select=data',{headers:sbHeaders()},8000);
+    if(!r.ok)return null;
+    const rows=await r.json();
+    if(rows&&rows[0]&&rows[0].data)return {data:rows[0].data};
+    return null;
+  }catch(e){return null;}
+}
+
+// PUSH : envoie la base (debounced, non bloquant)
+async function pushToSupabase(data){
+  if(location.protocol==='file:')return;
+  const payload=JSON.stringify(data);
+  if(payload===_lastPushStr)return;        // rien n'a changé
+  if(_sbBusy)return;                         // évite les envois concurrents
+  _sbBusy=true;showSyncStatus('sync');
+  try{
+    const body=JSON.stringify({id:'main',data:data});
+    const r=await sbFetchTimeout(SB_URL+'/rest/v1/'+SB_TABLE+'?on_conflict=id',{
+      method:'POST',headers:sbHeaders({'Prefer':'resolution=merge-duplicates'}),body:body
+    },12000);
+    if(r.ok){_lastPushStr=payload;showSyncStatus('ok');}
+    else{showSyncStatus('err');}
+  }catch(e){showSyncStatus('err');}
+  finally{_sbBusy=false;}
+}
+// déclenché par sv() — voir override plus bas
+function syncToSupabase(data){
+  clearTimeout(_pushTimer);
+  _pushTimer=setTimeout(()=>pushToSupabase(gD()),2500);
+}
+
+// applique des données distantes dans l'app et rafraîchit l'écran
+function applyRemoteData(remote){
+  _dataCache=normalizeData(remote);
+  try{localStorage.setItem('sl_clean_20260523',JSON.stringify(_dataCache));}catch(e){}
+  _lastPushStr=JSON.stringify(_dataCache);
+  try{
+    syncProjects();if(typeof rPjBanner==='function')setTimeout(rPjBanner,50);
+    pS();rA();
+    if(typeof rCh==='function')rCh();if(typeof rTr==='function')rTr();if(typeof rR==='function')rR();
+    if(typeof rUsers==='function')rUsers();if(typeof rBackup==='function')rBackup();
+  }catch(e){}
+}
+
+// compte les éléments pour décider qui est "le plus à jour" en secours
+function dbCount(d){d=d||{};return (d.animals||[]).length+(d.dailyLogs||[]).length+(d.trainings||[]).length+(d.chirurgies||[]).length+(d.recordings||[]).length;}
+
+// override sv() pour pousser vers Supabase après chaque sauvegarde locale
+const _svLocal_sb=window.sv;
+window.sv=function(d){_svLocal_sb(d);syncToSupabase(d);};
+
+// PULL initial au chargement — en arrière-plan, après le rendu local
+window.addEventListener('load',function(){
+  if(location.protocol==='file:'){showSyncStatus('ok');return;}
+  showSyncStatus('sync');
+  setTimeout(async function(){
+    const remote=await loadFromSupabase();
+    if(remote&&remote.data){
+      const local=gD();
+      // au démarrage, on privilégie le distant s'il contient autant ou plus de données
+      if(dbCount(remote.data)>=dbCount(local)){applyRemoteData(remote.data);}
+      else{ _lastPushStr=''; syncToSupabase(local); } // local plus riche → on pousse
+      showSyncStatus('ok');
+    }else{
+      // pas de distant : on initialise avec le local
+      _lastPushStr=''; syncToSupabase(gD()); showSyncStatus('ok');
+    }
+  },800);
+});
+
+// POLLING léger : récupère les changements des autres appareils toutes les 60s
+setInterval(async function(){
+  if(location.protocol==='file:'||_sbBusy)return;
+  const remote=await loadFromSupabase();
+  if(!remote||!remote.data)return;
+  const remoteStr=JSON.stringify(remote.data);
+  const localStr=JSON.stringify(gD());
+  if(remoteStr!==localStr && dbCount(remote.data)>=dbCount(gD())){
+    applyRemoteData(remote.data);
+    toast('Données mises à jour depuis un autre appareil');
+  }
+},60000);
 
 
 /* ===== SUPABASE STORAGE - Upload médias ===== */
