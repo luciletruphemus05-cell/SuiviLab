@@ -273,6 +273,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <div class="logo">🔬</div>
     <button id="backup-indicator" class="backup-ind none" onclick="checkBackupPassword()" title="Sauvegarde non vérifiée">💾</button>
     <span class="title">SuiviLab</span>
+    <button class="opbtn" style="padding:5px 10px;font-size:12px" onclick="openProjectsModal()" title="Mes projets">📁 Projets</button>
   </div>
   <div class="ppills">
     <button class="pp on" onclick="swP('LT',this)">LT</button>
@@ -588,6 +589,13 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 </div></div>
 
 
+<div id="modal-projects" class="mw"><div class="modal">
+  <div class="mh"><h2>Mes projets</h2><button class="xb" onclick="clM('modal-projects')">✕</button></div>
+  <div id="projects-modal-sub" style="font-size:11px;color:var(--text2);margin-bottom:10px"></div>
+  <div id="projects-modal-list"></div>
+  <button class="btnp" style="margin-top:10px" onclick="clM('modal-projects');openM('modal-proj')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouveau projet</button>
+  <p style="font-size:11px;color:var(--text3);line-height:1.5;margin-top:10px">Seuls les projets associés à l'opérateur actif sont affichés. Pour assigner des projets à chaque utilisateur, va dans « Gérer utilisateurs ».</p>
+</div></div>
 <div id="modal-users" class="mw"><div class="modal">
   <div class="mh"><h2>Utilisateurs / opérateurs</h2><button class="xb" onclick="clM('modal-users')">✕</button></div>
   <div class="card" style="padding:12px;margin-bottom:10px">
@@ -629,11 +637,52 @@ function markUser(obj,d){const u=currentUser(d);obj.operatorId=u.id;obj.operator
 function updateOperatorBar(){const d=ensureUsers(gD()),u=currentUser(d),el=document.getElementById('op-active-name');if(el)el.textContent=u.name;}
 function rUsers(){
   const d=ensureUsers(gD()),sel=document.getElementById('user-active'),list=document.getElementById('users-list');
+  const allCodes=Object.keys(PR);
   if(sel){sel.innerHTML=d.users.map(u=>'<option value="'+u.id+'">'+esc(u.name)+(u.role?' · '+esc(u.role):'')+'</option>').join('');sel.value=d.activeUserId;}
-  if(list){list.innerHTML=d.users.map(u=>'<div class="rc"><div class="rc-top"><div><div class="rc-name">'+esc(u.name)+(u.id===d.activeUserId?' <span class="user-pill">actif</span>':'')+'</div><div class="rc-sub">'+esc(u.role||'—')+'</div></div><button class="opbtn" onclick="setActiveUser(\''+u.id+'\')">Activer</button></div></div>').join('');}
+  if(list){list.innerHTML=d.users.map(u=>{
+    const assigned=Array.isArray(u.projects)?u.projects:[];
+    const chips=allCodes.map(c=>{
+      const on=assigned.includes(c);
+      return '<button class="proj-chip'+(on?' on':'')+'" onclick="toggleUserProject(\''+u.id+'\',\''+c+'\')" style="padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid '+(on?(PR[c].c):'var(--border2)')+';background:'+(on?PR[c].d:'transparent')+';color:'+(on?PR[c].c:'var(--text3)')+'">'+c+'</button>';
+    }).join(' ');
+    const sub=assigned.length?(assigned.length+' projet'+(assigned.length>1?'s':'')):'tous les projets (aucun filtre)';
+    return '<div class="rc"><div class="rc-top"><div><div class="rc-name">'+esc(u.name)+(u.id===d.activeUserId?' <span class="user-pill">actif</span>':'')+'</div><div class="rc-sub">'+esc(u.role||'—')+' · '+sub+'</div></div><button class="opbtn" onclick="setActiveUser(\''+u.id+'\')">Activer</button></div><div style="margin-top:8px"><div class="lbl" style="margin-bottom:5px">Projets de cet utilisateur</div><div style="display:flex;flex-wrap:wrap;gap:6px">'+chips+'</div></div></div>';
+  }).join('');}
   updateOperatorBar();
 }
-function setActiveUser(id){const d=ensureUsers(gD());d.activeUserId=id;d.users.forEach(u=>u.active=(u.id===id));sv(d);rUsers();toast('Opérateur actif : '+currentUser(d).name);}
+function toggleUserProject(uid,code){
+  const d=ensureUsers(gD()),u=d.users.find(x=>x.id===uid);if(!u)return;
+  if(!Array.isArray(u.projects))u.projects=[];
+  const i=u.projects.indexOf(code);
+  if(i>=0)u.projects.splice(i,1);else u.projects.push(code);
+  sv(d);rUsers();
+  if(uid===d.activeUserId)syncProjects();
+}
+function openProjectsModal(){openM('modal-projects');rProjectsList();}
+function rProjectsList(){
+  const d=ensureUsers(gD());
+  const u=currentUser(d);
+  const codes=userProjects(d);
+  const sub=document.getElementById('projects-modal-sub');
+  if(sub)sub.textContent='Opérateur actif : '+u.name+' · '+codes.length+' projet'+(codes.length>1?'s':'');
+  const list=document.getElementById('projects-modal-list');if(!list)return;
+  if(!codes.length){list.innerHTML='<div class="empty">Aucun projet</div>';return;}
+  list.innerHTML=codes.map(code=>{
+    const m=(d.projects&&d.projects[code])||{};
+    const col=PR[code]?PR[code].c:'#888';
+    const nA=(d.animals||[]).filter(a=>a.proj===code).length;
+    const isCur=code===cp;
+    return '<div class="rc" style="border-left:3px solid '+col+';cursor:pointer" onclick="switchToProject(\''+code+'\')"><div class="rc-top"><div><div class="rc-name" style="color:'+col+'">'+code+(isCur?' <span class="user-pill">actuel</span>':'')+'</div><div class="rc-sub">'+esc(m.name||('Projet '+code))+(m.resp?' · '+esc(m.resp):'')+'</div><div class="rc-sub" style="margin-top:2px">'+nA+' animal'+(nA>1?'aux':'')+'</div></div><button class="opbtn" onclick="event.stopPropagation();switchToProject(\''+code+'\')">Ouvrir</button></div></div>';
+  }).join('');
+}
+function switchToProject(code){
+  if(!PR[code])return;
+  cp=code;sPC(code);
+  clM('modal-projects');
+  syncProjects();setTimeout(rPjBanner,50);pS();rA();if(typeof rTr==='function')rTr();if(typeof rR==='function')rR();if(typeof rCh==='function')rCh();
+  toast('Projet '+code);
+}
+function setActiveUser(id){const d=ensureUsers(gD());d.activeUserId=id;d.users.forEach(u=>u.active=(u.id===id));sv(d);rUsers();syncProjects();setTimeout(rPjBanner,50);pS();rA();if(typeof rTr==='function')rTr();if(typeof rR==='function')rR();if(typeof rCh==='function')rCh();toast('Opérateur actif : '+currentUser(d).name);}
 function addUser(){const name=(document.getElementById('user-new-name')?.value||'').trim(),role=(document.getElementById('user-new-role')?.value||'').trim();if(!name){toast('Nom requis');return;}const d=ensureUsers(gD());const id='u'+Date.now();d.users.push({id,name,role,active:false});sv(d);document.getElementById('user-new-name').value='';document.getElementById('user-new-role').value='';rUsers();toast('Utilisateur ajouté');}
 function boot(){
   const d={"animals":[],"chirurgies":[],"recordings":[],"trainings":[],"dailyLogs":[],"savedConds":["120cVR","120cm VR","120cmVR","1m VR","1m VR classique","1mVR","60cmVR","80cm VR","80cmVR","CA3 avec objet","CA3 sans objet","Env objets sans arbre","Env sans objet","Gain 0.8","Gain 1.2","Gain 1m","Habituation VR","Habituation VR + barre","Hipp CA1 gauche","Object NOTREE","Rachel NOTREE","Track black","Track pauvre sans objet","Track riche avec objets","VR OB NOTREE","VR classique","VR hipp droit"],"projects":{"LT":{"name":"Projet LT","resp":"Lucile Truphemus","desc":"Enregistrements electrophysiologiques hippocampe. Souris KI et WT KCNQ2. VR lineaire 2m.","color":"#1D9E75"},"LK":{"name":"Projet LK","resp":"Lydia K.","desc":"Protocole KCNQ2 suivi comportemental VR.","color":"#378ADD"},"ER":{"name":"Projet ER","resp":"E. Robbe","desc":"VR gain protocol electrophysiologie.","color":"#D4537E"},"PP":{"name":"Projet PP - Pierre-Pascal","resp":"Pierre-Pascal","desc":"Souris BTBR2 autistes (modele BTBR T+ Itpr3tf/J). Protocole comportemental et electrophysiologique.","color":"#7B5EA7"}}};
@@ -934,6 +983,13 @@ function rCh(){
 }
 function fCh(el,id){document.querySelectorAll('.fp').forEach(p=>p.classList.remove('on'));el.classList.add('on');chirF=id;rCh();}
 
+function userProjects(d){
+  d=ensureUsers(d||gD());
+  const u=d.users.find(x=>x.id===d.activeUserId)||d.users[0];
+  const all=Object.keys(PR);
+  const assigned=(u&&Array.isArray(u.projects))?u.projects.filter(c=>all.includes(c)):[];
+  return assigned.length?assigned:all; // aucun projet assigné → tout afficher
+}
 function syncProjects(){
   const d=gD();
   if(d.projects){Object.keys(d.projects).forEach(code=>{
@@ -943,9 +999,12 @@ function syncProjects(){
       PR[code]={c:col,d:'rgba('+rv+','+gv+','+bv+',.12)',m:'rgba('+rv+','+gv+','+bv+',.25)'};
     }
   });}
+  const visible=userProjects(d);
+  // Si le projet courant n'est pas visible pour cet utilisateur, basculer sur le premier visible
+  if(visible.length&&!visible.includes(cp)){cp=visible[0];if(PR[cp])sPC(cp);}
   const nav=document.querySelector('.ppills'); if(!nav)return;
   nav.innerHTML='';
-  Object.keys(PR).forEach(code=>{
+  visible.forEach(code=>{
     const b=document.createElement('button');b.className='pp'+(code===cp?' on':'');b.textContent=code;b.onclick=function(){swP(code,this);};nav.appendChild(b);
   });
   const plus=document.createElement('button');plus.className='pp';plus.textContent='+';plus.title='Nouveau projet';plus.style.padding='5px 9px';plus.onclick=function(){openM('modal-proj');};nav.appendChild(plus);
