@@ -2462,12 +2462,47 @@ function deleteCustomCondition(id){
   d.conditionLibrary=d.conditionLibrary.filter(x=>x.id!==id); logAction(d,'delete','condition',c); sv(d);
   fillConditionSelects();bSC();rConditions();toast('Condition supprimée');
 }
+function editCustomCondition(id){
+  const d=gD(); const c=(d.conditionLibrary||[]).find(x=>x.id===id); if(!c)return;
+  const el=document.getElementById('cond-edit-'+id); if(!el)return;
+  el.innerHTML=`
+    <div style="background:var(--bg3);border:.5px solid var(--border2);border-radius:var(--rs);padding:12px;margin-top:8px;display:flex;flex-direction:column;gap:8px">
+      <div class="fg"><label class="lbl">Nom</label><input id="ced-name-${id}" value="${escHtml(c.name)}" style="width:100%"/></div>
+      <div style="display:flex;gap:8px">
+        <div class="fg"><label class="lbl">Track visuel (cm)</label><input type="number" id="ced-track-${id}" value="${c.trackLengthCm??''}" step="1"/></div>
+        <div class="fg"><label class="lbl">Gain roue/VR</label><input type="number" id="ced-gain-${id}" value="${c.gain??''}" step="0.01"/></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <div class="fg"><label class="lbl">Dist. roue équiv. (cm)</label><input type="number" id="ced-wheel-${id}" value="${c.wheelGainCm??''}" step="1"/></div>
+        <div class="fg"><label class="lbl">Objets</label><select id="ced-obj-${id}"><option value="0" ${c.objects?'':'selected'}>Sans objet</option><option value="1" ${c.objects?'selected':''}>Avec objets</option></select></div>
+      </div>
+      <div class="fg"><label class="lbl">Notes</label><textarea id="ced-notes-${id}">${escHtml(c.notes||'')}</textarea></div>
+      <div style="display:flex;gap:8px">
+        <button class="btnp" style="flex:1" onclick="saveEditCondition('${id}')">✓ Enregistrer</button>
+        <button class="btns" style="flex:1" onclick="document.getElementById('cond-edit-${id}').innerHTML='';rConditions()">Annuler</button>
+      </div>
+    </div>`;
+}
+function saveEditCondition(id){
+  const d=gD(); d.conditionLibrary=d.conditionLibrary||[];
+  const idx=d.conditionLibrary.findIndex(x=>x.id===id); if(idx<0)return;
+  const name=(document.getElementById('ced-name-'+id)?.value||'').trim();
+  if(!name){toast('Nom requis');return;}
+  const track=parseFloat(document.getElementById('ced-track-'+id)?.value)||100;
+  const gain=parseFloat(document.getElementById('ced-gain-'+id)?.value)||1;
+  const wheel=parseFloat(document.getElementById('ced-wheel-'+id)?.value)||Math.round(track*gain);
+  const objects=document.getElementById('ced-obj-'+id)?.value==='1';
+  const notes=document.getElementById('ced-notes-'+id)?.value||'';
+  const c={...d.conditionLibrary[idx],name,label:name+(objects?' · avec objets':' · sans objet'),trackLengthCm:track,visualTrackCm:track,wheelGainCm:wheel,gain,objects,notes};
+  d.conditionLibrary[idx]=c; logAction(d,'update','condition',c); sv(d);
+  fillConditionSelects();bSC();rConditions();toast('✓ Condition mise à jour');
+}
 function rConditions(){
   const el=document.getElementById('cond-library-list'); if(!el)return;
   const d=gD(); const customIds=new Set((d.conditionLibrary||[]).map(c=>c.id));
   const rows=getAllCondLibrary().filter(c=>c.id!=='custom').map(c=>{
     const isCustom=customIds.has(c.id);
-    return `<div class="cc"><div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><div><div class="ctit">${escHtml(c.label||c.name)}</div><div class="cmet">${escHtml(c.kind||'condition')} · track ${c.trackLengthCm??'—'} cm · roue ${c.wheelGainCm??'—'} cm · gain ${c.gain??'—'} · ${c.objects?'avec objets':'sans objet'}</div>${c.notes?`<div class="cnot">${escHtml(c.notes)}</div>`:''}</div>${isCustom?`<button class="mini-btn" onclick="deleteCustomCondition('${c.id}')">Supprimer</button>`:'<span class="bdg binf">défaut</span>'}</div></div>`;
+    return `<div class="cc"><div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><div style="flex:1"><div class="ctit">${escHtml(c.label||c.name)}</div><div class="cmet">${escHtml(c.kind||'condition')} · track ${c.trackLengthCm??'—'} cm · roue ${c.wheelGainCm??'—'} cm · gain ${c.gain??'—'} · ${c.objects?'avec objets':'sans objet'}</div>${c.notes?`<div class="cnot">${escHtml(c.notes)}</div>`:''}</div><div style="display:flex;gap:5px;flex-shrink:0">${isCustom?`<button class="mini-btn" onclick="editCustomCondition('${c.id}')">Modifier</button><button class="mini-btn" style="background:rgba(226,75,74,.12);color:#f07070;border-color:rgba(226,75,74,.3)" onclick="deleteCustomCondition('${c.id}')">Supprimer</button>`:'<span class="bdg binf">défaut</span>'}</div></div><div id="cond-edit-${c.id}"></div></div>`;
   }).join('');
   el.innerHTML=rows||'<div class="empty">Aucune condition disponible</div>';
 }
