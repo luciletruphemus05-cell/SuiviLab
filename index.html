@@ -275,13 +275,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <span class="title">SuiviLab</span>
     <button class="opbtn" style="padding:5px 10px;font-size:12px" onclick="openProjectsModal()" title="Mes projets">📁 Projets</button>
   </div>
-  <div class="ppills">
-    <button class="pp on" onclick="swP('LT',this)">LT</button>
-    <button class="pp" onclick="swP('LK',this)">LK</button>
-    <button class="pp" onclick="swP('ER',this)">ER</button>
-    <button class="pp" onclick="swP('PP',this)">PP</button>
-    <button class="pp" onclick="openM('modal-proj')" title="Nouveau projet" style="padding:5px 9px">+</button>
-  </div>
+  <div class="ppills" style="display:none"></div>
 </div>
 <div class="opbar"><span>Opérateur actif : <strong id="op-active-name">Lucile</strong></span><button class="opbtn" onclick="openM('modal-users');rUsers()">Gérer utilisateurs</button></div>
 <div id="t-animals" class="sec on content"><div id="pj-banner"></div><div id="az"></div><div id="al"></div><button class="btnp" onclick="openM('ma')"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter un animal</button></div>
@@ -736,10 +730,12 @@ function updateHatDeduct(){
   const d=gD(),a=d.animals.find(x=>x.id===document.getElementById('da')?.value);
   const hw=hardwareWeight(a);
   const raw=parseFloat(input.value);
+  _wBrut=isFinite(raw)?raw:null;
+  _wReal=isFinite(raw)?Math.max(0,raw-hw):null;
   if(hw>0&&isFinite(raw)){
     box.style.display='block';
     hd.textContent=(hardwareLabel(a)||('total '+hw.toFixed(2)+'g'));
-    hr.textContent=(raw-hw).toFixed(2)+' g';
+    hr.textContent=_wReal.toFixed(2)+' g';
   }else if(hw>0){
     box.style.display='block';hd.textContent=(hardwareLabel(a)||('total '+hw.toFixed(2)+'g'));hr.textContent='—';
   }else box.style.display='none';
@@ -1004,10 +1000,7 @@ function syncProjects(){
   if(visible.length&&!visible.includes(cp)){cp=visible[0];if(PR[cp])sPC(cp);}
   const nav=document.querySelector('.ppills'); if(!nav)return;
   nav.innerHTML='';
-  visible.forEach(code=>{
-    const b=document.createElement('button');b.className='pp'+(code===cp?' on':'');b.textContent=code;b.onclick=function(){swP(code,this);};nav.appendChild(b);
-  });
-  const plus=document.createElement('button');plus.className='pp';plus.textContent='+';plus.title='Nouveau projet';plus.style.padding='5px 9px';plus.onclick=function(){openM('modal-proj');};nav.appendChild(plus);
+  // Pills cachées (navigation via bouton Projets uniquement)
   refreshProjectSelects();
 }
 function refreshProjectSelects(){
@@ -1049,7 +1042,13 @@ function savCh(){
 function savD(){
   const animal=document.getElementById('da').value,date=document.getElementById('dd').value;
   if(!animal||!date){toast('Animal et date requis');return;}
-  const d=gD();d.dailyLogs=d.dailyLogs.filter(l=>!(l.animal===animal&&l.date===date));
+  // Recalculer le poids au moment de la sauvegarde (sécurité si les globales ne sont pas à jour)
+  const d=gD();
+  const _savA=d.animals.find(x=>x.id===animal);
+  const _rawW=parseFloat(document.getElementById('dw').value);
+  const _hw=hardwareWeight(_savA);
+  if(_wBrut===null&&isFinite(_rawW)){_wBrut=_rawW;_wReal=Math.max(0,_rawW-_hw);}
+  d.dailyLogs=d.dailyLogs.filter(l=>!(l.animal===animal&&l.date===date));
   const status=document.getElementById('d-status')?.value||'active', statusNote=(document.getElementById('d-status-note')?.value||'').trim();
   const _newD=markUser({id:'dl'+Date.now(),animal,date,weight:_wReal,weightBrut:_wBrut,water:parseFloat(document.getElementById('dea').value)||null,restriction:document.getElementById('dr').value,status,statusNote,scores:{...sc},scoreTotal:Object.values(sc).reduce((a,b)=>a+b,0),notes:document.getElementById('dn').value},d);d.dailyLogs.push(_newD);logAction(d,'create','daily',_newD);
   const aa=d.animals.find(x=>x.id===animal); if(aa){aa.status=status;aa.statusNote=statusNote;if(status==='dead'||status==='sacrificed'||status==='excluded')aa.deces=date;else if(status==='active'||status==='pause')aa.deces='';}
