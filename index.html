@@ -2319,10 +2319,10 @@ function calcConditionPerf(cond,ar,dur){
   const spec=condSpecFromName(cond); ar=parseFloat(ar)||0; dur=parseFloat(dur)||0;
   const trackCm=parseFloat(spec.trackLengthCm)||0;
   const wheelCm=parseFloat(spec.wheelGainCm)||trackCm;
-  const distanceM=ar&&trackCm?ar*trackCm*2/100:null;
-  const wheelDistanceM=ar&&wheelCm?ar*wheelCm*2/100:null;
+  const distanceM=ar&&trackCm?ar*trackCm*2/100:null;         // distance VR perçue
+  const wheelDistanceM=ar&&wheelCm?ar*wheelCm*2/100:null;   // distance roue physique
   const arMin=ar&&dur?ar/dur:null;
-  const speedCms=distanceM&&dur?(distanceM*100)/(dur*60):null;
+  const speedCms=wheelDistanceM&&dur?(wheelDistanceM*100)/(dur*60):null; // vitesse physique réelle (roue)
   return {spec,arMin,speedCms,distanceM,wheelDistanceM};
 }
 function trainingPerf(cond,ar,dur){return calcConditionPerf(cond,ar,dur);}
@@ -2346,7 +2346,13 @@ function cR(){
   const rate=document.getElementById('trr'); if(rate)rate.value=ar&&dur?(ar/dur).toFixed(2):'';
   const p=calcConditionPerf(cond,ar,dur),v=document.getElementById('trv'),dist=document.getElementById('trdist');
   if(v)v.value=p.speedCms? p.speedCms.toFixed(1)+' cm/s':'';
-  if(dist)dist.value=p.distanceM? p.distanceM.toFixed(1)+' m':'';
+  if(dist){
+    const gain=p.spec?.gain??1;
+    if(p.distanceM&&p.wheelDistanceM&&Math.abs(gain-1)>0.01)
+      dist.value=p.distanceM.toFixed(1)+' m VR / '+p.wheelDistanceM.toFixed(1)+' m roue';
+    else
+      dist.value=p.distanceM?p.distanceM.toFixed(1)+' m':'';
+  }
   showCondPreview('trc','tr-cond-preview');
 }
 function savTr(){
@@ -2366,7 +2372,7 @@ function rTr(){
   let sess=d.trainings.filter(t=>pa.includes(t.animal)); if(fA)sess=sess.filter(t=>t.animal===fA); sess=sess.sort((a,b)=>(b.date||'').localeCompare(a.date||'')); if(fN>0)sess=sess.slice(0,fN);
   const list=document.getElementById('tr-list')||document.getElementById('trl'); if(!list)return;
   if(!sess.length){list.innerHTML='<div class="empty">Aucune session</div>';return;}
-  list.innerHTML=sess.map(t=>{const p=t.condSpec||condSpecFromName(t.cond);return '<div class="rc"><div class="rc-top"><div><div class="rc-name">'+t.animal+' <span style="color:var(--text2);font-weight:400">· '+escHtml(t.cond||'—')+'</span></div><div class="rc-sub" style="font-family:var(--m);font-size:11px">'+fd(t.date)+' · track '+(p.trackLengthCm||'—')+' cm · gain '+(p.gain??'—')+'</div></div><span class="bdg bok">'+(t.ar||'—')+' AR</span></div><div class="rc-stats"><span><strong>'+(t.dur||'—')+'</strong> min</span><span><strong>'+(t.rate||'—')+'</strong> AR/min</span><span><strong>'+(t.speedCms?Number(t.speedCms).toFixed(1):'—')+'</strong> cm/s</span><span><strong>'+(t.distanceM?Number(t.distanceM).toFixed(1):'—')+'</strong> m</span></div>'+(t.engage&&t.engage!=='Non précisé'?'<div style="font-size:11px;color:var(--text2);margin-top:5px">'+escHtml(t.engage)+'</div>':'')+(t.needsCheck?'<span class="check-flag">À vérifier</span>':'')+(t.notes?'<div class="rc-note">'+escHtml(t.notes)+'</div>':'')+itemActions('training',t.id)+'</div>';}).join('');
+  list.innerHTML=sess.map(t=>{const p=t.condSpec||condSpecFromName(t.cond);return '<div class="rc"><div class="rc-top"><div><div class="rc-name">'+t.animal+' <span style="color:var(--text2);font-weight:400">· '+escHtml(t.cond||'—')+'</span></div><div class="rc-sub" style="font-family:var(--m);font-size:11px">'+fd(t.date)+' · track '+(p.trackLengthCm||'—')+' cm · gain '+(p.gain??'—')+'</div></div><span class="bdg bok">'+(t.ar||'—')+' AR</span></div><div class="rc-stats"><span><strong>'+(t.dur||'—')+'</strong> min</span><span><strong>'+(t.rate||'—')+'</strong> AR/min</span><span><strong>'+(t.speedCms?Number(t.speedCms).toFixed(1):'—')+'</strong> cm/s</span><span><strong>'+(t.distanceM?Number(t.distanceM).toFixed(1)+(t.wheelDistanceM&&t.condSpec&&Math.abs((t.condSpec.gain??1)-1)>0.01?' m VR / '+Number(t.wheelDistanceM).toFixed(1)+' m roue':' m'):'—')+'</strong></span></div>'+(t.engage&&t.engage!=='Non précisé'?'<div style="font-size:11px;color:var(--text2);margin-top:5px">'+escHtml(t.engage)+'</div>':'')+(t.needsCheck?'<span class="check-flag">À vérifier</span>':'')+(t.notes?'<div class="rc-note">'+escHtml(t.notes)+'</div>':'')+itemActions('training',t.id)+'</div>';}).join('');
 }
 cL=[];
 function addC(c,e,dur){const spec=condSpecFromName(c||'1m VR');cL.push({id:Date.now()+Math.random(),cond:spec.name,condSpec:spec,ar:parseInt(e)||null,dur:parseFloat(dur)||null,notes:''});rCL();}
@@ -2379,7 +2385,13 @@ function updRecCond(i,field,val){
   if(field==='notes')cL[i].notes=val;
   rCL();
 }
-function recCondSummary(c){const p=calcConditionPerf(c.cond,c.ar,c.dur);return `${p.arMin?p.arMin.toFixed(2):'—'} AR/min · ${p.speedCms?p.speedCms.toFixed(1):'—'} cm/s · ${p.distanceM?p.distanceM.toFixed(1):'—'} m`;}
+function recCondSummary(c){
+  const p=calcConditionPerf(c.cond,c.ar,c.dur);
+  const gain=p.spec?.gain??1;
+  let distStr=p.distanceM?p.distanceM.toFixed(1)+' m VR':'—';
+  if(p.wheelDistanceM&&Math.abs(gain-1)>0.01) distStr+=' / '+p.wheelDistanceM.toFixed(1)+' m roue';
+  return `${p.arMin?p.arMin.toFixed(2):'—'} AR/min · ${p.speedCms?p.speedCms.toFixed(1):'—'} cm/s · ${distStr}`;
+}
 function rCL(){
   const el=document.getElementById('rco');if(!el)return;
   if(!cL.length){el.innerHTML='<div style="font-size:11px;color:var(--text3);padding:3px 0">Aucune condition. Ajoute une condition pour calculer la performance par segment.</div>';return;}
@@ -2404,7 +2416,7 @@ function savR(){
 function rR(){
   const d=gD(),pa=d.animals.filter(a=>a.proj===cp).map(a=>a.id),recent=d.recordings.filter(r=>pa.includes(r.animal)).sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,8),list=document.getElementById('rl');
   if(!list)return; if(!recent.length){list.innerHTML='<div class="empty">Aucun enregistrement</div>';return;}
-  list.innerHTML=recent.map(r=>{const sc=r.signal&&r.signal.startsWith('Excell')||r.signal&&r.signal.startsWith('Bonne')?['rgba(99,153,34,.15)','#8fce4a']:['rgba(186,117,23,.15)','#e8a23a'];const proto=(r.protocol||[]).map(c=>{const p=c.condSpec||condSpecFromName(c.cond);const rate=c.rate||(c.ar&&c.dur?(c.ar/c.dur).toFixed(2):'');return `<div class="cond-row"><b>${escHtml(c.cond||'—')}</b><br><span style="color:var(--text2)">${c.ar||'—'} AR · ${c.dur||'—'} min · ${rate||'—'} AR/min · ${c.speedCms?Number(c.speedCms).toFixed(1):'—'} cm/s · track ${p.trackLengthCm||'—'} cm</span>${c.notes?`<div style="color:var(--text3);margin-top:3px">${escHtml(c.notes)}</div>`:''}</div>`;}).join('');return `<div class="rc"><div class="rc-top"><div><div class="rc-name">${r.animal} <span style="color:var(--text2);font-weight:400">· ${escHtml(r.zone||'—')}</span></div><div class="rc-sub">${fd(r.date)} · ${escHtml(r.elec||'—')} · ${r.depth||'—'}µm · durée globale ${r.dur||'—'} min</div></div><span class="bdg binf">${r.shanksOk||'?'}/${r.shanksTotal||'?'} sh.</span></div>${proto?`<div class="proto" style="font-family:var(--f);line-height:1.45">${proto}</div>`:''}<div style="margin-top:5px"><span class="bdg" style="background:${sc[0]};color:${sc[1]}">${escHtml(r.signal||'—')}</span></div>${r.needsCheck?'<span class="check-flag">À vérifier</span>':''}${r.notes?`<div class="rc-note">${escHtml(r.notes)}</div>`:''}${itemActions('recording',r.id)}</div>`;}).join('');
+  list.innerHTML=recent.map(r=>{const sc=r.signal&&r.signal.startsWith('Excell')||r.signal&&r.signal.startsWith('Bonne')?['rgba(99,153,34,.15)','#8fce4a']:['rgba(186,117,23,.15)','#e8a23a'];const proto=(r.protocol||[]).map(c=>{const p=c.condSpec||condSpecFromName(c.cond);const rate=c.rate||(c.ar&&c.dur?(c.ar/c.dur).toFixed(2):'');return `<div class="cond-row"><b>${escHtml(c.cond||'—')}</b><br><span style="color:var(--text2)">${c.ar||'—'} AR · ${c.dur||'—'} min · ${rate||'—'} AR/min · ${c.speedCms?Number(c.speedCms).toFixed(1):'—'} cm/s · ${c.distanceM?Number(c.distanceM).toFixed(1)+(c.wheelDistanceM&&p.gain&&Math.abs(p.gain-1)>0.01?' m VR / '+Number(c.wheelDistanceM).toFixed(1)+' m roue':' m'):'—'} · track ${p.trackLengthCm||'—'} cm</span>${c.notes?`<div style="color:var(--text3);margin-top:3px">${escHtml(c.notes)}</div>`:''}</div>`;}).join('');return `<div class="rc"><div class="rc-top"><div><div class="rc-name">${r.animal} <span style="color:var(--text2);font-weight:400">· ${escHtml(r.zone||'—')}</span></div><div class="rc-sub">${fd(r.date)} · ${escHtml(r.elec||'—')} · ${r.depth||'—'}µm · durée globale ${r.dur||'—'} min</div></div><span class="bdg binf">${r.shanksOk||'?'}/${r.shanksTotal||'?'} sh.</span></div>${proto?`<div class="proto" style="font-family:var(--f);line-height:1.45">${proto}</div>`:''}<div style="margin-top:5px"><span class="bdg" style="background:${sc[0]};color:${sc[1]}">${escHtml(r.signal||'—')}</span></div>${r.needsCheck?'<span class="check-flag">À vérifier</span>':''}${r.notes?`<div class="rc-note">${escHtml(r.notes)}</div>`:''}${itemActions('recording',r.id)}</div>`;}).join('');
 }
 function applyV31Tweaks(){
   fillConditionSelects();bSC();rCL();
