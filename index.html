@@ -264,6 +264,115 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .export-preview th{background:var(--bg3);font-weight:600;color:var(--text2)}
 .export-chart{margin:8px 0;overflow-x:auto}
 .export-chart svg{max-width:100%;height:auto}
+
+/* ═══ ARMOIRE MODULE ═══════════════════════════════════════════════════════ */
+.arm-toolbar{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.arm-mode-btn{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:.5px solid var(--border2);color:var(--text2);background:transparent;font-family:var(--f);transition:all .2s}
+.arm-mode-btn.on{border-color:var(--pc);color:var(--pc);background:var(--pc-dim)}
+.arm-section{margin-bottom:18px}
+.arm-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.arm-title button{font-size:10px;padding:3px 9px;border-radius:20px;border:.5px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;font-family:var(--f)}
+/* Vue étagères */
+.arm-cabinet{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:12px;overflow:hidden}
+.arm-cabinet-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.arm-cabinet-name{font-size:13px;font-weight:700;color:var(--text)}
+.arm-cabinet-sub{font-size:10px;color:var(--text3);margin-top:1px}
+.arm-shelf{display:flex;gap:6px;margin-bottom:8px;padding:8px;background:var(--bg3);border-radius:var(--rs);border:.5px solid var(--border);align-items:flex-end;min-height:80px;position:relative}
+.arm-shelf-label{font-size:9px;color:var(--text3);font-family:var(--m);writing-mode:vertical-rl;transform:rotate(180deg);margin-right:2px;flex-shrink:0}
+.arm-cage{border-radius:8px;padding:6px 5px 5px;cursor:pointer;transition:all .2s;border:.5px solid transparent;position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0}
+.arm-cage:hover{border-color:var(--pc);transform:translateY(-1px)}
+.arm-cage.sz-s{width:52px;min-height:66px}
+.arm-cage.sz-m{width:70px;min-height:66px}
+.arm-cage.sz-l{width:90px;min-height:66px}
+.arm-cage.empty{background:var(--bg4);border:.5px dashed var(--border2);opacity:.6}
+.arm-cage-name{font-size:9px;font-weight:700;color:var(--text);font-family:var(--m);text-align:center;line-height:1.2}
+.arm-cage-animals{display:flex;flex-wrap:wrap;gap:2px;justify-content:center;margin:2px 0}
+.arm-animal-dot{font-size:8px;font-weight:700;padding:1px 3px;border-radius:4px;color:#fff;font-family:var(--m);line-height:1.3;max-width:30px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arm-gauge{width:100%;height:4px;border-radius:2px;margin-top:2px;overflow:hidden;background:var(--bg)}
+.arm-gauge-fill{height:100%;border-radius:2px;transition:width .3s,background .3s}
+.gauge-ok{background:#4caf50}
+.gauge-warn{background:#ff9800}
+.gauge-crit{background:#f44336}
+.arm-slot-empty{width:52px;min-height:66px;border-radius:8px;border:.5px dashed var(--border);opacity:.3;flex-shrink:0}
+/* Vue liste */
+.arm-list-cage{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px}
+.arm-list-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.arm-list-name{font-size:13px;font-weight:600;color:var(--text)}
+.arm-list-meta{font-size:10px;color:var(--text3);margin-top:3px}
+.arm-list-animals{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.arm-list-dot{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;color:#fff;font-family:var(--m)}
+.arm-gauge-row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.arm-gauge-label{font-size:10px;color:var(--text3);width:70px;flex-shrink:0}
+.arm-gauge-bar{flex:1;height:6px;border-radius:3px;background:var(--bg3);overflow:hidden}
+.arm-gauge-val{font-size:10px;font-family:var(--m);width:38px;text-align:right;flex-shrink:0}
+.arm-check-btn{font-size:10px;padding:4px 10px;border-radius:20px;border:.5px solid var(--pc);color:var(--pc);background:transparent;cursor:pointer;font-family:var(--f);white-space:nowrap}
+.arm-cage-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+/* Modal armoire */
+.arm-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+
+/* ─── Sélecteur animaux cage ─────────────────────────────── */
+.acg-animal-selector{background:var(--bg3);border:.5px solid var(--border2);border-radius:var(--rs);padding:10px;margin-top:6px}
+.acg-animal-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;min-height:24px}
+.acg-chip{display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;font-family:var(--m);cursor:pointer;border:.5px solid transparent}
+.acg-chip .rm{font-size:10px;opacity:.7;margin-left:1px}
+.acg-search{margin-bottom:6px}
+.acg-search input{font-size:12px;padding:7px 10px}
+.acg-dropdown{max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:3px}
+.acg-opt{padding:6px 9px;border-radius:6px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.acg-opt:hover{background:var(--bg4)}
+.acg-opt .acg-opt-id{font-weight:600;font-family:var(--m);color:var(--text)}
+.acg-opt .acg-opt-meta{font-size:10px;color:var(--text3)}
+.acg-opt.selected{opacity:.4;pointer-events:none}
+.acg-new-btn{margin-top:6px;padding:6px 10px;border-radius:var(--rs);border:.5px dashed var(--pc);color:var(--pc);background:transparent;cursor:pointer;font-size:11px;font-family:var(--f);width:100%;text-align:left}
+/* ─── Drag & drop cages ──────────────────────────────────── */
+.arm-cage.dragging{opacity:.4;transform:scale(.96)}
+.arm-cage[draggable="true"]{cursor:grab}
+.arm-cage[draggable="true"]:active{cursor:grabbing}
+.arm-slot-empty.drag-over{background:var(--pc-dim);border-color:var(--pc);opacity:1}
+.arm-cage.drag-over-cage{border-color:var(--pc);background:var(--pc-dim)}
+/* ─── Bouton déplacer ────────────────────────────────────── */
+.arm-move-btn{position:absolute;top:3px;right:3px;font-size:9px;padding:2px 5px;border-radius:4px;border:.5px solid var(--border2);background:var(--bg2);color:var(--text3);cursor:pointer;opacity:0;transition:opacity .2s}
+.arm-cage:hover .arm-move-btn{opacity:1}
+/* Modal déplacer cage */
+
+/* ─── Animaux inactifs réduits ───────────────────────────── */
+.acard.inactive{opacity:.55;border-left-color:#555}
+.acard.inactive:hover{opacity:.8}
+
+/* ─── Bouton armoire topbar ──────────────────────────────── */
+.arm-topbtn{border:.5px solid var(--border2);background:var(--bg3);color:var(--text2);border-radius:18px;padding:5px 10px;font-size:11px;font-family:var(--f);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px}
+.arm-topbtn:active,.arm-topbtn.on{background:var(--pc-dim);color:var(--pc);border-color:var(--pc)}
+
+/* ─── Panneau latéral indépendants ──────────────────────── */
+.ind-panel{position:fixed;top:0;right:0;bottom:0;width:min(88vw,380px);background:var(--bg2);border-left:.5px solid var(--border);z-index:300;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);padding-top:var(--sat)}
+.ind-panel.open{transform:translateX(0)}
+.ind-panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:299;opacity:0;pointer-events:none;transition:opacity .3s}
+.ind-panel-overlay.open{opacity:1;pointer-events:auto}
+.ind-panel-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:.5px solid var(--border);flex-shrink:0}
+.ind-panel-title{font-size:14px;font-weight:700;color:var(--text)}
+.ind-panel-body{flex:1;overflow-y:auto;padding:12px 14px}
+.ind-cage-card{background:var(--bg3);border:.5px solid var(--border);border-radius:var(--rs);padding:11px;margin-bottom:9px}
+.ind-cage-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.ind-cage-arm{font-size:10px;color:var(--text3);font-weight:400}
+.ind-animal-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:.5px solid var(--border);font-size:12px}
+.ind-animal-row:last-child{border-bottom:none}
+.ind-animal-id{font-weight:600;font-family:var(--m);color:#888;min-width:60px}
+.ind-animal-meta{color:var(--text3);font-size:11px;flex:1}
+.ind-empty{font-size:12px;color:var(--text3);text-align:center;padding:30px 0}
+/* Swipe hint */
+.ind-swipe-hint{position:fixed;right:0;top:50%;transform:translateY(-50%);width:8px;height:60px;background:var(--border2);border-radius:4px 0 0 4px;z-index:298;opacity:.4}
+
+/* ─── Point vérification sur cage étagère ───────────────── */
+.cage-check-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;border:1.5px solid var(--bg2)}
+/* ─── Badge eau ─────────────────────────────────────────── */
+.cage-water-badge{font-size:8px;font-weight:700;padding:1px 4px;border-radius:4px;margin-top:2px;text-align:center;letter-spacing:.02em}
+.wb-biberon{background:rgba(55,138,221,.2);color:#378ADD}
+.wb-pompe{background:rgba(99,153,34,.2);color:#6a9e22}
+.wb-pipette{background:rgba(136,136,136,.15);color:#888}
+/* ─── Eau modal ─────────────────────────────────────────── */
+.eau-section{background:var(--bg3);border:.5px solid var(--border2);border-radius:var(--rs);padding:10px;margin-top:4px}
+#acg-pompe-details{transition:opacity .2s}
 </style>
 </head>
 <body>
@@ -274,11 +383,161 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <button id="backup-indicator" class="backup-ind none" onclick="checkBackupPassword()" title="Sauvegarde non vérifiée">💾</button>
     <span class="title">SuiviLab</span>
     <button class="opbtn" style="padding:5px 10px;font-size:12px" onclick="openProjectsModal()" title="Mes projets">📁 Projets</button>
+    <button class="arm-topbtn" id="arm-topbar-btn" onclick="tab('armoire')" title="Armoire">🗄️ Armoire</button>
   </div>
   <div class="ppills" style="display:none"></div>
 </div>
+
+<!-- Overlay panneau indépendants -->
+<div id="ind-overlay" class="ind-panel-overlay" onclick="closeIndPanel()"></div>
+<!-- Panneau latéral indépendants -->
+<div id="ind-panel" class="ind-panel">
+  <div class="ind-panel-header">
+    <div class="ind-panel-title">🐭 Animaux indépendants</div>
+    <button class="xb" onclick="closeIndPanel()">✕</button>
+  </div>
+  <div class="ind-panel-body" id="ind-panel-body"></div>
+</div>
+<div class="ind-swipe-hint" id="ind-swipe-hint" onclick="openIndPanel()" title="Animaux indépendants"></div>
+
 <div class="opbar"><span>Opérateur actif : <strong id="op-active-name">Lucile</strong></span><button class="opbtn" onclick="openM('modal-users');rUsers()">Gérer utilisateurs</button></div>
 <div id="t-animals" class="sec on content"><div id="pj-banner"></div><div id="az"></div><div id="al"></div><button class="btnp" onclick="openM('ma')"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter un animal</button></div>
+<div id="t-armoire" class="sec content">
+  <div class="arm-toolbar">
+    <button class="arm-mode-btn on" id="arm-btn-shelf" onclick="armSetMode('shelf')">🗄️ Étagères</button>
+    <button class="arm-mode-btn" id="arm-btn-list" onclick="armSetMode('list')">☰ Liste</button>
+    <div style="flex:1"></div>
+    <button class="mini-btn" onclick="openIndPanel()" style="font-size:11px;padding:5px 12px">🐭 Indép.</button>
+    <button class="mini-btn" onclick="exportArmoire()" style="font-size:11px;padding:5px 12px">📄 Export</button>
+    <button class="mini-btn" onclick="armOpenNewModal()" style="font-size:11px;padding:5px 12px">+ Armoire</button>
+  </div>
+  <div id="arm-view"></div>
+</div>
+
+<!-- Modal nouvelle armoire -->
+<div id="modal-arm-new" class="mw"><div class="modal">
+    <div class="mh"><span>Nouvelle armoire</span><button class="xb" onclick="closeM('modal-arm-new')">✕</button></div>
+    <div class="fg"><label class="lbl">Nom de l'armoire</label><input id="arm-new-name" placeholder="ex: Armoire A, Salle 3…"/></div>
+    <div class="arm-modal-grid">
+      <div class="fg"><label class="lbl">Niveaux (rangées)</label><input type="number" id="arm-new-levels" value="4" min="1" max="10"/></div>
+      <div class="fg"><label class="lbl">Slots par niveau</label><input type="number" id="arm-new-slots" value="6" min="1" max="12"/></div>
+    </div>
+    <button type="button" class="btnp" onclick="armCreate()">Créer</button>
+    <button class="btns" onclick="closeM('modal-arm-new')">Annuler</button>
+</div></div>
+
+<!-- Modal cage -->
+<div id="modal-arm-cage" class="mw"><div class="modal">
+    <div class="mh"><span id="arm-cage-modal-title">Cage</span><button class="xb" onclick="closeM('modal-arm-cage')">✕</button></div>
+    <div class="fg"><label class="lbl">Nom de la cage</label><input id="acg-name" placeholder="ex: A1, Cage bleue…"/></div>
+    <div class="arm-modal-grid">
+      <div class="fg"><label class="lbl">Taille</label>
+        <select id="acg-size" onchange="acgUpdateCapacity()">
+          <option value="s">Petite (≤3 adultes)</option>
+          <option value="m" selected>Moyenne (≤5 adultes)</option>
+          <option value="l">Grande / Portée (≤20)</option>
+        </select>
+      </div>
+      <div class="fg"><label class="lbl">Type</label>
+        <select id="acg-type" onchange="acgUpdateCapacity()">
+          <option value="adultes">Adultes</option>
+          <option value="portee">Portée</option>
+          <option value="sevrage">Sevrés / Jeunes</option>
+        </select>
+      </div>
+    </div>
+    <!-- Position dans l'armoire -->
+    <div class="arm-modal-grid">
+      <div class="fg"><label class="lbl">Niveau</label><input type="number" id="acg-level" placeholder="ex: 2" min="1"/></div>
+      <div class="fg"><label class="lbl">Slot</label><input type="number" id="acg-slot" placeholder="ex: 3" min="1"/></div>
+    </div>
+    <!-- Sélecteur animaux -->
+    <div class="fg">
+      <label class="lbl">Animaux <span id="acg-capacity-badge" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text3)"></span></label>
+      <div class="acg-animal-selector">
+        <div class="acg-animal-chips" id="acg-chips"></div>
+        <div class="acg-search"><input id="acg-search" placeholder="Rechercher un animal…" oninput="acgFilterList()" autocomplete="off"/></div>
+        <div class="acg-dropdown" id="acg-dropdown"></div>
+        <button type="button" class="acg-new-btn" onclick="acgCreateNew()">+ Créer une nouvelle fiche animal</button>
+      </div>
+    </div>
+    <div class="fg"><label class="lbl">Équipe / Projet</label><input id="acg-team" placeholder="ex: LT, ER…"/></div>
+    <div class="fg"><label class="lbl">N° APAFIS</label><input id="acg-apafis" placeholder="ex: 37101"/></div>
+    <!-- Section eau -->
+    <div class="fg">
+      <label class="lbl">Alimentation en eau</label>
+      <div class="eau-section">
+        <select id="acg-water-type" onchange="acgToggleWaterType()" style="margin-bottom:8px">
+          <option value="">— Aucune (pipette / à la main)</option>
+          <option value="biberon">🍼 Biberon</option>
+          <option value="pompe">⚙️ Pompe à eau</option>
+        </select>
+        <div id="acg-pompe-details" style="display:none">
+          <div class="arm-modal-grid">
+            <div class="fg"><label class="lbl">Heure d'activation</label><input type="time" id="acg-pompe-heure" placeholder="ex: 08:00"/></div>
+            <div class="fg"><label class="lbl">Durée (min)</label><input type="number" id="acg-pompe-duree" placeholder="ex: 10" min="1" max="120"/></div>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px;line-height:1.5">10 min ≈ 1 ml d'eau distribué</div>
+        </div>
+      </div>
+    </div>
+    <div class="fg"><label class="lbl">Notes</label><textarea id="acg-notes" placeholder="Observations, traitements en cours…" style="min-height:60px"></textarea></div>
+    <button type="button" class="btnp" onclick="armSaveCage()">Enregistrer</button>
+    <button type="button" class="btns" id="acg-del-btn" onclick="armDeleteCage()" style="border-color:#f07070;color:#f07070;display:none">Supprimer la cage</button>
+    <button type="button" class="btns" onclick="closeM('modal-arm-cage')">Annuler</button>
+</div></div>
+
+<!-- Modal vérification cage -->
+<div id="modal-arm-check" class="mw"><div class="modal">
+    <div class="mh"><span id="arm-check-title">Vérification</span><button class="xb" onclick="closeM('modal-arm-check')">✕</button></div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Enregistrer une vérification pour cette cage — l'horloge repart à zéro.</p>
+    <div class="fg"><label class="lbl">Notes (optionnel)</label><textarea id="arm-check-notes" placeholder="Cage propre, eau changée, croquettes ajoutées…" style="min-height:60px"></textarea></div>
+    <button class="btnp" onclick="armDoCheck()">✓ Vérification effectuée</button>
+    <button class="btns" onclick="closeM('modal-arm-check')">Annuler</button>
+</div></div>
+
+<!-- Modal déplacer cage -->
+<div id="modal-arm-move" class="mw"><div class="modal" id="modal-arm-move-content">
+</div></div>
+
+<div id="t-groupes" class="sec content">
+  <div class="card">
+    <div class="ct">🏷️ Groupes expérimentaux</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6">Crée des groupes (ex: WT, Muté, Témoin, Traité…) et assigne des animaux dedans. Un animal peut appartenir à plusieurs groupes.</p>
+    <button type="button" class="btnp" onclick="openGrpModal(null)" style="margin-bottom:0">+ Nouveau groupe</button>
+  </div>
+  <div id="grp-list"></div>
+</div>
+
+<!-- Modal groupe -->
+<div id="modal-grp" class="mw"><div class="modal">
+  <div class="mh"><span id="grp-modal-title">Nouveau groupe</span><button class="xb" onclick="closeM('modal-grp')">✕</button></div>
+  <div class="fg"><label class="lbl">Nom du groupe</label><input id="grp-name" placeholder="ex: WT, Muté, Témoin…"/></div>
+  <div class="arm-modal-grid">
+    <div class="fg"><label class="lbl">Couleur</label><input type="color" id="grp-color" value="#9b59b6" style="height:42px;padding:4px 8px"/></div>
+    <div class="fg"><label class="lbl">Type</label>
+      <select id="grp-type">
+        <option value="genotype">Génotype (WT/KI/KO…)</option>
+        <option value="treatment">Traitement</option>
+        <option value="cohort">Cohorte</option>
+        <option value="autre">Autre</option>
+      </select>
+    </div>
+  </div>
+  <div class="fg"><label class="lbl">Description</label><input id="grp-desc" placeholder="ex: Souris hétérozygotes KCNQ2"/></div>
+  <div class="fg">
+    <label class="lbl">Animaux du groupe</label>
+    <div class="acg-animal-selector">
+      <div class="acg-animal-chips" id="grp-chips"></div>
+      <div class="acg-search"><input id="grp-search" placeholder="Rechercher un animal…" oninput="grpFilterList()" autocomplete="off"/></div>
+      <div class="acg-dropdown" id="grp-dropdown"></div>
+    </div>
+  </div>
+  <button type="button" class="btnp" onclick="saveGrp()">Enregistrer</button>
+  <button type="button" class="btns" id="grp-del-btn" onclick="deleteGrp()" style="border-color:#f07070;color:#f07070;display:none">Supprimer le groupe</button>
+  <button type="button" class="btns" onclick="closeM('modal-grp')">Annuler</button>
+</div></div>
+
 <div id="t-chirurgie" class="sec content"><div class="fr" id="cf"></div><div id="cl"></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><path d="M20 7l-9 9-4-4"/><path d="M3 21l4-4"/></svg>Nouvelle chirurgie</div><div class="fl"><div class="fg"><label class="lbl">Animal</label><select id="ca"></select></div><div class="fg"><label class="lbl">Date</label><input type="date" id="cd"/></div></div><div class="fg"><label class="lbl">Type</label><select id="cty" onchange="surgeryTypeChanged()"><option>Crâniotomie hippocampe droit</option><option>Crâniotomie hippocampe gauche</option><option>Crâniotomie double</option><option>Chirurgie chapeau VR</option><option>Remplacement crâniotomie</option><option value="custom">+ Nouveau type de chirurgie...</option></select></div><div id="cty-custom-wrap" class="fg" style="display:none"><label class="lbl">Nouveau type de chirurgie</label><input type="text" id="cty-custom" placeholder="ex : Injection virale AAV, implantation fibre, EEG..."/></div><div class="fl"><div class="fg"><label class="lbl">Poids (g)</label><input type="number" id="cw" step=".01"/></div><div class="fg"><label class="lbl">Anesthésie</label><select id="can"><option>Keta/Xyla</option><option>Isoflurane</option><option>Keta/Xyla + ISO</option></select></div></div><div class="fl"><div class="fg"><label class="lbl">Chapeau posé / présent ?</label><select id="c-hat" onchange="document.getElementById('c-hat-w').disabled=this.value==='0'"><option value="0">Non</option><option value="1">Oui</option></select></div><div class="fg"><label class="lbl">Poids du chapeau (g)</label><input type="number" id="c-hat-w" step="0.01" placeholder="ex: 0.70" disabled/></div></div><div class="fl"><div class="fg"><label class="lbl">Ciment/dental cement (g)</label><input type="number" id="c-cement-w" step="0.01" placeholder="ex: 0.20"/></div><div class="fg"><label class="lbl">Implant/électrode/fibre (g)</label><input type="number" id="c-implant-w" step="0.01" placeholder="ex: 0.15"/></div></div><div class="fg"><label class="lbl">Description matériel ajouté</label><input type="text" id="c-hardware-note" placeholder="ex : chapeau VR + ciment + connecteur"/></div><div class="fl"><div class="fg"><label class="lbl">Dose anesthésie (ml)</label><input type="number" id="cad" step=".01"/></div><div class="fg"><label class="lbl">Bupré (ml)</label><input type="number" id="cb2" step=".01"/></div></div><div class="fl"><div class="fg"><label class="lbl">Heure début</label><input type="time" id="ch1"/></div><div class="fg"><label class="lbl">Heure fin</label><input type="time" id="ch2"/></div></div><div class="fg"><label class="lbl">Observations</label><textarea id="cn" placeholder="Déroulement, incidents, température, réveil..."></textarea></div><button class="btnp" onclick="savCh()">Enregistrer</button></div></div>
 <div id="t-daily" class="sec content"><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Animal & date</div><div class="fl"><div class="fg"><label class="lbl">Animal</label><select id="da" onchange="updateHatDeduct();cWA()"></select></div><div class="fg"><label class="lbl">Date</label><input type="date" id="dd"/></div></div><div class="fl"><div class="fg"><label class="lbl">Poids brut avec matériel (g)</label><input type="number" id="dw" step=".01" oninput="cWA();updateHatDeduct()"/></div>
 <div id="hat-deduct-info" style="display:none;font-size:12px;padding:8px 11px;background:var(--bg3);border-radius:var(--rs);margin-top:-6px;margin-bottom:8px;border:.5px solid var(--border2)">
@@ -505,6 +764,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <button class="more-tile" onclick="tab('search')"><span class="more-ico">🔎</span><div class="more-title">Recherche / Tags</div><div class="more-sub">Recherche globale et annotations</div></button>
     <button class="more-tile" onclick="tab('export')"><span class="more-ico">📤</span><div class="more-title">Export</div><div class="more-sub">Rapports et fiches</div></button>
     <button class="more-tile" onclick="tab('conditions')"><span class="more-ico">🧩</span><div class="more-title">Conditions</div><div class="more-sub">Paramètres VR/gain</div></button>
+    <button class="more-tile" onclick="tab('groupes')"><span class="more-ico">🏷️</span><div class="more-title">Groupes</div><div class="more-sub">Groupes expérimentaux</div></button>
     <button class="more-tile" onclick="checkBackupPassword()"><span class="more-ico">💾</span><div class="more-title">Backup</div><div class="more-sub">Sauvegarde JSON</div></button>
     <button class="more-tile" onclick="tab('history')"><span class="more-ico">🕘</span><div class="more-title">Historique</div><div class="more-sub">Modifications récentes</div></button>
   </div>
@@ -949,7 +1209,24 @@ function rA(){
   az.innerHTML=h;
   const d=gD(),list=document.getElementById('al'),animals=d.animals.filter(a=>a.proj===cp);
   if(!animals.length){list.innerHTML='<div class="empty">Aucun animal dans ce projet</div>';return;}
-  list.innerHTML=animals.map(a=>{
+  // Toggle inactifs
+  const showInactive = window._showInactiveAnimals || false;
+  const activeAnimals = animals.filter(a=>!animalInactive(a));
+  const inactiveAnimals = animals.filter(a=>animalInactive(a));
+  const visibleAnimals = showInactive ? animals : activeAnimals;
+
+  // Barre de contrôle
+  const inactiveCount = inactiveAnimals.length;
+  const toggleHtml = inactiveCount > 0 ? `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:8px 12px;background:var(--bg2);border-radius:var(--rs);border:.5px solid var(--border)">
+    <span style="font-size:12px;color:var(--text2)">${activeAnimals.length} actif(s)${inactiveCount?' · '+inactiveCount+' inactif(s)':''}</span>
+    <button onclick="window._showInactiveAnimals=!window._showInactiveAnimals;rA()" style="font-size:11px;padding:4px 10px;border-radius:20px;border:.5px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer">
+      ${showInactive?'Masquer inactifs':'Afficher inactifs (+'+inactiveCount+')'}
+    </button>
+  </div>` : '';
+  list.innerHTML = toggleHtml;
+
+  if(!visibleAnimals.length){list.innerHTML+=showInactive?'<div class="empty">Aucun animal dans ce projet</div>':'<div class="empty">Aucun animal actif — <button onclick="window._showInactiveAnimals=true;rA()" style="color:var(--pc);background:none;border:none;cursor:pointer;font-size:inherit">afficher les inactifs</button></div>';} else {
+  list.innerHTML+=visibleAnimals.map(a=>{
     const logs=d.dailyLogs.filter(l=>l.animal===a.id).sort((x,y)=>y.date.localeCompare(x.date));
     const trs=d.trainings.filter(t=>t.animal===a.id).sort((x,y)=>y.date.localeCompare(x.date));
     const chirs=d.chirurgies.filter(c=>c.animal===a.id),recs=d.recordings.filter(r=>r.animal===a.id);
@@ -964,8 +1241,26 @@ function rA(){
     else if(days>=3)dc=`<span class="dchip" style="background:rgba(186,117,23,.15);color:#e8a23a">${days}j</span>`;
     else dc=`<span class="dchip" style="background:rgba(99,153,34,.15);color:#8fce4a">${days}j</span>`;
     const age=animalAgeLabel(a), status=animalStatusLabel(a);
-    return `<div class="acard${animalInactive(a)?' inactive':''}"><div class="ac-top"><div class="av">${init}</div><div style="flex:1;min-width:0"><div class="aname">${a.id}${age?`<span class="age-pill">${age}</span>`:''}${status?` <span class="status-badge">${status}</span>`:''}</div><div class="asub">${a.sp} · ${a.sx} · Cage ${a.cage||'—'}${a.experboard?' · EB#'+a.experboard:''}${a.numero?' · '+a.numero:''}${hardwareWeight(a)>0?' · 🎩 '+hardwareWeight(a).toFixed(2)+'g':''} · ${chirs.length} chir · ${recs.length} enreg.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${badges}</div></div><div class="astats"><div class="sm"><div class="smv">${w?w+'g':'—'}</div><div class="sml">Poids</div></div><div class="sm"><div class="smv">${lt?lt.ar:'—'}</div><div class="sml">Derniers AR</div></div><div class="sm" style="display:flex;flex-direction:column;align-items:center;justify-content:center">${dc}<div class="sml" style="margin-top:3px">Pesée</div></div></div><div class="row-actions" style="margin-top:8px"><button class="mini-btn" onclick="editAnimal('${a.id}')">Modifier</button><button class="mini-btn" onclick="deleteAnimal('${a.id}')">Supprimer</button></div></div>`;
+    return `<div class="acard${animalInactive(a)?' inactive':''}"><div class="ac-top"><div class="av">${init}</div><div style="flex:1;min-width:0"><div class="aname">${a.id}${age?`<span class="age-pill">${age}</span>`:''}${status?` <span class="status-badge">${status}</span>`:''}</div><div class="asub">${(()=>{const fc=findAnimalCage(a.id);return fc?`🗄️ ${escHtml(fc.arm.name)} · ${escHtml(fc.cage.name)}`:`Cage ${a.cage||'—'}`;})()}${a.experboard?' · EB#'+a.experboard:''}${a.numero?' · '+a.numero:''}${hardwareWeight(a)>0?' · 🎩 '+hardwareWeight(a).toFixed(2)+'g':''} · ${a.sp} · ${a.sx} · ${chirs.length} chir · ${recs.length} enreg.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${badges}</div></div><div class="astats"><div class="sm"><div class="smv">${w?w+'g':'—'}</div><div class="sml">Poids</div></div><div class="sm"><div class="smv">${lt?lt.ar:'—'}</div><div class="sml">Derniers AR</div></div><div class="sm" style="display:flex;flex-direction:column;align-items:center;justify-content:center">${dc}<div class="sml" style="margin-top:3px">Pesée</div></div></div><div class="row-actions" style="margin-top:8px"><button class="mini-btn" onclick="editAnimal('${a.id}')">Modifier</button><button class="mini-btn" onclick="deleteAnimal('${a.id}')">Supprimer</button></div></div>`;
   }).join('');
+  } // end if visibleAnimals
+
+  // ── Animaux indépendants (sans projet) ──────────────────────────────
+  const d2=gD();
+  const indAnimals = (d2.animals||[]).filter(a=>!a.proj||a.proj==='');
+  if(indAnimals.length){
+    const showInd = window._showIndAnimals || false;
+    list.innerHTML += `<div style="margin-top:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em">Animaux indépendants (${indAnimals.length})</div>
+        <button onclick="window._showIndAnimals=!window._showIndAnimals;rA()" style="font-size:11px;padding:3px 10px;border-radius:20px;border:.5px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer">${showInd?'Réduire':'Afficher'}</button>
+      </div>
+      ${showInd ? indAnimals.map(a=>{
+        const init=a.id.replace(/[^A-Z0-9]/gi,'').substring(0,3).toUpperCase();
+        return `<div class="acard" style="border-left-color:#888;opacity:.85"><div class="ac-top"><div class="av" style="background:rgba(136,136,136,.15);color:#888">${init}</div><div style="flex:1;min-width:0"><div class="aname">${a.id}<span style="font-size:10px;color:#888;font-weight:400;margin-left:6px">indépendant</span></div><div class="asub">${[a.sp,a.sx,a.line||(a.souche||''),a.dob?'né '+a.dob:''].filter(Boolean).join(' · ')}</div></div></div><div class="row-actions" style="margin-top:8px"><button class="mini-btn" onclick="editAnimal('${a.id}')">Modifier</button><button class="mini-btn" onclick="deleteAnimal('${a.id}')">Supprimer</button></div></div>`;
+      }).join('') : ''}
+    </div>`;
+  }
 }
 let chirF='Tous';
 function rCh(){
@@ -1006,7 +1301,7 @@ function syncProjects(){
 function refreshProjectSelects(){
   const sel=document.getElementById('npr'); if(!sel)return;
   const cur=sel.value||cp;
-  sel.innerHTML=Object.keys(PR).map(code=>'<option value="'+code+'">'+code+(code==='PP'?' (Pierre-Pascal)':'')+'</option>').join('');
+  sel.innerHTML='<option value="">— Sans projet (indépendant)</option>'+Object.keys(PR).map(code=>'<option value="'+code+'">'+code+(code==='PP'?' (Pierre-Pascal)':'')+'</option>').join('');
   if(PR[cur]) sel.value=cur;
 }
 function refreshSurgeryTypes(){
@@ -1231,7 +1526,7 @@ function rF(){
   const logs=d.dailyLogs.filter(l=>l.animal===aid),trs=d.trainings.filter(t=>t.animal===aid),recs=d.recordings.filter(r=>r.animal===aid),chirs=d.chirurgies.filter(c=>c.animal===aid);
   const ll=logs.sort((x,y)=>y.date.localeCompare(x.date))[0],days=ll?da(ll.date):null,lt=trs.sort((x,y)=>y.date.localeCompare(x.date))[0];
   const P=PR[a.proj]||PR.LT,init=aid.replace(/[^A-Z0-9]/gi,'').substring(0,3).toUpperCase();
-  prev.innerHTML=`<div class="fb"><div class="fh"><div class="fav" style="background:${P.d};color:${P.c}">${init}</div><div><div style="font-size:15px;font-weight:700">${a.id}</div><div style="font-size:11px;color:var(--text2);margin-top:2px">${a.sp} · ${a.sx} · ${a.line||'—'} · Cage ${a.cage||'—'}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${a.proto||''}</div></div></div><div class="fg2"><div class="fs"><div class="fsl">Âge</div><div class="fsv">${animalAgeLabel(a)||'—'}</div></div><div class="fs"><div class="fsl">Statut</div><div class="fsv">${animalStatusLabel(a)||'Actif'}</div></div><div class="fs"><div class="fsl">Date fin/décès</div><div class="fsv">${animalEndDate(a)?fd(animalEndDate(a)):'—'}</div></div><div class="fs"><div class="fsl">Poids initial</div><div class="fsv">${a.wi||'—'}g <span style="color:#f07070;font-size:10px">seuil ${a.wi?(a.wi*.8).toFixed(1):'—'}g</span></div></div><div class="fs"><div class="fsl">Dernière pesée</div><div class="fsv">${days===null?'Jamais':days===0?"Auj.":days+'j'}</div></div><div class="fs"><div class="fsl">Meilleurs AR</div><div class="fsv">${lt?lt.ar:'—'}</div></div><div class="fs"><div class="fsl">Dernier entr.</div><div class="fsv">${lt?fd(lt.date):'—'}</div></div></div><div class="fc"><span>🔬 ${chirs.length} chir.</span><span>📡 ${recs.length} enreg.</span><span>🏃 ${trs.length} training</span><span>📋 ${logs.length} suivi(s)</span></div></div>`;
+  prev.innerHTML=`<div class="fb"><div class="fh"><div class="fav" style="background:${P.d};color:${P.c}">${init}</div><div><div style="font-size:15px;font-weight:700">${a.id}</div><div style="font-size:11px;color:var(--text2);margin-top:2px">${a.sp} · ${a.sx} · ${a.line||'—'} · ${(()=>{const fc=findAnimalCage(a.id);return fc?'🗄️ '+escHtml(fc.arm.name)+' · '+escHtml(fc.cage.name)+(fc.cage.level?' · N'+fc.cage.level+'·S'+fc.cage.slot:''):'Cage '+(a.cage||'—');})()}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${a.proto||''}</div></div></div><div class="fg2"><div class="fs"><div class="fsl">Âge</div><div class="fsv">${animalAgeLabel(a)||'—'}</div></div><div class="fs"><div class="fsl">Statut</div><div class="fsv">${animalStatusLabel(a)||'Actif'}</div></div><div class="fs"><div class="fsl">Date fin/décès</div><div class="fsv">${animalEndDate(a)?fd(animalEndDate(a)):'—'}</div></div><div class="fs"><div class="fsl">Poids initial</div><div class="fsv">${a.wi||'—'}g <span style="color:#f07070;font-size:10px">seuil ${a.wi?(a.wi*.8).toFixed(1):'—'}g</span></div></div><div class="fs"><div class="fsl">Dernière pesée</div><div class="fsv">${days===null?'Jamais':days===0?"Auj.":days+'j'}</div></div><div class="fs"><div class="fsl">Meilleurs AR</div><div class="fsv">${lt?lt.ar:'—'}</div></div><div class="fs"><div class="fsl">Dernier entr.</div><div class="fsv">${lt?fd(lt.date):'—'}</div></div></div><div class="fc"><span>🔬 ${chirs.length} chir.</span><span>📡 ${recs.length} enreg.</span><span>🏃 ${trs.length} training</span><span>📋 ${logs.length} suivi(s)</span></div></div>`;
 }
 function cpF(){
   var aid=document.getElementById('fa').value;if(!aid){toast('Selectionner un animal');return;}
@@ -1294,6 +1589,7 @@ function cpF(){
 function shD(){const d=gD();const txt=JSON.stringify(d,null,2);if(navigator.share){navigator.share({title:'SuiviLab',text:txt}).catch(()=>{});}else{navigator.clipboard?.writeText(txt).then(()=>toast('✓ Données JSON copiées')).catch(()=>toast('Partage non disponible'));}}
 function openM(id){document.getElementById(id).classList.add('open');if(id==='modal-nc3rs')openNC3Rs();}
 function clM(id){document.getElementById(id).classList.remove('open');}
+function closeM(id){clM(id);}
 let _editingAnimalId=null;
 function savA(){
   const id=document.getElementById('ni').value.trim();if(!id){toast('ID requis');return;}
@@ -1314,7 +1610,7 @@ function savA(){
   }else{
     if(d.animals.find(a=>a.id===id)){toast('ID déjà utilisé');return;}
     d.animals.push(markUser(Object.assign({id},fields,{created:td()}),d));
-    sv(d);clM('ma');if(proj===cp)rA();pS();toast('✓ Animal ajouté');
+    sv(d);clM('ma');rA();pS();toast('✓ Animal ajouté');
   }
   ['ni','nd','nwi','nwp','nl','nc','np','nno','n-end','n-status-note'].forEach(x=>{const e=document.getElementById(x);if(e)e.value='';});const ns=document.getElementById('n-status');if(ns)ns.value='active';
 }
@@ -3860,6 +4156,1240 @@ window.checkBackupPassword = function() {
     alert('❌ Code incorrect. Accès refusé.');
   }
 };
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODULE ARMOIRE — SuiviLab
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+let _armMode = 'shelf';        // 'shelf' | 'list'
+function armOpenNewModal(){ openM('modal-arm-new'); }
+let _armEditId = null;         // id armoire en cours d'édition
+let _armCageEditId = null;     // id cage en cours d'édition
+let _armCheckCageId = null;    // id cage pour la modale vérification
+
+// ─── Normalisation données armoire ─────────────────────────────────────────
+const _normDataBase = normalizeData;
+normalizeData = function(d){
+  d = _normDataBase(d);
+  d.armoires = d.armoires || [];
+  // Normaliser chaque armoire (sans créer d'armoire par défaut ici)
+  d.armoires.forEach(arm => {
+    arm.cages = arm.cages || [];
+    arm.cages.forEach(cage => {
+      cage.id = cage.id || ('cage_' + Date.now() + '_' + Math.random().toString(36).slice(2,6));
+      cage.checks = cage.checks || [];
+      cage.size = cage.size || 'm';
+      cage.type = cage.type || 'adultes';
+      cage.animals = cage.animals || [];
+      cage.level = cage.level ?? null;
+      cage.slot = cage.slot ?? null;
+    });
+  });
+  return d;
+};
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+function armMaxAnimals(size, type){
+  if(type === 'portee') return size === 'l' ? 20 : size === 'm' ? 12 : 6;
+  if(type === 'sevrage') return size === 'l' ? 15 : size === 'm' ? 10 : 5;
+  // Adultes — selon directive 2010/63 & NC3Rs (surface type I/II/III)
+  return size === 'l' ? 8 : size === 'm' ? 5 : 2;
+}
+
+// Délais de vérification en jours selon taille, type, nb d'animaux
+function armGaugeThresholds(cage){
+  const n = (cage.animals||[]).length;
+  const max = armMaxAnimals(cage.size, cage.type);
+  const density = max > 0 ? n / max : 0;
+  if(cage.type === 'portee'){
+    return {ok: 2, warn: 4, crit: 6};
+  }
+  if(density > 0.66){
+    return {ok: 3, warn: 5, crit: 7};
+  }
+  if(density > 0.33){
+    return {ok: 4, warn: 6, crit: 9};
+  }
+  return {ok: 5, warn: 7, crit: 10};
+}
+
+function armDaysSince(cage){
+  if(!cage.checks || cage.checks.length === 0) return null;
+  const last = cage.checks[cage.checks.length - 1];
+  const d = new Date(last.date);
+  const now = new Date();
+  return Math.floor((now - d) / 86400000);
+}
+
+function armGaugeClass(cage){
+  const days = armDaysSince(cage);
+  if(days === null) return 'gauge-crit';
+  const th = armGaugeThresholds(cage);
+  if(days <= th.ok) return 'gauge-ok';
+  if(days <= th.warn) return 'gauge-warn';
+  return 'gauge-crit';
+}
+
+function armGaugePct(cage){
+  const days = armDaysSince(cage);
+  if(days === null) return 100;
+  const th = armGaugeThresholds(cage);
+  return Math.min(100, Math.round(days / th.crit * 100));
+}
+
+function armGaugeLabel(cage){
+  const days = armDaysSince(cage);
+  if(days === null) return '⚠ jamais vérifiée';
+  if(days === 0) return 'Vérifiée auj.';
+  if(days === 1) return 'Vérif. hier';
+  return 'Vérif. il y a ' + days + 'j';
+}
+
+// Trouver la couleur projet d'un animal ID
+function animalColor(animalId, d){
+  if(!animalId) return '#888';
+  const a = (d.animals||[]).find(x =>
+    x.id === animalId ||
+    (x.id||'').toLowerCase() === (animalId||'').toLowerCase() ||
+    (x.name||'').toLowerCase() === (animalId||'').toLowerCase()
+  );
+  if(!a || !a.proj || a.proj === '') return '#888'; // indépendant → gris
+  return (PR[a.proj] && PR[a.proj].c) || '#888';
+}
+
+function armShortId(id){
+  // Afficher les 3 premières + 3 dernières lettres si > 6 chars
+  const s = String(id||'').trim();
+  if(s.length <= 6) return s;
+  return s.slice(0,3) + '…' + s.slice(-3);
+}
+
+// ─── Rendu principal ─────────────────────────────────────────────────────────
+function rArmoire(){
+  const d = gD();
+  const el = document.getElementById('arm-view');
+  if(!el) return;
+  if(_armMode === 'shelf') el.innerHTML = armRenderShelf(d);
+  else el.innerHTML = armRenderList(d);
+}
+
+// ── Vue étagères ─────────────────────────────────────────────────────────────
+function armRenderShelf(d){
+  return (d.armoires||[]).map(arm => armRenderCabinet(arm, d)).join('') +
+    '<button class="btns" style="margin-top:8px" onclick="armOpenNewModal()">+ Nouvelle armoire</button>';
+}
+
+function armRenderCabinet(arm, d){
+  const totalCages = (arm.cages||[]).length;
+  let html = `<div class="arm-cabinet">
+    <div class="arm-cabinet-header">
+      <div>
+        <div class="arm-cabinet-name">🗄️ ${escHtml(arm.name)}</div>
+        <div class="arm-cabinet-sub">${arm.levels} niveaux · ${arm.slotsPerLevel} slots · ${totalCages} cage(s)</div>
+      </div>
+      <div style="display:flex;gap:5px">
+        <button class="mini-btn" onclick="armEditCabinet('${arm.id}')">Modifier</button>
+        <button class="mini-btn" style="color:#f07070;border-color:rgba(240,112,112,.3)" onclick="armDeleteCabinet('${arm.id}')">Supprimer</button>
+      </div>
+    </div>`;
+
+  // Construire grille niveau × slot
+  for(let lv = arm.levels; lv >= 1; lv--){
+    html += `<div class="arm-shelf"><div class="arm-shelf-label">N${lv}</div>`;
+    for(let sl = 1; sl <= arm.slotsPerLevel; sl++){
+      const cage = (arm.cages||[]).find(c => c.level === lv && c.slot === sl);
+      if(cage){
+        html += armRenderCageShelf(cage, arm.id, d);
+      } else {
+        // Slot vide cliquable
+        html += `<div class="arm-slot-empty"
+          data-arm-id="${arm.id}" data-level="${lv}" data-slot="${sl}"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="armDropOnSlot(event,'${arm.id}',${lv},${sl})"
+          onclick="armNewCageAt('${arm.id}',${lv},${sl})"
+          title="Slot vide — cliquer pour ajouter, glisser une cage ici"
+          style="cursor:pointer;display:flex;align-items:center;justify-content:center">
+          <span style="font-size:16px;opacity:.3">+</span></div>`;
+      }
+    }
+    html += `</div>`;
+  }
+
+  // Cages sans position assignée
+  const unplaced = (arm.cages||[]).filter(c => c.level === null || c.slot === null);
+  if(unplaced.length){
+    html += `<div style="margin-top:8px;padding-top:8px;border-top:.5px solid var(--border)">
+      <div class="arm-title" style="margin-bottom:7px">Sans position</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">`;
+    unplaced.forEach(cage => { html += armRenderCageShelf(cage, arm.id, d); });
+    html += `</div></div>`;
+  }
+
+  html += `<button class="mini-btn" style="margin-top:10px;width:100%" onclick="armNewCageAt('${arm.id}',null,null)">+ Ajouter une cage</button>`;
+  html += `</div>`;
+  return html;
+}
+
+function armRenderCageShelf(cage, armId, d){
+  const gc = armGaugeClass(cage);
+  const gp = armGaugePct(cage);
+  const max = armMaxAnimals(cage.size, cage.type);
+  const n = (cage.animals||[]).length;
+  const overflow = n > max;
+  const sizeCls = 'sz-' + (cage.size||'m');
+
+  let animHtml = (cage.animals||[]).slice(0,6).map(aid => {
+    const col = animalColor(aid, d);
+    return `<span class="arm-animal-dot" style="background:${col}" title="${escHtml(aid)}">${escHtml(armShortId(aid))}</span>`;
+  }).join('');
+  if(n > 6) animHtml += `<span style="font-size:8px;color:var(--text3)">+${n-6}</span>`;
+
+  const dotColor = gc==='gauge-ok'?'#4caf50':gc==='gauge-warn'?'#ff9800':'#f44336';
+  const waterBadge = armWaterBadgeShelf(cage);
+
+  return `<div class="arm-cage ${sizeCls}" style="background:var(--bg3);${overflow?'border-color:#f44336;':''};position:relative"
+    draggable="true"
+    data-cage-id="${cage.id}" data-arm-id="${armId}"
+    ondragstart="armDragStart(event,'${armId}','${cage.id}')"
+    ondragend="armDragEnd(event)"
+    onclick="armOpenCage('${armId}','${cage.id}')">
+    <button class="arm-move-btn" type="button"
+      onclick="event.stopPropagation();armOpenMove('${armId}','${cage.id}')"
+      title="Déplacer la cage">⇄</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:2px">
+      <div class="arm-cage-name" style="flex:1;overflow:hidden;text-overflow:ellipsis">${escHtml(cage.name||'?')}</div>
+      <div class="cage-check-dot" style="background:${dotColor}" title="${armGaugeLabel(cage)}"></div>
+    </div>
+    ${n>0?`<div class="arm-cage-animals">${animHtml}</div>`:'<div style="font-size:9px;color:var(--text3);margin:auto">vide</div>'}
+    ${overflow?`<div style="font-size:8px;color:#f44336;font-weight:700">⚠ surpop.</div>`:`<div style="font-size:8px;color:var(--text3)">${n}/${max}</div>`}
+    ${waterBadge}
+  </div>`;
+}
+
+// ── Vue liste ─────────────────────────────────────────────────────────────────
+function armRenderList(d){
+  let html = '';
+  (d.armoires||[]).forEach(arm => {
+    html += `<div class="arm-section">
+      <div class="arm-title">${escHtml(arm.name)}
+        <button onclick="armEditCabinet('${arm.id}')">Modifier</button>
+        <button onclick="armNewCageAt('${arm.id}',null,null)" style="color:var(--pc);border-color:var(--pc)">+ Cage</button>
+      </div>`;
+    if((arm.cages||[]).length === 0){
+      html += `<div style="font-size:12px;color:var(--text3);padding:12px 0">Aucune cage — cliquez sur "+ Cage" pour commencer.</div>`;
+    }
+    (arm.cages||[]).forEach(cage => { html += armRenderCageList(cage, arm.id, d); });
+    html += `</div>`;
+  });
+  html += '<button class="btns" onclick="armOpenNewModal()">+ Nouvelle armoire</button>';
+  return html;
+}
+
+function armRenderCageList(cage, armId, d){
+  const gc = armGaugeClass(cage);
+  const gp = armGaugePct(cage);
+  const label = armGaugeLabel(cage);
+  const max = armMaxAnimals(cage.size, cage.type);
+  const n = (cage.animals||[]).length;
+  const overflow = n > max;
+  const sizeLbl = {s:'Petite',m:'Moyenne',l:'Grande'}[cage.size]||'';
+  const typeLbl = {adultes:'Adultes',portee:'Portée',sevrage:'Sevrés'}[cage.type]||'';
+  const pos = (cage.level && cage.slot) ? `N${cage.level} · Slot ${cage.slot}` : 'Sans position';
+
+  let animHtml = (cage.animals||[]).map(aid => {
+    const col = animalColor(aid, d);
+    return `<span class="arm-list-dot" style="background:${col}" title="${escHtml(aid)}">${escHtml(armShortId(aid))}</span>`;
+  }).join('');
+
+  const dotColorL = gc==='gauge-ok'?'#4caf50':gc==='gauge-warn'?'#ff9800':'#f44336';
+  const waterBadgeL = armWaterBadgeList(cage);
+
+  return `<div class="arm-list-cage">
+    <div class="arm-list-header">
+      <div style="flex:1">
+        <div class="arm-list-name" style="display:flex;align-items:center;gap:7px">
+          <span class="cage-check-dot" style="background:${dotColorL}" title="${label}"></span>
+          ${escHtml(cage.name||'Cage sans nom')}
+          ${overflow?'<span style="font-size:10px;color:#f44336;font-weight:700">⚠ surpop.</span>':''}
+          ${waterBadgeL}
+        </div>
+        <div class="arm-list-meta">${sizeLbl} · ${typeLbl} · ${pos} · ${n}/${max} animaux${cage.team?' · '+escHtml(cage.team):''}${cage.apafis?' · APAFIS '+escHtml(cage.apafis):''}</div>
+      </div>
+      <button class="arm-check-btn" onclick="armOpenCheck('${cage.id}','${armId}')">✓ Vérifier</button>
+    </div>
+    ${animHtml?`<div class="arm-list-animals">${animHtml}</div>`:'<div style="font-size:11px;color:var(--text3);margin-top:6px">Cage vide</div>'}
+    <div class="arm-gauge-row">
+      <span class="arm-gauge-label">Dernière vérif.</span>
+      <div class="arm-gauge-bar"><div class="arm-gauge-fill ${gc}" style="width:${gp}%;height:100%"></div></div>
+      <span class="arm-gauge-val" style="color:${dotColorL}">${label.replace('Vérif. ','').replace('Vérifiée ','')}</span>
+    </div>
+    ${cage.notes?`<div style="font-size:11px;color:var(--text3);margin-top:6px;line-height:1.5">${escHtml(cage.notes)}</div>`:''}
+    <div class="arm-cage-actions">
+      <button class="mini-btn" onclick="armOpenCage('${armId}','${cage.id}')">Modifier</button>
+      <button class="mini-btn" style="color:#f07070;border-color:rgba(240,112,112,.3)" onclick="armDeleteCageById('${armId}','${cage.id}')">Supprimer</button>
+    </div>
+  </div>`;
+}
+
+// ─── Actions ─────────────────────────────────────────────────────────────────
+function armSetMode(mode){
+  _armMode = mode;
+  document.getElementById('arm-btn-shelf').classList.toggle('on', mode==='shelf');
+  document.getElementById('arm-btn-list').classList.toggle('on', mode==='list');
+  rArmoire();
+}
+
+function armCreate(){
+  try{
+  const name = (document.getElementById('arm-new-name')?.value||'').trim();
+  if(!name){toast('Nom requis');return;}
+  const levels = parseInt(document.getElementById('arm-new-levels')?.value)||4;
+  const slots = parseInt(document.getElementById('arm-new-slots')?.value)||6;
+  const d = gD();
+  d.armoires = d.armoires || [];
+  const arm = {id:'arm_'+Date.now(), name, levels, slotsPerLevel:slots, cages:[]};
+  d.armoires.push(arm);
+  sv(d); closeM('modal-arm-new');
+  document.getElementById('arm-new-name').value='';
+  rArmoire(); toast('✓ Armoire créée');
+  }catch(e){toast('Erreur: '+e.message); console.error(e);}
+}
+
+function armEditCabinet(armId){
+  const d = gD();
+  const arm = d.armoires.find(a=>a.id===armId);
+  if(!arm) return;
+  const name = prompt('Nom de l’armoire', arm.name); if(name===null) return;
+  const levels = prompt('Nombre de niveaux', arm.levels); if(levels===null) return;
+  const slots = prompt('Slots par niveau', arm.slotsPerLevel); if(slots===null) return;
+  arm.name = name.trim()||arm.name;
+  arm.levels = parseInt(levels)||arm.levels;
+  arm.slotsPerLevel = parseInt(slots)||arm.slotsPerLevel;
+  sv(d); rArmoire(); toast('✓ Armoire modifiée');
+}
+
+function armDeleteCabinet(armId){
+  if(!confirm('Supprimer cette armoire et toutes ses cages ?')) return;
+  if(!confirm('Confirmation : cette action est irréversible.')) return;
+  const d = gD();
+  d.armoires = d.armoires.filter(a=>a.id!==armId);
+  sv(d); rArmoire(); toast('Armoire supprimée');
+}
+
+let _armNewLevel = null, _armNewSlot = null, _armNewArmId = null;
+function armNewCageAt(armId, level, slot){
+  _armNewArmId = armId;
+  _armNewLevel = level;
+  _armNewSlot = slot;
+  _armCageEditId = null;
+  ['acg-name','acg-team','acg-apafis','acg-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const sz=document.getElementById('acg-size'); if(sz)sz.value='m';
+  const ty=document.getElementById('acg-type'); if(ty)ty.value='adultes';
+  const lv=document.getElementById('acg-level'); if(lv)lv.value=level||'';
+  const sl=document.getElementById('acg-slot'); if(sl)sl.value=slot||'';
+  document.getElementById('arm-cage-modal-title').textContent = 'Nouvelle cage' + (level?` — N${level} S${slot}`:'');
+  document.getElementById('acg-del-btn').style.display='none';
+  _acgSelectedAnimals = [];
+  acgRenderChips(); acgBuildDropdown(); acgUpdateCapacity();
+  // Reset eau
+  const wt=document.getElementById('acg-water-type'); if(wt) wt.value='';
+  const pd=document.getElementById('acg-pompe-details'); if(pd) pd.style.display='none';
+  const ph=document.getElementById('acg-pompe-heure'); if(ph) ph.value='';
+  const pdu=document.getElementById('acg-pompe-duree'); if(pdu) pdu.value='';
+  openM('modal-arm-cage');
+}
+
+function armOpenCage(armId, cageId){
+  const d = gD();
+  const arm = d.armoires.find(a=>a.id===armId);
+  if(!arm) return;
+  const cage = arm.cages.find(c=>c.id===cageId);
+  if(!cage) return;
+  _armCageEditId = cageId;
+  _armNewArmId = armId;
+  document.getElementById('arm-cage-modal-title').textContent = 'Cage : ' + (cage.name||'?');
+  document.getElementById('acg-name').value = cage.name||'';
+  document.getElementById('acg-size').value = cage.size||'m';
+  document.getElementById('acg-type').value = cage.type||'adultes';
+  document.getElementById('acg-level').value = cage.level||'';
+  document.getElementById('acg-slot').value = cage.slot||'';
+  document.getElementById('acg-team').value = cage.team||'';
+  document.getElementById('acg-apafis').value = cage.apafis||'';
+  document.getElementById('acg-notes').value = cage.notes||'';
+  document.getElementById('acg-del-btn').style.display='';
+  _acgSelectedAnimals = [...(cage.animals||[])];
+  acgRenderChips(); acgBuildDropdown(); acgUpdateCapacity();
+  // Champs eau
+  const wt = document.getElementById('acg-water-type');
+  const pd = document.getElementById('acg-pompe-details');
+  if(wt){ wt.value = cage.waterType||''; }
+  if(pd){ pd.style.display = (cage.waterType==='pompe')?'block':'none'; }
+  const ph = document.getElementById('acg-pompe-heure');
+  const pdu = document.getElementById('acg-pompe-duree');
+  if(ph) ph.value = cage.pompeHeure||'';
+  if(pdu) pdu.value = cage.pompeDuree||'';
+  openM('modal-arm-cage');
+}
+
+function armSaveCage(){
+  try{
+  const d = gD();
+  const arm = d.armoires.find(a=>a.id===_armNewArmId);
+  if(!arm){toast('Armoire introuvable');return;}
+  const name = (document.getElementById('acg-name')?.value||'').trim();
+  if(!name){toast('Nom de cage requis');return;}
+  const size = document.getElementById('acg-size')?.value||'m';
+  const type = document.getElementById('acg-type')?.value||'adultes';
+  const animals = [...(_acgSelectedAnimals||[])];
+  const level = parseInt(document.getElementById('acg-level')?.value)||null;
+  const slot = parseInt(document.getElementById('acg-slot')?.value)||null;
+  const team = document.getElementById('acg-team')?.value||'';
+  const apafis = document.getElementById('acg-apafis')?.value||'';
+  const notes = document.getElementById('acg-notes')?.value||'';
+  const waterType = document.getElementById('acg-water-type')?.value||'';
+  const pompeHeure = document.getElementById('acg-pompe-heure')?.value||'';
+  const pompeDuree = parseInt(document.getElementById('acg-pompe-duree')?.value)||null;
+  if(_armCageEditId){
+    const cage = arm.cages.find(c=>c.id===_armCageEditId);
+    if(!cage){toast('Cage introuvable');return;}
+    Object.assign(cage,{name,size,type,animals,level,slot,team,apafis,notes,waterType,pompeHeure,pompeDuree});
+  } else {
+    arm.cages.push({id:'cage_'+Date.now(),name,size,type,animals,team,apafis,notes,waterType,pompeHeure,pompeDuree,level,slot,checks:[]});
+  }
+  sv(d); closeM('modal-arm-cage'); rArmoire();
+  toast(_armCageEditId?'✓ Cage modifiée':'✓ Cage créée');
+  }catch(e){toast('Erreur: '+e.message);console.error(e);}
+}
+
+function armDeleteCage(){
+  armDeleteCageById(_armNewArmId, _armCageEditId);
+  closeM('modal-arm-cage');
+}
+
+function armDeleteCageById(armId, cageId){
+  if(!confirm('Supprimer cette cage ?')) return;
+  const d = gD();
+  const arm = d.armoires.find(a=>a.id===armId);
+  if(!arm) return;
+  arm.cages = arm.cages.filter(c=>c.id!==cageId);
+  sv(d); closeM('modal-arm-cage'); rArmoire(); toast('Cage supprimée');
+}
+
+function armOpenCheck(cageId, armId){
+  _armCheckCageId = cageId;
+  _armNewArmId = armId;
+  const d = gD();
+  const arm = d.armoires.find(a=>a.id===armId);
+  const cage = arm?.cages.find(c=>c.id===cageId);
+  document.getElementById('arm-check-title').textContent = 'Vérification — ' + (cage?.name||'Cage');
+  document.getElementById('arm-check-notes').value = '';
+  openM('modal-arm-check');
+}
+
+function armDoCheck(){
+  const d = gD();
+  const arm = d.armoires.find(a=>a.id===_armNewArmId);
+  if(!arm){toast('Armoire introuvable');return;}
+  const cage = arm.cages.find(c=>c.id===_armCheckCageId);
+  if(!cage){toast('Cage introuvable');return;}
+  const notes = document.getElementById('arm-check-notes')?.value||'';
+  cage.checks = cage.checks||[];
+  cage.checks.push({date:new Date().toISOString(), notes});
+  sv(d); closeM('modal-arm-check'); rArmoire();
+  toast('✓ Vérification enregistrée');
+}
+
+// ─── Hook dans la fonction tab ─────────────────────────────────────────────
+const _tab_arm = tab;
+tab = function(t){
+  _tab_arm(t);
+  if(t === 'armoire') rArmoire();
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   MODULE ARMOIRE — Sélecteur animaux + Drag & Drop
+   ═══════════════════════════════════════════════════════════════════ */
+
+// ── Sélecteur animaux ────────────────────────────────────────────────
+let _acgSelectedAnimals = [];   // IDs des animaux sélectionnés dans le modal cage
+let _acgFilter = '';
+
+function acgAllAnimals(){
+  const d = gD();
+  // Animaux déjà assignés à une cage (sauf la cage en cours d'édition)
+  const alreadyInCage = new Set();
+  (d.armoires||[]).forEach(arm => {
+    (arm.cages||[]).forEach(cage => {
+      if(cage.id === _armCageEditId) return; // exclure la cage courante
+      (cage.animals||[]).forEach(aid => alreadyInCage.add(aid));
+    });
+  });
+  // Animaux vivants uniquement (pas décédés, sacrifiés, exclus) + pas déjà en cage
+  const fromDB = (d.animals||[])
+    .filter(a => {
+      const inactive = a.deces || a.status==='dead' || a.status==='sacrificed' || a.status==='excluded';
+      return !inactive && !alreadyInCage.has(a.id);
+    })
+    .map(a => ({
+      id: a.id,
+      label: a.id + (a.proj&&a.proj!=='' ? ' · ' + a.proj : ' · indépendant') + (a.sx ? ' · ' + a.sx : '') + (a.line ? ' · ' + a.line : ''),
+      proj: a.proj||null,
+      color: (a.proj && a.proj!=='' && PR[a.proj]) ? PR[a.proj].c : '#888'
+    }));
+  // Animaux déjà dans la cage courante (toujours affichés)
+  const currentCageAnimals = [];
+  if(_armCageEditId){
+    (d.armoires||[]).forEach(arm => {
+      (arm.cages||[]).forEach(cage => {
+        if(cage.id===_armCageEditId){
+          (cage.animals||[]).forEach(aid => {
+            if(!fromDB.some(x=>x.id===aid)){
+              const a = (d.animals||[]).find(x=>x.id===aid);
+              currentCageAnimals.push({
+                id: aid,
+                label: aid + (a?.proj&&a.proj!=='' ? ' · '+a.proj : ' · indépendant'),
+                proj: a?.proj||null,
+                color: (a?.proj && PR[a.proj]) ? PR[a.proj].c : '#888'
+              });
+            }
+          });
+        }
+      });
+    });
+  }
+  return [...fromDB, ...currentCageAnimals];
+}
+
+function acgRenderChips(){
+  const el = document.getElementById('acg-chips');
+  if(!el) return;
+  const d = gD();
+  el.innerHTML = _acgSelectedAnimals.map(aid => {
+    const col = animalColor(aid, d)||'#888';
+    return `<span class="acg-chip" style="background:${col}22;border-color:${col};color:${col}">
+      ${escHtml(armShortId(aid))}
+      <span class="rm" onclick="acgRemoveAnimal('${aid.replace(/'/g,"\'")}')">✕</span>
+    </span>`;
+  }).join('') || '<span style="font-size:11px;color:var(--text3)">Aucun animal sélectionné</span>';
+}
+
+function acgBuildDropdown(){
+  const el = document.getElementById('acg-dropdown');
+  if(!el) return;
+  const all = acgAllAnimals();
+  const filter = (document.getElementById('acg-search')?.value||'').toLowerCase().trim();
+  const filtered = all.filter(a =>
+    !_acgSelectedAnimals.includes(a.id) &&
+    (a.id.toLowerCase().includes(filter) || a.label.toLowerCase().includes(filter))
+  ).slice(0, 30);
+
+  el.innerHTML = filtered.map(a => `
+    <div class="acg-opt" onclick="acgAddAnimal('${a.id.replace(/'/g,"\'")}')">
+      <span class="acg-opt-id" style="color:${a.color}">${escHtml(a.id)}</span>
+      <span class="acg-opt-meta">${escHtml(a.label.replace(a.id+' · ',''))}</span>
+    </div>`).join('') ||
+    `<div style="font-size:11px;color:var(--text3);padding:6px">Aucun résultat</div>`;
+}
+
+function acgFilterList(){
+  acgBuildDropdown();
+}
+
+function acgAddAnimal(aid){
+  if(!_acgSelectedAnimals.includes(aid)){
+    _acgSelectedAnimals.push(aid);
+    acgRenderChips();
+    acgBuildDropdown();
+    acgUpdateCapacity();
+    const s = document.getElementById('acg-search'); if(s) s.value='';
+    acgBuildDropdown();
+  }
+}
+
+function acgRemoveAnimal(aid){
+  _acgSelectedAnimals = _acgSelectedAnimals.filter(x=>x!==aid);
+  acgRenderChips();
+  acgBuildDropdown();
+  acgUpdateCapacity();
+}
+
+function acgUpdateCapacity(){
+  const size = document.getElementById('acg-size')?.value||'m';
+  const type = document.getElementById('acg-type')?.value||'adultes';
+  const max = armMaxAnimals(size, type);
+  const n = _acgSelectedAnimals.length;
+  const badge = document.getElementById('acg-capacity-badge');
+  if(badge){
+    const over = n > max;
+    badge.textContent = `(${n}/${max})`;
+    badge.style.color = over ? '#f44336' : n === max ? '#ff9800' : 'var(--text3)';
+  }
+}
+
+function acgCreateNew(){
+  // Fermer modal cage, ouvrir modal animal, et au retour re-ouvrir
+  closeM('modal-arm-cage');
+  // Stocker qu'on vient de l'armoire
+  window._armReturnToCage = true;
+  openM('ma');
+  // Pré-remplir le projet si l'armoire a un projet dominant
+  const team = document.getElementById('acg-team')?.value||'';
+  if(team){
+    const pr = document.getElementById('npr'); if(pr && pr.options.length) pr.value = team;
+  }
+  toast('Crée l’animal puis reviens modifier la cage', 4000);
+}
+
+// ── Drag & Drop ──────────────────────────────────────────────────────
+let _dragArmId = null, _dragCageId = null;
+
+function armDragStart(event, armId, cageId){
+  _dragArmId = armId;
+  _dragCageId = cageId;
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text/plain', cageId);
+  setTimeout(()=>{ event.target.classList.add('dragging'); }, 0);
+}
+
+function armDragEnd(event){
+  event.target.classList.remove('dragging');
+  document.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over'));
+}
+
+function armDropOnSlot(event, armId, level, slot){
+  event.preventDefault();
+  event.currentTarget.classList.remove('drag-over');
+  if(!_dragCageId) return;
+  const d = gD();
+  const srcArm = d.armoires.find(a=>a.id===_dragArmId);
+  const dstArm = d.armoires.find(a=>a.id===armId);
+  if(!srcArm||!dstArm) return;
+  const cage = srcArm.cages.find(c=>c.id===_dragCageId);
+  if(!cage) return;
+  // Vérifier si le slot de destination est occupé dans l'armoire cible
+  const occupant = dstArm.cages.find(c=>c.level===level && c.slot===slot && c.id!==_dragCageId);
+  if(occupant){
+    // Échanger les positions
+    const oldLevel = cage.level, oldSlot = cage.slot;
+    occupant.level = oldLevel; occupant.slot = oldSlot;
+  }
+  // Si la cage vient d'une autre armoire, la déplacer
+  if(_dragArmId !== armId){
+    srcArm.cages = srcArm.cages.filter(c=>c.id!==_dragCageId);
+    dstArm.cages.push(cage);
+  }
+  cage.level = level; cage.slot = slot;
+  sv(d); rArmoire();
+  _dragCageId = null; _dragArmId = null;
+}
+
+// ── Modal déplacer (bouton ⇄) ────────────────────────────────────────
+let _armMoveArmId = null, _armMoveCageId = null;
+
+function armOpenMove(armId, cageId){
+  _armMoveArmId = armId;
+  _armMoveCageId = cageId;
+  const d = gD();
+  const arm = d.armoires.find(a=>a.id===armId);
+  const cage = arm?.cages.find(c=>c.id===cageId);
+  if(!cage) return;
+
+  // Construire le sélecteur de destination
+  let html = `<div class="mh"><span>Déplacer : ${escHtml(cage.name||'Cage')}</span><button class="xb" onclick="closeM('modal-arm-move')">✕</button></div>`;
+  html += `<div style="font-size:12px;color:var(--text2);margin-bottom:12px">Position actuelle : ${cage.level?'N'+cage.level+' S'+cage.slot:'non assignée'}</div>`;
+
+  // Sélecteur armoire destination
+  html += `<div class="fg"><label class="lbl">Armoire cible</label><select id="move-arm-sel" onchange="armMoveRefreshGrid()">`;
+  (d.armoires||[]).forEach(a => {
+    html += `<option value="${a.id}" ${a.id===armId?'selected':''}>${escHtml(a.name)}</option>`;
+  });
+  html += `</select></div>`;
+  html += `<div class="arm-modal-grid">
+    <div class="fg"><label class="lbl">Niveau</label><input type="number" id="move-level" value="${cage.level||''}" min="1" placeholder="ex: 2"/></div>
+    <div class="fg"><label class="lbl">Slot</label><input type="number" id="move-slot" value="${cage.slot||''}" min="1" placeholder="ex: 3"/></div>
+  </div>`;
+  html += `<div id="move-warning" style="font-size:11px;color:#ff9800;min-height:16px;margin-bottom:6px"></div>`;
+  html += `<button type="button" class="btnp" onclick="armDoMove()">↳ Déplacer</button>`;
+  html += `<button type="button" class="btns" onclick="closeM('modal-arm-move')">Annuler</button>`;
+
+  document.getElementById('modal-arm-move-content').innerHTML = html;
+  openM('modal-arm-move');
+}
+
+function armMoveRefreshGrid(){
+  const armId = document.getElementById('move-arm-sel')?.value;
+  if(!armId) return;
+  const d = gD();
+  const arm = d.armoires.find(a=>a.id===armId);
+  if(!arm) return;
+  const w = document.getElementById('move-warning');
+  if(w) w.textContent = `${arm.levels} niveaux, ${arm.slotsPerLevel} slots par niveau`;
+}
+
+function armDoMove(){
+  const dstArmId = document.getElementById('move-arm-sel')?.value;
+  const level = parseInt(document.getElementById('move-level')?.value)||null;
+  const slot = parseInt(document.getElementById('move-slot')?.value)||null;
+  if(!level||!slot){toast('Niveau et slot requis');return;}
+  const d = gD();
+  const srcArm = d.armoires.find(a=>a.id===_armMoveArmId);
+  const dstArm = d.armoires.find(a=>a.id===dstArmId);
+  if(!srcArm||!dstArm){toast('Armoire introuvable');return;}
+  const cage = srcArm.cages.find(c=>c.id===_armMoveCageId);
+  if(!cage){toast('Cage introuvable');return;}
+  // Vérifier occupant
+  const occupant = dstArm.cages.find(c=>c.level===level&&c.slot===slot&&c.id!==_armMoveCageId);
+  if(occupant){
+    if(!confirm(`Le slot N${level}·S${slot} est occupé par "${occupant.name}". Échanger les positions ?`)) return;
+    const oldL=cage.level, oldS=cage.slot;
+    occupant.level=oldL; occupant.slot=oldS;
+    if(_armMoveArmId!==dstArmId){ srcArm.cages.push(occupant); dstArm.cages=dstArm.cages.filter(c=>c.id!==occupant.id); }
+  }
+  if(_armMoveArmId!==dstArmId){
+    srcArm.cages=srcArm.cages.filter(c=>c.id!==_armMoveCageId);
+    dstArm.cages.push(cage);
+  }
+  cage.level=level; cage.slot=slot;
+  sv(d); closeM('modal-arm-move'); rArmoire();
+  toast('✓ Cage déplacée');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MODULE GROUPES EXPÉRIMENTAUX
+   ═══════════════════════════════════════════════════════════════════ */
+
+// ── Normalisation ───────────────────────────────────────────────────
+const _normDataGrp = normalizeData;
+normalizeData = function(d){
+  d = _normDataGrp(d);
+  d.groupes = d.groupes || [];
+  return d;
+};
+
+// ── State modal ─────────────────────────────────────────────────────
+let _grpEditId = null;
+let _grpSelectedAnimals = [];
+
+// ── Rendu liste groupes ─────────────────────────────────────────────
+function rGroupes(){
+  const d = gD();
+  const el = document.getElementById('grp-list');
+  if(!el) return;
+  if(!(d.groupes||[]).length){
+    el.innerHTML = '<div class="empty">Aucun groupe — crée ton premier groupe ci-dessus.</div>';
+    return;
+  }
+  el.innerHTML = (d.groupes||[]).map(g => {
+    const col = g.color||'#9b59b6';
+    const typeLbl = {genotype:'Génotype',treatment:'Traitement',cohort:'Cohorte',autre:'Autre'}[g.type]||g.type||'';
+    const animHtml = (g.animals||[]).map(aid => {
+      const ac = animalColor(aid, d);
+      return `<span style="padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;font-family:var(--m);background:${ac}22;color:${ac};border:.5px solid ${ac}">${escHtml(aid)}</span>`;
+    }).join('');
+    return `<div class="card" style="border-left:3px solid ${col};margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:${col}">${escHtml(g.name)}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:2px">${typeLbl}${g.desc?' · '+escHtml(g.desc):''} · ${(g.animals||[]).length} animal(ux)</div>
+        </div>
+        <button class="mini-btn" onclick="openGrpModal('${g.id}')">Modifier</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">${animHtml||'<span style="font-size:11px;color:var(--text3)">Aucun animal</span>'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Modal groupe ────────────────────────────────────────────────────
+function openGrpModal(id){
+  _grpEditId = id;
+  const d = gD();
+  const g = id ? (d.groupes||[]).find(x=>x.id===id) : null;
+  document.getElementById('grp-modal-title').textContent = g ? 'Modifier : '+g.name : 'Nouveau groupe';
+  document.getElementById('grp-name').value = g?.name||'';
+  document.getElementById('grp-color').value = g?.color||'#9b59b6';
+  document.getElementById('grp-type').value = g?.type||'genotype';
+  document.getElementById('grp-desc').value = g?.desc||'';
+  document.getElementById('grp-del-btn').style.display = g ? '' : 'none';
+  _grpSelectedAnimals = g ? [...(g.animals||[])] : [];
+  grpRenderChips(); grpBuildDropdown();
+  openM('modal-grp');
+}
+
+function saveGrp(){
+  const name = (document.getElementById('grp-name')?.value||'').trim();
+  if(!name){toast('Nom requis');return;}
+  const d = gD();
+  d.groupes = d.groupes||[];
+  const obj = {
+    id: _grpEditId||('grp_'+Date.now()),
+    name,
+    color: document.getElementById('grp-color')?.value||'#9b59b6',
+    type: document.getElementById('grp-type')?.value||'genotype',
+    desc: document.getElementById('grp-desc')?.value||'',
+    animals: [..._grpSelectedAnimals]
+  };
+  if(_grpEditId){
+    const idx = d.groupes.findIndex(x=>x.id===_grpEditId);
+    if(idx>=0) d.groupes[idx]=obj; else d.groupes.push(obj);
+  } else {
+    d.groupes.push(obj);
+  }
+  sv(d); closeM('modal-grp'); rGroupes();
+  toast(_grpEditId?'✓ Groupe modifié':'✓ Groupe créé');
+}
+
+function deleteGrp(){
+  if(!_grpEditId) return;
+  if(!confirm('Supprimer ce groupe ?')) return;
+  const d = gD();
+  d.groupes = (d.groupes||[]).filter(x=>x.id!==_grpEditId);
+  sv(d); closeM('modal-grp'); rGroupes(); toast('Groupe supprimé');
+}
+
+// ── Sélecteur animaux pour groupe (réutilise même pattern que cage) ──
+function grpRenderChips(){
+  const el = document.getElementById('grp-chips');
+  if(!el) return;
+  const d = gD();
+  el.innerHTML = _grpSelectedAnimals.map(aid => {
+    const col = animalColor(aid,d)||'#888';
+    return `<span class="acg-chip" style="background:${col}22;border-color:${col};color:${col}">
+      ${escHtml(aid)}<span class="rm" onclick="grpRemoveAnimal('${aid.replace(/'/g,"\'")}')">✕</span>
+    </span>`;
+  }).join('') || '<span style="font-size:11px;color:var(--text3)">Aucun animal sélectionné</span>';
+}
+
+function grpBuildDropdown(){
+  const el = document.getElementById('grp-dropdown');
+  if(!el) return;
+  const d = gD();
+  const filter = (document.getElementById('grp-search')?.value||'').toLowerCase();
+  const all = acgAllAnimals();
+  const filtered = all.filter(a =>
+    !_grpSelectedAnimals.includes(a.id) &&
+    (a.id.toLowerCase().includes(filter) || a.label.toLowerCase().includes(filter))
+  ).slice(0,30);
+  el.innerHTML = filtered.map(a =>
+    `<div class="acg-opt" onclick="grpAddAnimal('${a.id.replace(/'/g,"\'")}')">
+      <span class="acg-opt-id" style="color:${a.color}">${escHtml(a.id)}</span>
+      <span class="acg-opt-meta">${escHtml(a.label.replace(a.id+' · ',''))}</span>
+    </div>`
+  ).join('') || '<div style="font-size:11px;color:var(--text3);padding:6px">Aucun résultat</div>';
+}
+
+function grpFilterList(){ grpBuildDropdown(); }
+
+function grpAddAnimal(aid){
+  if(!_grpSelectedAnimals.includes(aid)){
+    _grpSelectedAnimals.push(aid);
+    grpRenderChips(); grpBuildDropdown();
+    const s=document.getElementById('grp-search'); if(s)s.value='';
+    grpBuildDropdown();
+  }
+}
+
+function grpRemoveAnimal(aid){
+  _grpSelectedAnimals = _grpSelectedAnimals.filter(x=>x!==aid);
+  grpRenderChips(); grpBuildDropdown();
+}
+
+// ── Hook tab ────────────────────────────────────────────────────────
+const _tab_grp = tab;
+tab = function(t){
+  _tab_grp(t);
+  if(t==='groupes') rGroupes();
+};
+// Ajouter groupes dans moreTabs
+const _tab_grp2 = tab;
+tab = function(t){
+  _tab_grp2(t);
+  if(t==='groupes'){
+    const mb=document.getElementById('nb-more');if(mb)mb.classList.add('on');
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   PANNEAU LATÉRAL — Animaux indépendants par cage
+   ═══════════════════════════════════════════════════════════════════ */
+
+function openIndPanel(){
+  rIndPanel();
+  document.getElementById('ind-panel').classList.add('open');
+  document.getElementById('ind-overlay').classList.add('open');
+  document.getElementById('ind-swipe-hint').style.display='none';
+}
+
+function closeIndPanel(){
+  document.getElementById('ind-panel').classList.remove('open');
+  document.getElementById('ind-overlay').classList.remove('open');
+  document.getElementById('ind-swipe-hint').style.display='';
+}
+
+function rIndPanel(){
+  const el = document.getElementById('ind-panel-body');
+  if(!el) return;
+  const d = gD();
+
+  // Collecter tous les IDs d'animaux enregistrés avec proj
+  const projAnimals = new Set((d.animals||[]).filter(a=>a.proj&&a.proj!=='').map(a=>a.id));
+
+  // Animaux indépendants = dans d.animals sans projet OU dans les cages mais pas dans d.animals
+  const indFromDB = (d.animals||[]).filter(a=>!a.proj||a.proj==='');
+  const indInCages = new Set();
+  (d.armoires||[]).forEach(arm=>{
+    (arm.cages||[]).forEach(cage=>{
+      (cage.animals||[]).forEach(aid=>{
+        if(!projAnimals.has(aid)) indInCages.add(aid);
+      });
+    });
+  });
+
+  // Construire la vue par cage
+  const cagesWithInd = [];
+  (d.armoires||[]).forEach(arm=>{
+    (arm.cages||[]).forEach(cage=>{
+      const indInThisCage = (cage.animals||[]).filter(aid=>!projAnimals.has(aid));
+      if(indInThisCage.length){
+        cagesWithInd.push({arm, cage, indAnimals: indInThisCage});
+      }
+    });
+  });
+
+  // Animaux indépendants sans cage assignée
+  const allCageAnimals = new Set();
+  (d.armoires||[]).forEach(arm=>{
+    (arm.cages||[]).forEach(cage=>{
+      (cage.animals||[]).forEach(aid=>allCageAnimals.add(aid));
+    });
+  });
+  const withoutCage = indFromDB.filter(a=>!allCageAnimals.has(a.id));
+
+  if(!cagesWithInd.length && !withoutCage.length){
+    el.innerHTML = `<div class="ind-empty">
+      <div style="font-size:24px;margin-bottom:8px">🐭</div>
+      <div>Aucun animal indépendant</div>
+      <div style="font-size:11px;margin-top:6px;color:var(--text3)">Les animaux sans projet apparaissent ici</div>
+    </div>`;
+    return;
+  }
+
+  let html = '';
+
+  // Résumé global
+  const totalInd = new Set([...cagesWithInd.flatMap(x=>x.indAnimals), ...withoutCage.map(a=>a.id)]).size;
+  html += `<div style="padding:8px 10px;background:var(--bg4);border-radius:var(--rs);margin-bottom:12px;font-size:11px;color:var(--text2)">
+    <strong style="color:var(--text)">${totalInd} animal(ux) indépendant(s)</strong> · non assignés à un projet
+  </div>`;
+
+  // Par cage
+  cagesWithInd.forEach(({arm, cage, indAnimals})=>{
+    const pos = (cage.level&&cage.slot) ? `N${cage.level}·S${cage.slot}` : 'sans position';
+    const gc = armGaugeClass(cage);
+    const gcColor = gc==='gauge-ok'?'#4caf50':gc==='gauge-warn'?'#ff9800':'#f44336';
+
+    html += `<div class="ind-cage-card">
+      <div class="ind-cage-name">
+        🗄️ ${escHtml(cage.name)}
+        <span class="ind-cage-arm">${escHtml(arm.name)} · ${pos}</span>
+        <span style="margin-left:auto;width:8px;height:8px;border-radius:50%;background:${gcColor};flex-shrink:0" title="${armGaugeLabel(cage)}"></span>
+      </div>`;
+
+    indAnimals.forEach(aid=>{
+      const a = (d.animals||[]).find(x=>x.id===aid);
+      if(a){
+        const age = animalAgeLabel(a)||'';
+        const meta = [a.sx, a.line||a.souche, age].filter(Boolean).join(' · ');
+        html += `<div class="ind-animal-row">
+          <span class="ind-animal-id">${escHtml(a.id)}</span>
+          <span class="ind-animal-meta">${escHtml(meta)||'—'}</span>
+          <div style="display:flex;gap:4px;flex-shrink:0">
+            <button class="mini-btn" onclick="editAnimal('${a.id}');closeIndPanel()">Fiche</button>
+            <button class="mini-btn" style="color:#f07070;border-color:rgba(240,112,112,.3)" onclick="indDeleteAnimal('${a.id}')">✕</button>
+          </div>
+        </div>`;
+      } else {
+        // Orphelin (dans cage mais pas dans d.animals)
+        html += `<div class="ind-animal-row">
+          <span class="ind-animal-id" style="color:#666">${escHtml(aid)}</span>
+          <span class="ind-animal-meta" style="font-style:italic">non enregistré</span>
+        </div>`;
+      }
+    });
+
+    // Aussi afficher les animaux du projet dans cette cage, en grisé
+    const projInCage = (cage.animals||[]).filter(aid=>projAnimals.has(aid));
+    if(projInCage.length){
+      html += `<div style="margin-top:6px;padding-top:6px;border-top:.5px dashed var(--border)">
+        <div style="font-size:9px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Aussi dans cette cage</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px">
+          ${projInCage.map(aid=>{
+            const col = animalColor(aid,d);
+            return `<span style="padding:1px 7px;border-radius:20px;font-size:10px;font-weight:600;font-family:var(--m);background:${col}22;color:${col}">${escHtml(armShortId(aid))}</span>`;
+          }).join('')}
+        </div>
+      </div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  // Indépendants sans cage
+  if(withoutCage.length){
+    html += `<div style="margin-top:10px">
+      <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Sans cage assignée (${withoutCage.length})</div>`;
+    withoutCage.forEach(a=>{
+      const age = animalAgeLabel(a)||'';
+      const meta = [a.sx, a.line||a.souche, age].filter(Boolean).join(' · ');
+      html += `<div class="ind-animal-row" style="background:var(--bg3);border-radius:var(--rs);padding:7px 10px;margin-bottom:5px">
+        <span class="ind-animal-id">${escHtml(a.id)}</span>
+        <span class="ind-animal-meta">${escHtml(meta)||'—'}</span>
+        <div style="display:flex;gap:4px;flex-shrink:0">
+          <button class="mini-btn" onclick="editAnimal('${a.id}');closeIndPanel()">Fiche</button>
+          <button class="mini-btn" style="color:#f07070;border-color:rgba(240,112,112,.3)" onclick="indDeleteAnimal('${a.id}')">✕</button>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  el.innerHTML = html;
+}
+
+// ── Swipe depuis la droite pour ouvrir le panneau ───────────────────
+(function(){
+  let startX = 0, startY = 0;
+  document.addEventListener('touchstart', e=>{
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, {passive:true});
+  document.addEventListener('touchend', e=>{
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = Math.abs(e.changedTouches[0].clientY - startY);
+    // Swipe depuis le bord droit (dernier tiers de l'écran) vers la gauche
+    if(startX > window.innerWidth * 0.7 && dx < -40 && dy < 60){
+      openIndPanel();
+    }
+    // Swipe vers la droite quand panneau ouvert → fermer
+    if(document.getElementById('ind-panel').classList.contains('open') && dx > 60 && dy < 60){
+      closeIndPanel();
+    }
+  }, {passive:true});
+})();
+
+// ── Bouton topbar armoire : activer visuellement quand sur l'onglet ─
+const _tab_arm_topbar = tab;
+tab = function(t){
+  _tab_arm_topbar(t);
+  const btn = document.getElementById('arm-topbar-btn');
+  if(btn) btn.classList.toggle('on', t==='armoire');
+};
+
+/* ─── Trouver la cage armoire d'un animal ───────────────── */
+function findAnimalCage(animalId){
+  const d = gD();
+  for(const arm of (d.armoires||[])){
+    for(const cage of (arm.cages||[])){
+      if((cage.animals||[]).includes(animalId)){
+        return {arm, cage};
+      }
+    }
+  }
+  return null;
+}
+
+/* ─── Eau — helpers badges et toggle ───────────────────── */
+function acgToggleWaterType(){
+  const v = document.getElementById('acg-water-type')?.value||'';
+  const pd = document.getElementById('acg-pompe-details');
+  if(pd) pd.style.display = v==='pompe' ? 'block' : 'none';
+}
+
+function armWaterBadgeShelf(cage){
+  const wt = cage.waterType||'';
+  if(wt==='biberon') return '<div class="cage-water-badge wb-biberon">🍼</div>';
+  if(wt==='pompe'){
+    const h = cage.pompeHeure ? ' '+cage.pompeHeure : '';
+    const d = cage.pompeDuree ? ' '+cage.pompeDuree+'min' : '';
+    return `<div class="cage-water-badge wb-pompe" title="Pompe${h}${d}">⚙️</div>`;
+  }
+  return ''; // pipette = rien (c'est ponctuel)
+}
+
+function armWaterBadgeList(cage){
+  const wt = cage.waterType||'';
+  if(wt==='biberon') return '<span class="cage-water-badge wb-biberon" style="font-size:10px;padding:2px 7px">🍼 Biberon</span>';
+  if(wt==='pompe'){
+    const h = cage.pompeHeure||'—';
+    const d = cage.pompeDuree ? cage.pompeDuree+'min' : '—';
+    return `<span class="cage-water-badge wb-pompe" style="font-size:10px;padding:2px 7px" title="${d} ≈ ${cage.pompeDuree||'?'} ml">⚙️ Pompe ${h} · ${d}</span>`;
+  }
+  return '<span class="cage-water-badge wb-pipette" style="font-size:10px;padding:2px 7px">💧 Pipette</span>';
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SUPPRESSION ANIMAL INDÉPENDANT + EXPORT ARMOIRE
+   ═══════════════════════════════════════════════════════════════════ */
+
+// ── Supprimer un animal indépendant depuis le panneau ───────────────
+function indDeleteAnimal(animalId){
+  const d = gD();
+  const a = (d.animals||[]).find(x=>x.id===animalId);
+  if(!a){ toast('Animal introuvable'); return; }
+  // Vérifier qu'il est bien indépendant
+  if(a.proj && a.proj !== ''){
+    toast('Cet animal appartient au projet '+a.proj+' — supprime-le depuis l’onglet Animaux');
+    return;
+  }
+  const nLogs = (d.dailyLogs||[]).filter(l=>l.animal===animalId).length;
+  const msg = nLogs
+    ? `Supprimer ${animalId} et ses ${nLogs} suivi(s) ? Cette action est irréversible.`
+    : `Supprimer l’animal indépendant ${animalId} ? Cette action est irréversible.`;
+  if(!confirm(msg)) return;
+  // Retirer de d.animals
+  d.animals = d.animals.filter(x=>x.id!==animalId);
+  // Retirer des cages
+  (d.armoires||[]).forEach(arm=>{
+    (arm.cages||[]).forEach(cage=>{
+      cage.animals = (cage.animals||[]).filter(id=>id!==animalId);
+    });
+  });
+  // Retirer des données associées
+  ['dailyLogs','trainings','chirurgies','recordings','media','dataLinks'].forEach(k=>{
+    if(d[k]) d[k] = d[k].filter(it=>it.animal!==animalId);
+  });
+  sv(d); rIndPanel(); rArmoire(); rA();
+  toast('✓ '+animalId+' supprimé');
+}
+
+// ── Export armoire en HTML ──────────────────────────────────────────
+function exportArmoire(){
+  const d = gD();
+  const date = new Date().toLocaleDateString('fr-FR');
+  const waterLabel = wt => wt==='biberon'?'🍼 Biberon':wt==='pompe'?'⚙️ Pompe':'💧 Pipette/main';
+
+  let body = `<h1>🗄️ Rapport Armoires — ${date}</h1>`;
+
+  (d.armoires||[]).forEach(arm => {
+    body += `<h2>${arm.name}</h2>`;
+    body += `<p style="color:#555;font-size:13px">${arm.levels} niveaux · ${arm.slotsPerLevel} slots · ${(arm.cages||[]).length} cage(s)</p>`;
+
+    if(!(arm.cages||[]).length){
+      body += `<p style="color:#999;font-style:italic">Aucune cage dans cette armoire.</p>`;
+      return;
+    }
+
+    // Trier par niveau puis slot
+    const sorted = [...(arm.cages||[])].sort((a,b)=>{
+      if(a.level!==b.level) return (a.level||99)-(b.level||99);
+      return (a.slot||99)-(b.slot||99);
+    });
+
+    sorted.forEach(cage => {
+      const pos = cage.level&&cage.slot ? `N${cage.level} · Slot ${cage.slot}` : 'Sans position';
+      const max = armMaxAnimals(cage.size, cage.type);
+      const n = (cage.animals||[]).length;
+      const sizeLbl = {s:'Petite',m:'Moyenne',l:'Grande'}[cage.size]||'';
+      const typeLbl = {adultes:'Adultes',portee:'Portée',sevrage:'Sevrés'}[cage.type]||'';
+      const overflow = n > max;
+
+      // Jauge vérification
+      const days = armDaysSince(cage);
+      const th = armGaugeThresholds(cage);
+      const gaugeColor = days===null?'#e53935':days<=th.ok?'#43a047':days<=th.warn?'#fb8c00':'#e53935';
+      const gaugeLabel = armGaugeLabel(cage);
+
+      body += `<div style="border:1px solid #ddd;border-radius:8px;padding:14px;margin-bottom:14px;page-break-inside:avoid">`;
+      body += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">`;
+      body += `<div>
+        <strong style="font-size:15px">${cage.name||'Cage sans nom'}</strong>
+        ${overflow?'<span style="color:#e53935;font-weight:700;margin-left:8px">⚠ Surpopulation</span>':''}
+        <div style="font-size:11px;color:#777;margin-top:2px">${sizeLbl} · ${typeLbl} · ${pos} · ${n}/${max} animaux</div>
+      </div>`;
+      body += `<div style="text-align:right;font-size:11px">
+        <div style="width:10px;height:10px;border-radius:50%;background:${gaugeColor};display:inline-block;margin-right:4px"></div>
+        <span style="color:${gaugeColor}">${gaugeLabel}</span><br>
+        <span style="color:#888">${waterLabel(cage.waterType)}</span>
+        ${cage.waterType==='pompe'&&cage.pompeHeure?`<br><span style="color:#888">${cage.pompeHeure} · ${cage.pompeDuree||'?'} min</span>`:''}
+      </div>`;
+      body += `</div>`;
+
+      // Tableau des animaux
+      if(n > 0){
+        body += `<table><thead><tr><th>ID</th><th>Projet</th><th>Espèce</th><th>Sexe</th><th>DDN</th><th>Souche</th><th>Statut</th></tr></thead><tbody>`;
+        (cage.animals||[]).forEach(aid => {
+          const a = (d.animals||[]).find(x=>x.id===aid);
+          if(a){
+            body += `<tr>
+              <td><strong>${a.id}</strong></td>
+              <td>${a.proj||'<em>indépendant</em>'}</td>
+              <td>${a.sp||'—'}</td>
+              <td>${a.sx||'—'}</td>
+              <td>${a.dob||'—'}</td>
+              <td>${a.line||'—'}</td>
+              <td>${a.status||'Actif'}</td>
+            </tr>`;
+          } else {
+            body += `<tr><td><strong>${aid}</strong></td><td colspan="6" style="color:#999;font-style:italic">Non enregistré dans la base</td></tr>`;
+          }
+        });
+        body += `</tbody></table>`;
+      } else {
+        body += `<p style="color:#aaa;font-style:italic;font-size:12px">Cage vide</p>`;
+      }
+
+      if(cage.notes){
+        body += `<div style="font-size:11px;color:#666;border-top:1px solid #eee;padding-top:6px;margin-top:6px">📝 ${cage.notes}</div>`;
+      }
+      body += `</div>`;
+    });
+  });
+
+  // Récap indépendants
+  const indAnimals = (d.animals||[]).filter(a=>!a.proj||a.proj==='');
+  if(indAnimals.length){
+    body += `<h2>🐭 Animaux indépendants (${indAnimals.length})</h2>`;
+    body += `<table><thead><tr><th>ID</th><th>Espèce</th><th>Sexe</th><th>DDN</th><th>Souche</th><th>Cage assignée</th></tr></thead><tbody>`;
+    indAnimals.forEach(a => {
+      const fc = findAnimalCage(a.id);
+      body += `<tr>
+        <td><strong>${a.id}</strong></td>
+        <td>${a.sp||'—'}</td>
+        <td>${a.sx||'—'}</td>
+        <td>${a.dob||'—'}</td>
+        <td>${a.line||'—'}</td>
+        <td>${fc ? fc.arm.name+' · '+fc.cage.name : '—'}</td>
+      </tr>`;
+    });
+    body += `</tbody></table>`;
+  }
+
+  const html = `<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<title>SuiviLab — Armoires ${date}</title>
+<style>
+  body{font-family:Arial,sans-serif;line-height:1.4;max-width:900px;margin:0 auto;padding:20px;color:#222}
+  h1{color:#1D9E75;border-bottom:2px solid #1D9E75;padding-bottom:8px}
+  h2{color:#333;margin-top:28px;border-bottom:1px solid #eee;padding-bottom:5px}
+  table{border-collapse:collapse;width:100%;margin:8px 0 10px;font-size:12px}
+  td,th{border:1px solid #ddd;padding:5px 8px;vertical-align:top;text-align:left}
+  th{background:#f5f5f5;font-weight:600}
+  tr:nth-child(even){background:#fafafa}
+  @media print{body{max-width:100%}.no-print{display:none}}
+</style>
+</head><body>
+<div style="font-size:11px;color:#999;margin-bottom:8px">Exporté depuis SuiviLab · ${date}</div>
+${body}
+</body></html>`;
+
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'SuiviLab_Armoires_'+new Date().toISOString().slice(0,10)+'.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('✓ Export armoires téléchargé');
+}
 
 </script>
 </body>
