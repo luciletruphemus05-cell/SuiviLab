@@ -273,14 +273,15 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .arm-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .arm-title button{font-size:10px;padding:3px 9px;border-radius:20px;border:.5px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;font-family:var(--f)}
 /* Vue étagères */
-.arm-cabinet{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:12px;overflow:hidden}
+.arm-cabinet{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:12px;overflow:visible}
 .arm-cabinet-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .arm-cabinet-name{font-size:13px;font-weight:700;color:var(--text)}
 .arm-cabinet-sub{font-size:10px;color:var(--text3);margin-top:1px}
-.arm-shelf{display:flex;gap:6px;margin-bottom:8px;padding:8px;background:var(--bg3);border-radius:var(--rs);border:.5px solid var(--border);align-items:flex-end;min-height:80px;position:relative}
+.arm-shelf{display:flex;gap:6px;margin-bottom:8px;padding:8px;background:var(--bg3);border-radius:var(--rs);border:.5px solid var(--border);align-items:flex-end;min-height:80px;position:relative;overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
 .arm-shelf-label{font-size:9px;color:var(--text3);font-family:var(--m);writing-mode:vertical-rl;transform:rotate(180deg);margin-right:2px;flex-shrink:0}
 .arm-cage{border-radius:8px;padding:6px 5px 5px;cursor:pointer;transition:all .2s;border:.5px solid transparent;position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0}
 .arm-cage:hover{border-color:var(--pc);transform:translateY(-1px)}
+.arm-cage{scroll-snap-align:start}
 .arm-cage.sz-s{width:52px;min-height:66px}
 .arm-cage.sz-m{width:70px;min-height:66px}
 .arm-cage.sz-l{width:90px;min-height:66px}
@@ -293,7 +294,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .gauge-ok{background:#4caf50}
 .gauge-warn{background:#ff9800}
 .gauge-crit{background:#f44336}
-.arm-slot-empty{width:52px;min-height:66px;border-radius:8px;border:.5px dashed var(--border);opacity:.3;flex-shrink:0}
+.arm-slot-empty{width:52px;min-height:66px;border-radius:8px;border:.5px dashed var(--border);opacity:.3;flex-shrink:0;scroll-snap-align:start}
 /* Vue liste */
 .arm-list-cage{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px}
 .arm-list-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
