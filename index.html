@@ -374,6 +374,14 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 /* ─── Eau modal ─────────────────────────────────────────── */
 .eau-section{background:var(--bg3);border:.5px solid var(--border2);border-radius:var(--rs);padding:10px;margin-top:4px}
 #acg-pompe-details{transition:opacity .2s}
+
+/* ─── Badge génotype animal ──────────────────────────────── */
+.geno-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;letter-spacing:.04em;margin-left:4px;vertical-align:middle;text-transform:uppercase}
+.geno-wt{background:rgba(76,175,80,.18);color:#4caf50;border:.5px solid rgba(76,175,80,.4)}
+.geno-mut{background:rgba(244,67,54,.15);color:#f44336;border:.5px solid rgba(244,67,54,.35)}
+.geno-het{background:rgba(255,152,0,.15);color:#ff9800;border:.5px solid rgba(255,152,0,.35)}
+.geno-ctrl{background:rgba(33,150,243,.15);color:#2196f3;border:.5px solid rgba(33,150,243,.35)}
+.geno-other{background:rgba(156,39,176,.12);color:#9c27b0;border:.5px solid rgba(156,39,176,.3)}
 </style>
 </head>
 <body>
@@ -399,7 +407,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   </div>
   <div class="ind-panel-body" id="ind-panel-body"></div>
 </div>
-<div class="ind-swipe-hint" id="ind-swipe-hint" onclick="openIndPanel()" title="Animaux indépendants"></div>
+
 
 <div class="opbar"><span>Opérateur actif : <strong id="op-active-name">Lucile</strong></span><button class="opbtn" onclick="openM('modal-users');rUsers()">Gérer utilisateurs</button></div>
 <div id="t-animals" class="sec on content"><div id="pj-banner"></div><div id="az"></div><div id="al"></div><button class="btnp" onclick="openM('ma')"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter un animal</button></div>
@@ -601,8 +609,6 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
       <div id="tlp"></div>
     </div>
   </div>
-  <div class="sh">Agenda du mois</div>
-  <div id="cal-agenda"></div>
 </div>
 <div id="t-dashboard" class="sec content"><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Dashboard scientifique</div><div class="fl"><div class="fg"><label class="lbl">Animal</label><select id="dba" onchange="rDash()"></select></div><div class="fg"><label class="lbl">Vue</label><select id="dbv" onchange="rDash()"><option value="project">Projet actif</option><option value="animal">Animal sélectionné</option></select></div></div></div><div id="dbp"></div></div>
 
@@ -817,7 +823,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 </div>
 <div id="ma" class="mw"><div class="modal"><div class="mh"><h2>Ajouter un animal</h2><button class="xb" onclick="clM('ma')">✕</button></div><div class="fl"><div class="fg"><label class="lbl">Identifiant</label><input type="text" id="ni" placeholder="ex: LT07"/></div><div class="fg"><label class="lbl">Espèce</label><select id="nsp"><option>Souris</option><option>Rat</option></select></div></div><div class="fl"><div class="fg"><label class="lbl">Sexe</label><select id="nsx"><option>F</option><option>M</option></select></div><div class="fg"><label class="lbl">DDN</label><input type="date" id="nd"/></div></div><div class="fl"><div class="fg"><label class="lbl">Poids initial (g)</label><input type="number" id="nwi" step=".01"/></div><div class="fg"><label class="lbl">Poids post-chir (g)</label><input type="number" id="nwp" step=".01"/></div></div><div class="fl"><div class="fg"><label class="lbl">Souche</label><input type="text" id="nl" placeholder="C57BL/6"/></div><div class="fg"><label class="lbl">Cage</label><input type="text" id="nc"/></div></div>
 <div class="fl"><div class="fg"><label class="lbl">Chapeau ? (oui/non)</label><select id="n-hat" onchange="document.getElementById('n-hat-w').disabled=this.value==='0'"><option value="0">Non</option><option value="1">Oui</option></select></div><div class="fg"><label class="lbl">Poids chapeau (g)</label><input type="number" id="n-hat-w" step="0.01" placeholder="ex: 0.7" disabled/></div></div><div class="fl"><div class="fg"><label class="lbl">Poids ciment (g)</label><input type="number" id="n-cement-w" step="0.01" placeholder="ex: 0.20"/></div><div class="fg"><label class="lbl">Poids implant/électrode (g)</label><input type="number" id="n-implant-w" step="0.01" placeholder="ex: 0.15"/></div></div><div class="fg"><label class="lbl">Description matériel</label><input type="text" id="n-hardware-note" placeholder="ex : chapeau VR + ciment"/></div><div class="fl"><div class="fg"><label class="lbl">N° ExpériBoard</label><input type="text" id="neb" placeholder="ex: 37101"/></div><div class="fg"><label class="lbl">N° Tatouage</label><input type="text" id="nnum" placeholder="ex: MT274"/></div></div>
-<div class="fg"><label class="lbl">Protocole</label><input type="text" id="np"/></div><div class="fg"><label class="lbl">Projet</label><select id="npr"><option value="LT">LT</option><option value="LK">LK</option><option value="ER">ER</option><option value="PP">PP (Pierre-Pascal)</option></select></div><div class="card" style="background:var(--bg3);margin-bottom:11px"><div class="ct" style="margin-bottom:10px">Statut / fin de suivi</div><div class="fg"><label class="lbl">Statut initial</label><select id="n-status"><option value="active">Actif / suivi normal</option><option value="pause">Pause temporaire</option><option value="sacrificed">Mise à mort / perfusion</option><option value="dead">Décès</option><option value="excluded">Exclu expérimentalement</option></select></div><div class="fl"><div class="fg"><label class="lbl">Date de fin / décès / sacrifice</label><input type="date" id="n-end"/></div><div class="fg"><label class="lbl">Raison</label><input type="text" id="n-status-note" placeholder="ex : fin protocole, perfusion, endpoint..."/></div></div><div style="font-size:10px;color:var(--text3);line-height:1.45">Si une date de fin est renseignée, l’âge affiché restera bloqué à cette date.</div></div><div class="fg"><label class="lbl">Notes</label><textarea id="nno"></textarea></div><button class="btnp" onclick="savA()">Créer la fiche</button></div></div>
+<div class="fg"><label class="lbl">Protocole</label><input type="text" id="np"/></div><div class="fg"><label class="lbl">Projet</label><select id="npr"><option value="LT">LT</option><option value="LK">LK</option><option value="ER">ER</option><option value="PP">PP (Pierre-Pascal)</option></select></div><div class="card" style="background:var(--bg3);margin-bottom:11px"><div class="ct" style="margin-bottom:10px">Statut / fin de suivi</div><div class="fg"><label class="lbl">Statut initial</label><select id="n-status"><option value="active">Actif / suivi normal</option><option value="pause">Pause temporaire</option><option value="sacrificed">Mise à mort / perfusion</option><option value="dead">Décès</option><option value="excluded">Exclu expérimentalement</option></select></div><div class="fl"><div class="fg"><label class="lbl">Date de fin / décès / sacrifice</label><input type="date" id="n-end"/></div><div class="fg"><label class="lbl">Raison</label><input type="text" id="n-status-note" placeholder="ex : fin protocole, perfusion, endpoint..."/></div></div><div style="font-size:10px;color:var(--text3);line-height:1.45">Si une date de fin est renseignée, l’âge affiché restera bloqué à cette date.</div></div><div class="fg"><label class="lbl">Génotype</label><select id="n-geno" onchange="genoToggle()"><option value="">— Non spécifié</option><option value="wt">WT (sauvage)</option><option value="mut">Muté (homozygote)</option><option value="het">Hétérozygote</option><option value="ctrl">Contrôle</option><option value="other">Autre</option></select></div><div class="fg" id="n-geno-other-wrap" style="display:none"><label class="lbl">Préciser le génotype</label><input id="n-geno-other" placeholder="ex: KI/WT, KO/+..."/></div><div class="fg"><label class="lbl">Notes</label><textarea id="nno"></textarea></div><button class="btnp" onclick="savA()">Créer la fiche</button></div></div>
 
 <div id="modal-proj" class="mw"><div class="modal">
   <div class="mh"><h2>Nouveau projet</h2><button class="xb" onclick="clM('modal-proj')">x</button></div>
@@ -1237,12 +1243,19 @@ function rA(){
     if(s!==null)badges+=s>=6?`<span class="bdg balt">NC3Rs ${s}</span>`:s>=3?`<span class="bdg bwarn">NC3Rs ${s}</span>`:`<span class="bdg bok">NC3Rs ${s}</span>`;
     if(pct&&pct<80)badges+=` <span class="bdg balt">⚠ ${pct.toFixed(0)}%</span>`;
     let dc='';
-    if(days===null)dc=`<span class="dchip" style="background:rgba(226,75,74,.15);color:#f07070">jamais</span>`;
-    else if(days>=5)dc=`<span class="dchip" style="background:rgba(226,75,74,.15);color:#f07070">${days}j</span>`;
-    else if(days>=3)dc=`<span class="dchip" style="background:rgba(186,117,23,.15);color:#e8a23a">${days}j</span>`;
-    else dc=`<span class="dchip" style="background:rgba(99,153,34,.15);color:#8fce4a">${days}j</span>`;
+    if(animalInactive(a)){
+      dc=`<span class="dchip" style="background:var(--bg3);color:var(--text3)">—</span>`;
+    } else if(days===null){
+      dc=`<span class="dchip" style="background:rgba(226,75,74,.15);color:#f07070">jamais</span>`;
+    } else if(days>=5){
+      dc=`<span class="dchip" style="background:rgba(226,75,74,.15);color:#f07070">${days}j</span>`;
+    } else if(days>=3){
+      dc=`<span class="dchip" style="background:rgba(186,117,23,.15);color:#e8a23a">${days}j</span>`;
+    } else {
+      dc=`<span class="dchip" style="background:rgba(99,153,34,.15);color:#8fce4a">${days}j</span>`;
+    }
     const age=animalAgeLabel(a), status=animalStatusLabel(a);
-    return `<div class="acard${animalInactive(a)?' inactive':''}"><div class="ac-top"><div class="av">${init}</div><div style="flex:1;min-width:0"><div class="aname">${a.id}${age?`<span class="age-pill">${age}</span>`:''}${status?` <span class="status-badge">${status}</span>`:''}</div><div class="asub">${(()=>{const fc=findAnimalCage(a.id);return fc?`🗄️ ${escHtml(fc.arm.name)} · ${escHtml(fc.cage.name)}`:`Cage ${a.cage||'—'}`;})()}${a.experboard?' · EB#'+a.experboard:''}${a.numero?' · '+a.numero:''}${hardwareWeight(a)>0?' · 🎩 '+hardwareWeight(a).toFixed(2)+'g':''} · ${a.sp} · ${a.sx} · ${chirs.length} chir · ${recs.length} enreg.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${badges}</div></div><div class="astats"><div class="sm"><div class="smv">${w?w+'g':'—'}</div><div class="sml">Poids</div></div><div class="sm"><div class="smv">${lt?lt.ar:'—'}</div><div class="sml">Derniers AR</div></div><div class="sm" style="display:flex;flex-direction:column;align-items:center;justify-content:center">${dc}<div class="sml" style="margin-top:3px">Pesée</div></div></div><div class="row-actions" style="margin-top:8px"><button class="mini-btn" onclick="editAnimal('${a.id}')">Modifier</button><button class="mini-btn" onclick="deleteAnimal('${a.id}')">Supprimer</button></div></div>`;
+    return `<div class="acard${animalInactive(a)?' inactive':''}"><div class="ac-top"><div class="av">${init}</div><div style="flex:1;min-width:0"><div class="aname">${a.id}${genoBadgeHtml(a)}${age?`<span class="age-pill">${age}</span>`:''}${status?` <span class="status-badge">${status}</span>`:''}</div><div class="asub">${(()=>{const fc=findAnimalCage(a.id);return fc?`🗄️ ${escHtml(fc.arm.name)} · ${escHtml(fc.cage.name)}`:`Cage ${a.cage||'—'}`;})()}${a.experboard?' · EB#'+a.experboard:''}${a.numero?' · '+a.numero:''}${hardwareWeight(a)>0?' · 🎩 '+hardwareWeight(a).toFixed(2)+'g':''} · ${a.sp} · ${a.sx} · ${chirs.length} chir · ${recs.length} enreg.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${badges}</div></div><div class="astats"><div class="sm"><div class="smv">${w?w+'g':'—'}</div><div class="sml">Poids</div></div><div class="sm"><div class="smv">${lt?lt.ar:'—'}</div><div class="sml">Derniers AR</div></div><div class="sm" style="display:flex;flex-direction:column;align-items:center;justify-content:center">${dc}<div class="sml" style="margin-top:3px">Pesée</div></div></div><div class="row-actions" style="margin-top:8px"><button class="mini-btn" onclick="editAnimal('${a.id}')">Modifier</button><button class="mini-btn" onclick="deleteAnimal('${a.id}')">Supprimer</button></div></div>`;
   }).join('');
   } // end if visibleAnimals
 
@@ -1600,7 +1613,7 @@ function savA(){
   const endDate=(document.getElementById('n-end')||{value:''}).value||'';
   const statusNote=(document.getElementById('n-status-note')||{value:''}).value||'';
   const isEnded=status==='dead'||status==='sacrificed'||status==='excluded';
-  const fields={proj,sp:document.getElementById('nsp').value,sx:document.getElementById('nsx').value,dob:document.getElementById('nd').value||'',status, statusNote, deces:(isEnded||endDate)?endDate:'',wi:parseFloat(document.getElementById('nwi').value)||null,wpc:parseFloat(document.getElementById('nwp').value)||null,line:document.getElementById('nl').value,cage:document.getElementById('nc').value,hasHat:document.getElementById('n-hat').value==='1',hatWeight:parseFloat(document.getElementById('n-hat-w').value)||0,cementWeight:parseFloat(document.getElementById('n-cement-w')?.value)||0,implantWeight:parseFloat(document.getElementById('n-implant-w')?.value)||0,hardwareNote:(document.getElementById('n-hardware-note')?.value||''),proto:document.getElementById('np').value,experboard:(document.getElementById('neb')||{value:''}).value,numero:(document.getElementById('nnum')||{value:''}).value,notes:document.getElementById('nno').value};
+  const fields={proj,sp:document.getElementById('nsp').value,sx:document.getElementById('nsx').value,dob:document.getElementById('nd').value||'',status, statusNote, deces:(isEnded||endDate)?endDate:'',wi:parseFloat(document.getElementById('nwi').value)||null,wpc:parseFloat(document.getElementById('nwp').value)||null,line:document.getElementById('nl').value,cage:document.getElementById('nc').value,hasHat:document.getElementById('n-hat').value==='1',hatWeight:parseFloat(document.getElementById('n-hat-w').value)||0,cementWeight:parseFloat(document.getElementById('n-cement-w')?.value)||0,implantWeight:parseFloat(document.getElementById('n-implant-w')?.value)||0,hardwareNote:(document.getElementById('n-hardware-note')?.value||''),proto:document.getElementById('np').value,experboard:(document.getElementById('neb')||{value:''}).value,numero:(document.getElementById('nnum')||{value:''}).value,notes:document.getElementById('nno').value,geno:document.getElementById('n-geno')?.value||'',genoLabel:document.getElementById('n-geno-other')?.value||''};
   if(_editingAnimalId){
     const a=d.animals.find(x=>x.id===_editingAnimalId);if(!a){toast('Animal introuvable');return;}
     if(id!==_editingAnimalId&&d.animals.find(x=>x.id===id)){toast('ID déjà utilisé');return;}
@@ -1624,6 +1637,9 @@ function editAnimal(animalId){
   set('n-cement-w',a.cementWeight);set('n-implant-w',a.implantWeight);set('n-hardware-note',a.hardwareNote||'');
   set('neb',a.experboard||'');set('nnum',a.numero||'');set('np',a.proto||'');set('npr',a.proj||cp);
   set('n-status',a.status||'active');set('n-end',a.deces||'');set('n-status-note',a.statusNote||'');set('nno',a.notes||'');
+  const _gs=document.getElementById('n-geno');if(_gs)_gs.value=a.geno||'';
+  const _go=document.getElementById('n-geno-other');if(_go)_go.value=(a.geno==='other'?(a.genoLabel||''):'');
+  const _gw=document.getElementById('n-geno-other-wrap');if(_gw)_gw.style.display=a.geno==='other'?'block':'none';
   const modal=document.getElementById('ma');const h2=modal&&modal.querySelector('.mh h2');if(h2)h2.textContent='Modifier la fiche';const btn=modal&&modal.querySelector('.btnp');if(btn)btn.textContent='Enregistrer les modifications';
   openM('ma');
 }
@@ -2230,8 +2246,7 @@ function rCalendar(){
     cells+=`<div class="cal-day ${off?'off':''}"><div class="cal-num">${off?'':day}</div>${list.slice(0,3).map(e=>`<div class="cal-ev ${e.type}" title="${esc(e.animal+' · '+e.title)}">${e.ico} ${esc(e.animal)} · ${esc(e.title)}</div>`).join('')}${list.length>3?`<div class="cal-ev">+${list.length-3}</div>`:''}</div>`;
   }
   const wrap=document.getElementById('cal-grid-wrap'); if(wrap)wrap.innerHTML=`<div class="card" id="fold-month-view"><div class="fold-head" onclick="toggleFold('fold-month-view')"><div class="ct">Vue mensuelle · ${month}</div><button class="fold-btn" type="button">Réduire</button></div><div class="fold-body"><div class="cal-scroll"><div class="cal-grid wide">${heads}${cells}</div></div><div class="cal-hint">Astuce : fais défiler horizontalement la vue mensuelle pour lire les événements longs.</div></div></div>`;
-  const agenda=document.getElementById('cal-agenda');
-  if(agenda)agenda.innerHTML=events.length?Object.keys(byDate).sort().map(date=>`<div class="cal-agenda-day">${fd(date)}</div>`+byDate[date].map(e=>`<div class="rc"><div class="rc-top"><div><div class="rc-name">${e.ico} ${esc(e.title)}</div><div class="rc-sub">${esc(e.animal)} · ${esc(e.type)}</div></div><span class="bdg binf">${fd(e.date)}</span></div><div class="rc-note">${esc(e.meta||'—')}</div>${e.type==='planned'?`<button class="btns" onclick="delPlannedEvent('${e.id}')">Supprimer cet événement prévu</button>`:''}</div>`).join('')).join(''):'<div class="empty">Aucun événement pour ce mois.</div>';
+  // Agenda du mois supprimé
   const set=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val;};
   set('cal-total',events.length); set('cal-chir',events.filter(e=>e.type==='chirurgie'||(e.type==='planned'&&/chir/i.test(e.title))).length); set('cal-rec',events.filter(e=>e.type==='recording'||(e.type==='planned'&&/enreg/i.test(e.title))).length);
 }
@@ -2676,11 +2691,18 @@ function addC(c,e,dur){const spec=condSpecFromName(c||'1m VR');cL.push({id:Date.
 function rmC(i){cL.splice(i,1);rCL();}
 function updRecCond(i,field,val){
   if(!cL[i])return;
-  if(field==='cond'){const s=condSpecFromName(val);cL[i].cond=s.name;cL[i].condSpec=s;}
-  if(field==='ar')cL[i].ar=parseInt(val)||null;
-  if(field==='dur')cL[i].dur=parseFloat(val)||null;
-  if(field==='notes')cL[i].notes=val;
-  rCL();
+  if(field==='cond'){
+    const s=condSpecFromName(val);cL[i].cond=s.name;cL[i].condSpec=s;
+    rCL(); // re-render complet uniquement pour la condition (change les specs affichées)
+    return;
+  }
+  // Pour ar/dur/notes : mettre à jour cL sans re-render (évite la perte de focus)
+  if(field==='ar') cL[i].ar=parseFloat(val)||null;
+  if(field==='dur') cL[i].dur=parseFloat(val)||null;
+  if(field==='notes') cL[i].notes=val;
+  // Mettre à jour uniquement le résumé de perf
+  const sumEl=document.getElementById('cond-summary-'+i);
+  if(sumEl) sumEl.textContent=recCondSummary(cL[i]);
 }
 function recCondSummary(c){
   const p=calcConditionPerf(c.cond,c.ar,c.dur);
@@ -2692,7 +2714,7 @@ function recCondSummary(c){
 function rCL(){
   const el=document.getElementById('rco');if(!el)return;
   if(!cL.length){el.innerHTML='<div style="font-size:11px;color:var(--text3);padding:3px 0">Aucune condition. Ajoute une condition pour calculer la performance par segment.</div>';return;}
-  el.innerHTML=cL.map((c,i)=>{const spec=c.condSpec||condSpecFromName(c.cond);return `<div class="cb"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:7px"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em">Condition ${i+1}</div><button class="rmb" onclick="rmC(${i})">✕</button></div><div class="fg"><label class="lbl">Condition structurée</label><select onchange="updRecCond(${i},'cond',this.value)">${condOptionHtml(spec.name)}</select></div><div class="fl"><div class="fg"><label class="lbl">Allers-retours</label><input type="number" value="${c.ar??''}" oninput="updRecCond(${i},'ar',this.value)" placeholder="ex: 40"/></div><div class="fg"><label class="lbl">Durée condition (min)</label><input type="number" step="0.01" value="${c.dur??''}" oninput="updRecCond(${i},'dur',this.value)" placeholder="ex: 7.5"/></div></div><div style="font-size:11px;color:var(--pc);font-weight:600;margin-bottom:7px">${recCondSummary(c)}</div><div style="font-size:10px;color:var(--text3);line-height:1.4;margin-bottom:7px">${escHtml(spec.kind)} · track ${spec.trackLengthCm||'—'} cm · gain ${spec.gain??'—'} · ${spec.objects?'avec objets':'sans objet'}</div><textarea style="min-height:42px" placeholder="Notes sur cette condition" oninput="updRecCond(${i},'notes',this.value)">${escHtml(c.notes||'')}</textarea></div>`;}).join('');
+  el.innerHTML=cL.map((c,i)=>{const spec=c.condSpec||condSpecFromName(c.cond);return `<div class="cb"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:7px"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em">Condition ${i+1}</div><button class="rmb" onclick="rmC(${i})">✕</button></div><div class="fg"><label class="lbl">Condition structurée</label><select onchange="updRecCond(${i},'cond',this.value)">${condOptionHtml(spec.name)}</select></div><div class="fl"><div class="fg"><label class="lbl">Allers-retours</label><input type="number" value="${c.ar??''}" oninput="cL[${i}].ar=parseFloat(this.value)||null;const _s=document.getElementById('csumm${i}');if(_s)_s.textContent=recCondSummary(cL[${i}]);" placeholder="ex: 40"/></div><div class="fg"><label class="lbl">Durée condition (min)</label><input type="number" step="0.01" value="${c.dur??''}" oninput="cL[${i}].dur=parseFloat(this.value)||null;const _s2=document.getElementById('csumm${i}');if(_s2)_s2.textContent=recCondSummary(cL[${i}]);" placeholder="ex: 7.5"/></div></div><div id="csumm${i}" style="font-size:11px;color:var(--pc);font-weight:600;margin-bottom:7px">${recCondSummary(c)}</div><div style="font-size:10px;color:var(--text3);line-height:1.4;margin-bottom:7px">${escHtml(spec.kind)} · track ${spec.trackLengthCm||'—'} cm · gain ${spec.gain??'—'} · ${spec.objects?'avec objets':'sans objet'}</div><textarea style="min-height:42px" placeholder="Notes sur cette condition" oninput="cL[${i}].notes=this.value">${escHtml(c.notes||'')}</textarea></div>`;}).join('');
 }
 function bSC(){
   const el=document.getElementById('sc2'); if(!el)return;
@@ -5018,13 +5040,11 @@ function openIndPanel(){
   rIndPanel();
   document.getElementById('ind-panel').classList.add('open');
   document.getElementById('ind-overlay').classList.add('open');
-  document.getElementById('ind-swipe-hint').style.display='none';
 }
 
 function closeIndPanel(){
   document.getElementById('ind-panel').classList.remove('open');
   document.getElementById('ind-overlay').classList.remove('open');
-  document.getElementById('ind-swipe-hint').style.display='';
 }
 
 function rIndPanel(){
@@ -5160,22 +5180,8 @@ function rIndPanel(){
 // ── Swipe depuis la droite pour ouvrir le panneau ───────────────────
 (function(){
   let startX = 0, startY = 0;
-  document.addEventListener('touchstart', e=>{
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-  }, {passive:true});
-  document.addEventListener('touchend', e=>{
-    const dx = e.changedTouches[0].clientX - startX;
-    const dy = Math.abs(e.changedTouches[0].clientY - startY);
-    // Swipe depuis le bord droit (dernier tiers de l'écran) vers la gauche
-    if(startX > window.innerWidth * 0.7 && dx < -40 && dy < 60){
-      openIndPanel();
-    }
-    // Swipe vers la droite quand panneau ouvert → fermer
-    if(document.getElementById('ind-panel').classList.contains('open') && dx > 60 && dy < 60){
-      closeIndPanel();
-    }
-  }, {passive:true});
+  // Swipe désactivé (conflit avec scroll horizontal des étagères)
+  // Panneau indépendants accessible via le bouton 🐭 Indép. uniquement
 })();
 
 // ── Bouton topbar armoire : activer visuellement quand sur l'onglet ─
@@ -5390,6 +5396,20 @@ ${body}
   a.click();
   URL.revokeObjectURL(a.href);
   toast('✓ Export armoires téléchargé');
+}
+
+function genoToggle(){
+  const v=document.getElementById('n-geno')?.value;
+  const w=document.getElementById('n-geno-other-wrap');
+  if(w) w.style.display=v==='other'?'block':'none';
+}
+
+function genoBadgeHtml(a){
+  if(!a||!a.geno||a.geno==='') return '';
+  const map={wt:['WT','geno-wt'],mut:['MUT','geno-mut'],het:['HET','geno-het'],ctrl:['CTRL','geno-ctrl'],other:['','geno-other']};
+  const [lbl,cls]=map[a.geno]||['','geno-other'];
+  const label=a.geno==='other'?(a.genoLabel||'?').substring(0,8).toUpperCase():lbl;
+  return `<span class="geno-badge ${cls}">${escHtml(label)}</span>`;
 }
 
 </script>
