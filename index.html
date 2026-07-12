@@ -575,7 +575,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <span style="color:var(--text2)">Matériel déduit : <span id="hat-w-display" style="color:var(--text);font-weight:600">0g</span></span>
     <span style="color:var(--pc);font-weight:600">Poids réel animal : <span id="hat-real-w">—</span></span>
   </div>
-</div><div class="fg"><label class="lbl">Eau (mL)</label><input type="number" id="dea" step=".5"/></div></div><div class="fg"><label class="lbl">Restriction hydrique</label><select id="dr"><option>Non</option><option>Légère</option><option>Forte</option></select></div><div class="wa" id="wa"></div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Statut expérimental</div><div class="fg"><label class="lbl">Statut de l’animal</label><select id="d-status"><option value="active">Actif / suivi normal</option><option value="pause">Pause temporaire</option><option value="sacrificed">Mise à mort / perfusion</option><option value="dead">Décès</option><option value="excluded">Exclu expérimentalement</option></select></div><div class="fg"><label class="lbl">Raison / note de statut</label><input type="text" id="d-status-note" placeholder="ex : fin de protocole, perfusion, endpoint, transfert..."/></div><div style="font-size:10px;color:var(--text3);line-height:1.45">Si l’animal est marqué comme mort/sacrifié/exclu, il restera dans l’historique mais ne déclenchera plus les alertes de suivi.</div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Grille NC3Rs</div><div class="sg" id="sg"></div><div class="stot"><div><div class="stl">Score total</div><div class="stv" id="sv">0<span style="font-size:13px;color:var(--text3);font-weight:400"> / 16</span></div></div><span class="sint bok" id="si">Aucun signe</span></div><div class="sact" id="sa"></div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Observations</div><textarea id="dn" placeholder="Comportement, réactions, alertes..."></textarea></div><div class="fg"><label class="lbl">Photo de l'animal (optionnel)</label>
+</div><div class="fg"><label class="lbl">Eau (mL)</label><input type="number" id="dea" step=".5"/></div></div><div class="fg"><label class="lbl">Restriction hydrique</label><select id="dr"><option>Non</option><option>Légère</option><option>Forte</option></select></div><div class="wa" id="wa"></div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Statut expérimental</div><div class="fg"><label class="lbl">Statut de l’animal</label><select id="d-status"><option value="active">Actif / suivi normal</option><option value="pause">Pause temporaire</option><option value="sacrificed">Mise à mort</option><option value="perfused">Perfusion</option><option value="dead">Décès</option><option value="excluded">Exclu expérimentalement</option></select></div><div class="fg"><label class="lbl">Raison / note de statut</label><input type="text" id="d-status-note" placeholder="ex : fin de protocole, perfusion, endpoint, transfert..."/></div><div style="font-size:10px;color:var(--text3);line-height:1.45">Si l’animal est marqué comme mort/sacrifié/exclu, il restera dans l’historique mais ne déclenchera plus les alertes de suivi.</div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Grille NC3Rs</div><div class="sg" id="sg"></div><div class="stot"><div><div class="stl">Score total</div><div class="stv" id="sv">0<span style="font-size:13px;color:var(--text3);font-weight:400"> / 16</span></div></div><span class="sint bok" id="si">Aucun signe</span></div><div class="sact" id="sa"></div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Observations</div><textarea id="dn" placeholder="Comportement, réactions, alertes..."></textarea></div><div class="fg"><label class="lbl">Photo de l'animal (optionnel)</label>
 <label style="display:flex;align-items:center;gap:9px;padding:9px;background:var(--bg3);border-radius:var(--rs);cursor:pointer;border:.5px dashed var(--border2)">
   <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:var(--pc);stroke-width:2;stroke-linecap:round;flex-shrink:0"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
   <span style="font-size:12px;color:var(--text2)">Ajouter photo ou video</span>
@@ -842,9 +842,9 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   <button class="nb" id="nb-more" onclick="tab('more')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg><span>Plus</span></button>
 </nav>
 </div>
-<div id="ma" class="mw"><div class="modal"><div class="mh"><h2>Ajouter un animal</h2><button class="xb" onclick="clM('ma')">✕</button></div><div class="fl"><div class="fg"><label class="lbl">Identifiant</label><input type="text" id="ni" placeholder="ex: LT07"/></div><div class="fg"><label class="lbl">Espèce</label><select id="nsp"><option>Souris</option><option>Rat</option></select></div></div><div class="fl"><div class="fg"><label class="lbl">Sexe</label><select id="nsx"><option>F</option><option>M</option></select></div><div class="fg"><label class="lbl">DDN</label><input type="date" id="nd"/></div></div><div class="fl"><div class="fg"><label class="lbl">Poids initial (g)</label><input type="number" id="nwi" step=".01"/></div><div class="fg"><label class="lbl">Poids post-chir (g)</label><input type="number" id="nwp" step=".01"/></div></div><div class="fl"><div class="fg"><label class="lbl">Souche</label><input type="text" id="nl" placeholder="C57BL/6"/></div><div class="fg"><label class="lbl">Cage</label><input type="text" id="nc"/></div></div>
-<div class="fl"><div class="fg"><label class="lbl">Chapeau ? (oui/non)</label><select id="n-hat" onchange="document.getElementById('n-hat-w').disabled=this.value==='0'"><option value="0">Non</option><option value="1">Oui</option></select></div><div class="fg"><label class="lbl">Poids chapeau (g)</label><input type="number" id="n-hat-w" step="0.01" placeholder="ex: 0.7" disabled/></div></div><div class="fl"><div class="fg"><label class="lbl">Poids ciment (g)</label><input type="number" id="n-cement-w" step="0.01" placeholder="ex: 0.20"/></div><div class="fg"><label class="lbl">Poids implant/électrode (g)</label><input type="number" id="n-implant-w" step="0.01" placeholder="ex: 0.15"/></div></div><div class="fg"><label class="lbl">Description matériel</label><input type="text" id="n-hardware-note" placeholder="ex : chapeau VR + ciment"/></div><div class="fl"><div class="fg"><label class="lbl">N° ExpériBoard</label><input type="text" id="neb" placeholder="ex: 37101"/></div><div class="fg"><label class="lbl">N° Tatouage</label><input type="text" id="nnum" placeholder="ex: MT274"/></div></div>
-<div class="fg"><label class="lbl">Protocole</label><input type="text" id="np"/></div><div class="fg"><label class="lbl">Projet</label><select id="npr"><option value="LT">LT</option><option value="LK">LK</option><option value="ER">ER</option><option value="PP">PP (Pierre-Pascal)</option></select></div><div class="card" style="background:var(--bg3);margin-bottom:11px"><div class="ct" style="margin-bottom:10px">Statut / fin de suivi</div><div class="fg"><label class="lbl">Statut initial</label><select id="n-status"><option value="active">Actif / suivi normal</option><option value="pause">Pause temporaire</option><option value="sacrificed">Mise à mort / perfusion</option><option value="dead">Décès</option><option value="excluded">Exclu expérimentalement</option></select></div><div class="fl"><div class="fg"><label class="lbl">Date de fin / décès / sacrifice</label><input type="date" id="n-end"/></div><div class="fg"><label class="lbl">Raison</label><input type="text" id="n-status-note" placeholder="ex : fin protocole, perfusion, endpoint..."/></div></div><div style="font-size:10px;color:var(--text3);line-height:1.45">Si une date de fin est renseignée, l’âge affiché restera bloqué à cette date.</div></div><div class="fg"><label class="lbl">Génotype</label><select id="n-geno" onchange="genoToggle()"><option value="">— Non spécifié</option><option value="wt">WT (sauvage)</option><option value="mut">Muté (homozygote)</option><option value="het">Hétérozygote</option><option value="ctrl">Contrôle</option><option value="other">Autre</option></select></div><div class="fg" id="n-geno-other-wrap" style="display:none"><label class="lbl">Préciser le génotype</label><input id="n-geno-other" placeholder="ex: KI/WT, KO/+..."/></div><div class="fg"><label class="lbl">Notes</label><textarea id="nno"></textarea></div><button class="btnp" onclick="savA()">Créer la fiche</button></div></div>
+<div id="ma" class="mw"><div class="modal"><div class="mh"><h2>Ajouter un animal</h2><button class="xb" onclick="clM('ma')">✕</button></div><div class="fl"><div class="fg"><label class="lbl">Identifiant</label><input type="text" id="ni" placeholder="ex: LT07"/></div><div class="fg"><label class="lbl">Espèce</label><select id="nsp"><option>Souris</option><option>Rat</option></select></div></div><div class="fl"><div class="fg"><label class="lbl">Sexe</label><select id="nsx"><option>F</option><option>M</option></select></div><div class="fg"><label class="lbl">DDN</label><input type="date" id="nd"/></div></div><div class="fl"><div class="fg"><label class="lbl">Poids initial (g)</label><input type="number" id="nwi" step=".01"/></div><div class="fg"><label class="lbl">Poids post-chir (g)</label><input type="number" id="nwp" step=".01"/></div></div><div class="fl"><div class="fg"><label class="lbl">Souche</label><select id="nl" onchange="handleEditableSelectChange('nl','savedStrains','nl-new')"></select><input type="text" id="nl-new" placeholder="Nouvelle souche..." style="display:none;margin-top:6px" onblur="commitNewValue('nl','savedStrains','nl-new')" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"/><div style="margin-top:4px"><button type="button" onclick="removeSavedValue('nl','savedStrains')" style="font-size:10px;color:var(--text3);background:none;border:none;cursor:pointer;padding:0">🗑 Retirer la souche sélectionnée de la liste</button></div></div><div class="fg"><label class="lbl">Cage</label><input type="text" id="nc"/></div></div>
+<div class="fl"><div class="fg"><label class="lbl">Chapeau ? (oui/non)</label><select id="n-hat" onchange="document.getElementById('n-hat-w').disabled=this.value==='0'"><option value="0">Non</option><option value="1">Oui</option></select></div><div class="fg"><label class="lbl">Poids chapeau (g)</label><input type="number" id="n-hat-w" step="0.01" placeholder="ex: 0.7" disabled/></div></div><div class="fl"><div class="fg"><label class="lbl">Poids ciment (g)</label><input type="number" id="n-cement-w" step="0.01" placeholder="ex: 0.20"/></div><div class="fg"><label class="lbl">Poids implant/électrode (g)</label><input type="number" id="n-implant-w" step="0.01" placeholder="ex: 0.15"/></div></div><div class="fg"><label class="lbl">Description matériel</label><input type="text" id="n-hardware-note" placeholder="ex : chapeau VR + ciment"/></div><div class="fl"><div class="fg"><label class="lbl">N° ExpéBoard</label><input type="text" id="neb" placeholder="ex: B6CD1-592 ou 223335"/></div><div class="fg"><label class="lbl">N° APAFIS</label><select id="nnum" onchange="handleEditableSelectChange('nnum','savedApafisNums','nnum-new')"></select><input type="text" id="nnum-new" placeholder="Nouveau n° APAFIS..." style="display:none;margin-top:6px" onblur="commitNewValue('nnum','savedApafisNums','nnum-new')" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"/><div style="margin-top:4px"><button type="button" onclick="removeSavedValue('nnum','savedApafisNums')" style="font-size:10px;color:var(--text3);background:none;border:none;cursor:pointer;padding:0">🗑 Retirer ce n° de la liste</button></div></div></div>
+<div class="fg"><label class="lbl">Protocole</label><input type="text" id="np"/></div><div class="fg"><label class="lbl">Projet</label><select id="npr"><option value="LT">LT</option><option value="LK">LK</option><option value="ER">ER</option><option value="PP">PP (Pierre-Pascal)</option></select></div><div class="card" style="background:var(--bg3);margin-bottom:11px"><div class="ct" style="margin-bottom:10px">Statut / fin de suivi</div><div class="fg"><label class="lbl">Statut initial</label><select id="n-status"><option value="active">Actif / suivi normal</option><option value="pause">Pause temporaire</option><option value="sacrificed">Mise à mort</option><option value="perfused">Perfusion</option><option value="dead">Décès</option><option value="excluded">Exclu expérimentalement</option></select></div><div class="fl"><div class="fg"><label class="lbl">Date de fin / décès / sacrifice</label><input type="date" id="n-end"/></div><div class="fg"><label class="lbl">Raison</label><input type="text" id="n-status-note" placeholder="ex : fin protocole, perfusion, endpoint..."/></div></div><div style="font-size:10px;color:var(--text3);line-height:1.45">Si une date de fin est renseignée, l’âge affiché restera bloqué à cette date.</div></div><div class="fg"><label class="lbl">Génotype</label><select id="n-geno" onchange="genoToggle()"><option value="">— Non spécifié</option><option value="wt">WT (sauvage)</option><option value="mut">Muté (homozygote)</option><option value="het">Hétérozygote</option><option value="ctrl">Contrôle</option><option value="other">Autre</option></select></div><div class="fg" id="n-geno-other-wrap" style="display:none"><label class="lbl">Préciser le génotype</label><input id="n-geno-other" placeholder="ex: KI/WT, KO/+..."/></div><div class="fg"><label class="lbl">Notes</label><textarea id="nno"></textarea></div><button class="btnp" onclick="savA()">Créer la fiche</button></div></div>
 
 <div id="modal-proj" class="mw"><div class="modal">
   <div class="mh"><h2>Nouveau projet</h2><button class="xb" onclick="clM('modal-proj')">x</button></div>
@@ -1078,6 +1078,54 @@ function ensureUsers(d){
   d.users.forEach(u=>u.active=(u.id===d.activeUserId));
   return d;
 }
+
+/* ─── Listes extensibles (Souche, N° APAFIS) ─────────────── */
+function ensureSavedLists(d){
+  if(!Array.isArray(d.savedStrains)||!d.savedStrains.length) d.savedStrains=['C57BL/6J','T274M KCNQ2 KI/WT','RM KI KCNQ2','CD1','B6CD1'];
+  if(!Array.isArray(d.savedApafisNums)||!d.savedApafisNums.length) d.savedApafisNums=['37101'];
+  return d;
+}
+function countAnimalsByStrain(v){const d=gD();return (d.animals||[]).filter(a=>a.line===v).length;}
+function countAnimalsByApafis(v){const d=gD();return (d.animals||[]).filter(a=>a.numero===v).length;}
+function populateEditableSelect(selectId,listKey,currentValue){
+  const d=gD();ensureSavedLists(d);
+  const list=d[listKey]||[];
+  const sel=document.getElementById(selectId);if(!sel)return;
+  const countFn=listKey==='savedStrains'?countAnimalsByStrain:listKey==='savedApafisNums'?countAnimalsByApafis:null;
+  let html='<option value="">— choisir —</option>'+list.map(v=>`<option value="${escHtml(v)}">${escHtml(v)}${countFn?` (${countFn(v)} animaux)`:''}</option>`).join('');
+  if(currentValue&&!list.includes(currentValue))html+=`<option value="${escHtml(currentValue)}">${escHtml(currentValue)}</option>`;
+  html+='<option value="__new__">+ Nouveau...</option>';
+  sel.innerHTML=html;
+  sel.value=currentValue||'';
+}
+function handleEditableSelectChange(selectId,listKey,newInputId){
+  const sel=document.getElementById(selectId),newInput=document.getElementById(newInputId);
+  if(!sel||!newInput)return;
+  if(sel.value==='__new__'){newInput.style.display='block';newInput.value='';newInput.focus();}
+  else{newInput.style.display='none';}
+}
+function commitNewValue(selectId,listKey,newInputId){
+  const newInput=document.getElementById(newInputId),sel=document.getElementById(selectId);
+  if(!newInput||!sel)return;
+  const val=(newInput.value||'').trim();
+  newInput.style.display='none';
+  if(!val){sel.value='';return;}
+  const d=gD();ensureSavedLists(d);
+  if(!d[listKey].includes(val)){d[listKey].push(val);sv(d);}
+  populateEditableSelect(selectId,listKey,val);
+}
+function removeSavedValue(selectId,listKey){
+  const sel=document.getElementById(selectId);if(!sel)return;
+  const val=sel.value;
+  if(!val||val==='__new__'){toast('Choisis d’abord une valeur dans la liste');return;}
+  const n=listKey==='savedStrains'?countAnimalsByStrain(val):countAnimalsByApafis(val);
+  if(!confirm('Retirer "'+val+'" de la liste déroulante ?'+(n?' ('+n+' animal(aux) existant(s) garderont cette valeur.)':'')))return;
+  const d=gD();ensureSavedLists(d);
+  d[listKey]=(d[listKey]||[]).filter(v=>v!==val);
+  sv(d);
+  populateEditableSelect(selectId,listKey,'');
+  toast('✓ Retiré de la liste');
+}
 function currentUser(d){d=ensureUsers(d||gD());return d.users.find(u=>u.id===d.activeUserId)||d.users[0];}
 function markUser(obj,d){const u=currentUser(d);obj.operatorId=u.id;obj.operator=u.name;return obj;}
 function updateOperatorBar(){const d=ensureUsers(gD()),u=currentUser(d),el=document.getElementById('op-active-name');if(el)el.textContent=u.name;}
@@ -1132,9 +1180,13 @@ function switchToProject(code){
   syncProjects();
   pS();
   setTimeout(rPjBanner, 50);
-  // Rafraîchir tous les onglets actifs et les listes
-  window._recFilter=''; window._trFilter=''; const allRenderers = [rA, rTr, rR, rDailyList, rDash, rAlerts, rConditions]; // rCh/rChir: appelées uniquement quand l'onglet chir est visible
+  // Rafraîchir les listes de base (toujours utiles même hors écran : compteurs, bannières...)
+  window._recFilter=''; window._trFilter=''; const allRenderers = [rA, rTr, rR, rCh, rDailyList, rDash, rAlerts, rConditions];
   allRenderers.forEach(fn => { try{ if(typeof fn==='function') fn(); }catch(e){} });
+  // Rafraîchir explicitement l'onglet actuellement affiché à l'écran, quel qu'il soit
+  const activeSec=document.querySelector('.sec.on');
+  const activeId=activeSec?activeSec.id.replace(/^t-/,''):null;
+  if(activeId && typeof tab==='function'){ try{ tab(activeId); }catch(e){} }
   // Forcer la mise à jour des selects dans chaque onglet
   ['ca','tra','ra','da'].forEach(id => {
     const el = document.getElementById(id);
@@ -1220,8 +1272,8 @@ function cWA(){
 function td(){return new Date().toISOString().split('T')[0];}
 function fd(d){if(!d)return'—';const p=d.split('-');return`${p[2]}/${p[1]}/${p[0]}`;}
 function da(ds){if(!ds)return null;return Math.floor((Date.now()-new Date(ds))/86400000);}
-function animalInactive(a){return !!(a&&(a.deces||a.status==='dead'||a.status==='sacrificed'||a.status==='excluded'));}
-function animalStatusLabel(a){if(!a)return''; if(a.deces||a.status==='dead')return 'Décédé'; if(a.status==='sacrificed')return 'Sacrifié'; if(a.status==='excluded')return 'Exclu'; if(a.status==='pause')return 'Pause'; return '';}
+function animalInactive(a){return !!(a&&(a.deces||a.status==='dead'||a.status==='sacrificed'||a.status==='perfused'||a.status==='excluded'));}
+function animalStatusLabel(a){if(!a)return''; if(a.deces||a.status==='dead')return 'Décédé'; if(a.status==='sacrificed')return 'Sacrifié'; if(a.status==='perfused')return 'Perfusé'; if(a.status==='excluded')return 'Exclu'; if(a.status==='pause')return 'Pause'; return '';}
 function animalEndDate(a){
   if(!a)return null;
   return a.deces||a.deathDate||a.dateDeces||a.dateDécès||a.sacrificeDate||a.dateSacrifice||null;
@@ -1741,8 +1793,24 @@ function rCh(){
   let ch=d.chirurgies.filter(c=>pa.includes(c.animal)).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   if(chirF!=='Tous')ch=ch.filter(c=>c.animal===chirF);
   const list=document.getElementById('cl');
-  if(!ch.length){list.innerHTML='<div class="empty">Aucune chirurgie enregistrée</div>';return;}
-  list.innerHTML=ch.map(c=>`<div class="cc"><div class="cd">${fd(c.date)} · ${c.animal}</div><div class="ctit">${c.type}</div><div class="cmet">${c.weight?c.weight+'g · ':''}${(c.hasHat||c.hatWeight)?'🎩 '+(c.hatWeight||0)+'g · ':''}${c.cementWeight?'ciment '+c.cementWeight+'g · ':''}${c.implantWeight?'implant '+c.implantWeight+'g · ':''}${c.anesth}${c.anesthDose?' '+c.anesthDose+'ml':''} · Bupré ${c.bupre||'—'}ml${c.hDebut?' · '+c.hDebut+(c.hFin?' → '+c.hFin:''):''}</div>${c.needsCheck?'<span class="check-flag">À vérifier</span>':''}${c.notes?`<div class="cnot">${c.notes}</div>`:''}${itemActions('chirurgie',c.id)}</div>`).join('');
+  if(!list)return;
+  if(!ch.length){list.innerHTML='<div class="empty">Aucune chirurgie enregistrée'+(chirF!=='Tous'?' pour '+chirF:'')+'</div>';return;}
+  list.innerHTML='<div class="sh" style="margin-top:16px">Chirurgies enregistrées ('+ch.length+')</div>'+
+  '<div style="max-height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:6px">'+
+  ch.map(c=>{
+    const dur=(c.h1&&c.h2)?` · ${c.h1}→${c.h2}`:(c.hDebut?' · '+c.hDebut+(c.hFin?' → '+c.hFin:''):'');
+    const hw=[(c.hasHat||c.hatWeight||c.hat)?'🎩 '+(c.hatWeight||0)+'g':'',c.cementWeight?'ciment '+c.cementWeight+'g':'',c.implantWeight?'implant '+c.implantWeight+'g':''].filter(Boolean).join(' + ');
+    return `<div class="cc">
+      <div class="cd">${fd(c.date)} · ${escHtml(c.animal)}</div>
+      <div class="ctit">${escHtml(c.type||'—')}</div>
+      <div class="cmet">${c.weight?c.weight+'g · ':''}${c.anesth||c.anesthesia||'—'}${(c.anesthDose||c.dose)?' '+(c.anesthDose||c.dose)+'ml':''} · Bupré ${c.bupre||'—'}ml${dur}</div>
+      ${hw?`<div style="font-size:11px;color:var(--text2);margin-top:4px">${hw}</div>`:''}
+      ${c.notes?`<div class="cnot">${escHtml(c.notes)}</div>`:''}
+      ${c.needsCheck?'<span class="check-flag">À vérifier</span>':''}
+      ${itemActions('chirurgie',c.id)}
+    </div>`;
+  }).join('')+
+  '</div>';
 }
 function fCh(el,id){document.querySelectorAll('.fp').forEach(p=>p.classList.remove('on'));el.classList.add('on');chirF=id;rCh();}
 
@@ -1818,7 +1886,7 @@ function savD(){
   d.dailyLogs=d.dailyLogs.filter(l=>!(l.animal===animal&&l.date===date));
   const status=document.getElementById('d-status')?.value||'active', statusNote=(document.getElementById('d-status-note')?.value||'').trim();
   const _newD=markUser({id:'dl'+Date.now(),animal,date,weight:_wReal,weightBrut:_wBrut,water:parseFloat(document.getElementById('dea').value)||null,restriction:document.getElementById('dr').value,status,statusNote,scores:{...sc},scoreTotal:Object.values(sc).reduce((a,b)=>a+b,0),notes:document.getElementById('dn').value},d);d.dailyLogs.push(_newD);logAction(d,'create','daily',_newD);
-  const aa=d.animals.find(x=>x.id===animal); if(aa){aa.status=status;aa.statusNote=statusNote;if(status==='dead'||status==='sacrificed'||status==='excluded')aa.deces=date;else if(status==='active'||status==='pause')aa.deces='';}
+  const aa=d.animals.find(x=>x.id===animal); if(aa){aa.status=status;aa.statusNote=statusNote;if(status==='dead'||status==='sacrificed'||status==='perfused'||status==='excluded')aa.deces=date;else if(status==='active'||status==='pause')aa.deces='';}
   sv(d);
   // Save attached media to gallery
   const _dInp = document.getElementById('d-media');
@@ -2093,7 +2161,7 @@ function savA(){
   const status=(document.getElementById('n-status')||{value:'active'}).value;
   const endDate=(document.getElementById('n-end')||{value:''}).value||'';
   const statusNote=(document.getElementById('n-status-note')||{value:''}).value||'';
-  const isEnded=status==='dead'||status==='sacrificed'||status==='excluded';
+  const isEnded=status==='dead'||status==='sacrificed'||status==='perfused'||status==='excluded';
   const fields={proj,sp:document.getElementById('nsp').value,sx:document.getElementById('nsx').value,dob:document.getElementById('nd').value||'',status, statusNote, deces:(isEnded||endDate)?endDate:'',wi:parseFloat(document.getElementById('nwi').value)||null,wpc:parseFloat(document.getElementById('nwp').value)||null,line:document.getElementById('nl').value,cage:document.getElementById('nc').value,hasHat:document.getElementById('n-hat').value==='1',hatWeight:parseFloat(document.getElementById('n-hat-w').value)||0,cementWeight:parseFloat(document.getElementById('n-cement-w')?.value)||0,implantWeight:parseFloat(document.getElementById('n-implant-w')?.value)||0,hardwareNote:(document.getElementById('n-hardware-note')?.value||''),proto:document.getElementById('np').value,experboard:(document.getElementById('neb')||{value:''}).value,numero:(document.getElementById('nnum')||{value:''}).value,notes:document.getElementById('nno').value,geno:document.getElementById('n-geno')?.value||'',genoLabel:document.getElementById('n-geno-other')?.value||''};
   if(_editingAnimalId){
     const a=d.animals.find(x=>x.id===_editingAnimalId);if(!a){toast('Animal introuvable');return;}
@@ -2107,16 +2175,17 @@ function savA(){
     d.animals.push(markUser(Object.assign({id},fields,{created:td()}),d));
     sv(d);clM('ma');rA();pS();toast('✓ Animal ajouté');
   }
-  ['ni','nd','nwi','nwp','nl','nc','np','nno','n-end','n-status-note'].forEach(x=>{const e=document.getElementById(x);if(e)e.value='';});const ns=document.getElementById('n-status');if(ns)ns.value='active';
+  ['ni','nd','nwi','nwp','nc','np','nno','n-end','n-status-note'].forEach(x=>{const e=document.getElementById(x);if(e)e.value='';});const ns=document.getElementById('n-status');if(ns)ns.value='active';
+  populateEditableSelect('nl','savedStrains','');populateEditableSelect('nnum','savedApafisNums','');
 }
 function editAnimal(animalId){
   const d=gD(),a=d.animals.find(x=>x.id===animalId);if(!a){toast('Animal introuvable');return;}
   _editingAnimalId=animalId;
   const set=(elId,val)=>{const e=document.getElementById(elId);if(e)e.value=(val===null||val===undefined)?'':val;};
-  set('ni',a.id);set('nsp',a.sp||'Souris');set('nsx',a.sx||'F');set('nd',a.dob||'');set('nwi',a.wi);set('nwp',a.wpc);set('nl',a.line||'');set('nc',a.cage||'');
+  set('ni',a.id);set('nsp',a.sp||'Souris');set('nsx',a.sx||'F');set('nd',a.dob||'');set('nwi',a.wi);set('nwp',a.wpc);populateEditableSelect('nl','savedStrains',a.line||'');set('nc',a.cage||'');
   set('n-hat',a.hasHat?'1':'0');const hw=document.getElementById('n-hat-w');if(hw){hw.value=a.hatWeight||'';hw.disabled=!a.hasHat;}
   set('n-cement-w',a.cementWeight);set('n-implant-w',a.implantWeight);set('n-hardware-note',a.hardwareNote||'');
-  set('neb',a.experboard||'');set('nnum',a.numero||'');set('np',a.proto||'');set('npr',a.proj||cp);
+  set('neb',a.experboard||'');populateEditableSelect('nnum','savedApafisNums',a.numero||'');set('np',a.proto||'');set('npr',a.proj||cp);
   set('n-status',a.status||'active');set('n-end',a.deces||'');set('n-status-note',a.statusNote||'');set('nno',a.notes||'');
   const _gs=document.getElementById('n-geno');if(_gs)_gs.value=a.geno||'';
   const _go=document.getElementById('n-geno-other');if(_go)_go.value=(a.geno==='other'?(a.genoLabel||''):'');
@@ -2139,7 +2208,8 @@ function deleteAnimal(animalId){
 const _origOpenM_anim=window.openM;
 window.openM=function(id){
   if(id==='ma'&&!_editingAnimalId){
-    ['ni','nd','nwi','nwp','nl','nc','np','nno','n-end','n-status-note','n-hat-w','n-cement-w','n-implant-w','n-hardware-note','neb','nnum'].forEach(x=>{const e=document.getElementById(x);if(e)e.value='';});
+    ['ni','nd','nwi','nwp','nc','np','nno','n-end','n-status-note','n-hat-w','n-cement-w','n-implant-w','n-hardware-note','neb'].forEach(x=>{const e=document.getElementById(x);if(e)e.value='';});
+    populateEditableSelect('nl','savedStrains','');populateEditableSelect('nnum','savedApafisNums','');
     const ns=document.getElementById('n-status');if(ns)ns.value='active';const nh=document.getElementById('n-hat');if(nh){nh.value='0';}const hw=document.getElementById('n-hat-w');if(hw)hw.disabled=true;
     const modal=document.getElementById('ma');const h2=modal&&modal.querySelector('.mh h2');if(h2)h2.textContent='Ajouter un animal';const btn=modal&&modal.querySelector('.btnp');if(btn)btn.textContent='Créer la fiche';
   }
@@ -3753,7 +3823,7 @@ function downloadPerfCSV(){
 
 document.addEventListener('DOMContentLoaded',()=>{
   ['dd','trd','rd','cd','med-date','ln-date','ex-start','ex-end','cal-plan-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=td();});
-  applyV24Ergo(); let dd=ensureUsers(gD());sv(dd);syncProjects();sPC('LT');refreshSurgeryTypes();pS();rA();rCL();bSG();uSD();rExport();rUsers();rBackup();rBackupIndicator(); if(typeof fillDataTypeSelects==='function')fillDataTypeSelects(); if(typeof rAnalysis==='function')rAnalysis(); if(typeof rSearch==='function')rSearch(); if(typeof rTags==='function')rTags(); if(typeof applyV31Tweaks==='function')applyV31Tweaks(); if(typeof rConditions==='function')rConditions(); const cm=document.getElementById('cal-month'); if(cm&&!cm.value)cm.value=calMonthDefault();
+  applyV24Ergo(); let dd=ensureUsers(gD());ensureSavedLists(dd);sv(dd);syncProjects();sPC('LT');refreshSurgeryTypes();pS();rA();rCL();bSG();uSD();rExport();rUsers();rBackup();rBackupIndicator(); populateEditableSelect('nl','savedStrains','');populateEditableSelect('nnum','savedApafisNums',''); if(typeof fillDataTypeSelects==='function')fillDataTypeSelects(); if(typeof rAnalysis==='function')rAnalysis(); if(typeof rSearch==='function')rSearch(); if(typeof rTags==='function')rTags(); if(typeof applyV31Tweaks==='function')applyV31Tweaks(); if(typeof rConditions==='function')rConditions(); const cm=document.getElementById('cal-month'); if(cm&&!cm.value)cm.value=calMonthDefault();
 });
 
 
@@ -5131,7 +5201,7 @@ function acgAllAnimals(){
   // Animaux vivants uniquement (pas décédés, sacrifiés, exclus) + pas déjà en cage
   const fromDB = (d.animals||[])
     .filter(a => {
-      const inactive = a.deces || a.status==='dead' || a.status==='sacrificed' || a.status==='excluded';
+      const inactive = a.deces || a.status==='dead' || a.status==='sacrificed' || a.status==='perfused' || a.status==='excluded';
       return !inactive && !alreadyInCage.has(a.id);
     })
     .map(a => ({
@@ -5894,38 +5964,7 @@ function genoBadgeHtml(a){
 }
 
 /* ─── Liste chirurgies dans l'onglet chirurgie ──────────── */
-function rChir(){
-  const d=gD();
-  const el=document.getElementById('cl');
-  if(!el)return;
-  const pa=d.animals.filter(a=>a.proj===cp).map(a=>a.id);
-  const chirs=d.chirurgies.filter(c=>pa.includes(c.animal)).sort((a,b)=>b.date.localeCompare(a.date));
-  if(!chirs.length){
-    el.innerHTML='<div class="empty">Aucune chirurgie enregistrée pour ce projet.</div>';
-    return;
-  }
-  el.innerHTML='<div class="sh" style="margin-top:16px;display:flex;align-items:center;justify-content:space-between">'+
-    '<span>Chirurgies enregistrées ('+chirs.length+')</span>'+
-    '</div>'+
-  '<div style="max-height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:6px">'+
-  chirs.map(c=>{
-    const dur=(c.h1&&c.h2)?` · ${c.h1}→${c.h2}`:'';
-    const hw=[c.hat?'Chapeau':'',c.cementWeight?'Ciment '+c.cementWeight+'g':'',c.implantWeight?'Implant '+c.implantWeight+'g':''].filter(Boolean).join(' + ');
-    return `<div class="rc">
-      <div class="rc-top">
-        <div>
-          <div class="rc-name">${escHtml(c.animal)} <span style="color:var(--text2);font-weight:400">· ${escHtml(c.type||'—')}</span></div>
-          <div class="rc-sub">${fd(c.date)}${dur} · ${c.weight||'—'}g · ${c.anesthesia||'—'}</div>
-        </div>
-        <span class="bdg binf">${c.dose||'?'} mL</span>
-      </div>
-      ${hw?`<div style="font-size:11px;color:var(--text2);margin-top:4px">🔩 ${escHtml(hw)}</div>`:''}
-      ${c.notes?`<div class="rc-note">${escHtml(c.notes)}</div>`:''}
-      ${c.needsCheck?'<span class="check-flag">À vérifier</span>':''}
-      ${itemActions('chirurgie',c.id)}
-    </div>`;
-  }).join('');
-}
+function rChir(){ rCh(); }
 
 /* ─── Overview animal — timeline + stats ───────────────── */
 function toggleOverview(animalId){
@@ -6037,21 +6076,23 @@ function gotoStats(animalId){
   if(animal&&animal.proj&&animal.proj!==cp){
     cp=animal.proj; sPC(animal.proj); pS();
   }
-  // Navigation manuelle
+  // Navigation manuelle vers le Dashboard scientifique (graphiques réels), filtré sur cet animal
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  const sec=document.getElementById('t-analysis');
+  const sec=document.getElementById('t-dashboard');
   if(!sec){ toast('Section stats introuvable — recharge la page'); return; }
   sec.classList.add('on');
   const mb=document.getElementById('nb-more');
   if(mb) mb.classList.add('on');
-  const modeEl=document.getElementById('ana-mode');
-  if(modeEl){ modeEl.value='animal'; modeEl.dataset.initialized='1'; }
-  const winEl=document.getElementById('ana-window');
-  if(winEl) winEl.value='all';
-  window._gotoStatsAnimal=animalId;
-  if(typeof rAnalysis==='function'){
-    try{ rAnalysis(); window._gotoStatsAnimal=null; }
+  const viewEl=document.getElementById('dbv');
+  if(viewEl) viewEl.value='animal';
+  const animalEl=document.getElementById('dba');
+  if(animalEl){
+    animalEl.innerHTML='<option value="">Tous les animaux</option>'+d.animals.filter(a=>a.proj===cp).map(a=>'<option value="'+a.id+'">'+a.id+'</option>').join('');
+    animalEl.value=animalId;
+  }
+  if(typeof rDash==='function'){
+    try{ rDash(); }
     catch(e){ toast('Erreur affichage stats: '+e.message, 6000); console.error(e); }
   }
 }
