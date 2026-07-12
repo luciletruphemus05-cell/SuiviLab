@@ -2196,7 +2196,7 @@ function editAnimal(animalId){
   set('ni',a.id);set('nsp',a.sp||'Souris');set('nsx',a.sx||'F');set('nd',a.dob||'');set('nwi',a.wi);set('nwp',a.wpc);populateEditableSelect('nl','savedStrains',a.line||'');set('nc',a.cage||'');
   set('n-hat',a.hasHat?'1':'0');const hw=document.getElementById('n-hat-w');if(hw){hw.value=a.hatWeight||'';hw.disabled=!a.hasHat;}
   set('n-cement-w',a.cementWeight);set('n-implant-w',a.implantWeight);set('n-hardware-note',a.hardwareNote||'');
-  set('neb',a.experboard||'');populateEditableSelect('nnum','savedApafisNums',a.numero||'');set('np',a.proto||'');set('npr',a.proj||cp);
+  set('neb',a.experboard||'');populateEditableSelect('nnum','savedApafisNums',a.numero||'');set('np',a.proto||'');set('npr',a.proj||'');
   set('n-status',a.status||'active');set('n-end',a.deces||'');set('n-status-note',a.statusNote||'');set('nno',a.notes||'');
   const _gs=document.getElementById('n-geno');if(_gs)_gs.value=a.geno||'';
   const _go=document.getElementById('n-geno-other');if(_go)_go.value=(a.geno==='other'?(a.genoLabel||''):'');
