@@ -430,6 +430,17 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   <div class="ind-panel-body" id="ind-panel-body"></div>
 </div>
 
+<!-- Overlay panneau fiche animal -->
+<div id="af-overlay" class="ind-panel-overlay" onclick="closeAnimalFiche()"></div>
+<!-- Panneau latéral fiche animal -->
+<div id="af-panel" class="ind-panel">
+  <div class="ind-panel-header">
+    <div class="ind-panel-title" id="af-panel-title">🐭 Fiche animal</div>
+    <button class="xb" onclick="closeAnimalFiche()">✕</button>
+  </div>
+  <div class="ind-panel-body" id="af-panel-body"></div>
+</div>
+
 
 <div class="opbar"><span>Opérateur actif : <strong id="op-active-name">Lucile</strong></span><button class="opbtn" onclick="openM('modal-users');rUsers()">Gérer utilisateurs</button></div>
 <div id="t-animals" class="sec on content"><div id="pj-banner"></div><div id="az"></div><div id="al"></div><button class="btnp" onclick="openM('ma')"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter un animal</button></div>
@@ -500,7 +511,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
       <div class="eau-section">
         <select id="acg-water-type" onchange="acgToggleWaterType()" style="margin-bottom:8px">
           <option value="">— Aucune (pipette / à la main)</option>
-          <option value="biberon">🍼 Biberon</option>
+          <option value="biberon" selected>🍼 Biberon</option>
           <option value="pompe">⚙️ Pompe à eau</option>
         </select>
         <div id="acg-pompe-details" style="display:none">
@@ -1759,7 +1770,7 @@ function rA(){
       dc=`<span class="dchip" style="background:rgba(99,153,34,.15);color:#8fce4a">${days}j</span>`;
     }
     const age=animalAgeLabel(a), status=animalStatusLabel(a);
-    return `<div class="acard${animalInactive(a)?' inactive':''}"><div class="ac-top"><div class="av">${init}</div><div style="flex:1;min-width:0"><div class="aname">${a.id}${genoBadgeHtml(a)}${age?`<span class="age-pill">${age}</span>`:''}${status?` <span class="status-badge">${status}</span>`:''}</div><div class="asub">${(()=>{const fc=findAnimalCage(a.id);return fc?`🗄️ ${escHtml(fc.arm.name)} · ${escHtml(fc.cage.name)}`:`Cage ${a.cage||'—'}`;})()}${a.experboard?' · EB#'+a.experboard:''}${a.numero?' · '+a.numero:''}${hardwareWeight(a)>0?' · 🎩 '+hardwareWeight(a).toFixed(2)+'g':''} · ${a.sp} · ${a.sx} · ${chirs.length} chir · ${recs.length} enreg.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${badges}</div></div><div class="astats"><div class="sm"><div class="smv">${w?w+'g':'—'}</div><div class="sml">Poids</div></div><div class="sm"><div class="smv">${lt?lt.ar:'—'}</div><div class="sml">Derniers AR</div></div><div class="sm" style="display:flex;flex-direction:column;align-items:center;justify-content:center">${dc}<div class="sml" style="margin-top:3px">Pesée</div></div></div><div class="row-actions" style="margin-top:8px">
+    return `<div class="acard${animalInactive(a)?' inactive':''}"><div class="ac-top" style="cursor:pointer" onclick="openAnimalFiche('${a.id}')"><div class="av">${init}</div><div style="flex:1;min-width:0"><div class="aname">${a.id}${genoBadgeHtml(a)}${age?`<span class="age-pill">${age}</span>`:''}${status?` <span class="status-badge">${status}</span>`:''}</div><div class="asub">${(()=>{const fc=findAnimalCage(a.id);return fc?`🗄️ ${escHtml(fc.arm.name)} · ${escHtml(fc.cage.name)}`:`Cage ${a.cage||'—'}`;})()}${a.experboard?' · EB#'+a.experboard:''}${a.numero?' · '+a.numero:''}${hardwareWeight(a)>0?' · 🎩 '+hardwareWeight(a).toFixed(2)+'g':''} · ${a.sp} · ${a.sx} · ${chirs.length} chir · ${recs.length} enreg.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${badges}</div></div><div class="astats"><div class="sm"><div class="smv">${w?w+'g':'—'}</div><div class="sml">Poids</div></div><div class="sm"><div class="smv">${lt?lt.ar:'—'}</div><div class="sml">Derniers AR</div></div><div class="sm" style="display:flex;flex-direction:column;align-items:center;justify-content:center">${dc}<div class="sml" style="margin-top:3px">Pesée</div></div></div><div class="row-actions" style="margin-top:8px">
         <button class="mini-btn overview-btn" id="ovbtn-${a.id}" onclick="toggleOverview('${a.id}')">📊 Vue d'ensemble</button>
         <button class="mini-btn" onclick="editAnimal('${a.id}')">Modifier</button>
         <button class="mini-btn" onclick="deleteAnimal('${a.id}')">Supprimer</button>
@@ -5066,7 +5077,7 @@ function armNewCageAt(armId, level, slot){
   _acgSelectedAnimals = [];
   acgRenderChips(); acgBuildDropdown(); acgUpdateCapacity();
   // Reset eau
-  const wt=document.getElementById('acg-water-type'); if(wt) wt.value='';
+  const wt=document.getElementById('acg-water-type'); if(wt) wt.value='biberon';
   const pd=document.getElementById('acg-pompe-details'); if(pd) pd.style.display='none';
   const ph=document.getElementById('acg-pompe-heure'); if(ph) ph.value='';
   const pdu=document.getElementById('acg-pompe-duree'); if(pdu) pdu.value='';
@@ -5604,9 +5615,12 @@ function rIndPanel(){
 
   // Collecter tous les IDs d'animaux enregistrés avec proj
   const projAnimals = new Set((d.animals||[]).filter(a=>a.proj&&a.proj!=='').map(a=>a.id));
+  const showDeceased = window._showIndDeceased || false;
 
   // Animaux indépendants = dans d.animals sans projet OU dans les cages mais pas dans d.animals
-  const indFromDB = (d.animals||[]).filter(a=>!a.proj||a.proj==='');
+  const indAllForDB = (d.animals||[]).filter(a=>!a.proj||a.proj==='');
+  const indDeceasedCount = indAllForDB.filter(a=>animalInactive(a)).length;
+  const indFromDB = showDeceased ? indAllForDB : indAllForDB.filter(a=>!animalInactive(a));
   const indInCages = new Set();
   (d.armoires||[]).forEach(arm=>{
     (arm.cages||[]).forEach(cage=>{
@@ -5620,7 +5634,12 @@ function rIndPanel(){
   const cagesWithInd = [];
   (d.armoires||[]).forEach(arm=>{
     (arm.cages||[]).forEach(cage=>{
-      const indInThisCage = (cage.animals||[]).filter(aid=>!projAnimals.has(aid));
+      const indInThisCage = (cage.animals||[]).filter(aid=>{
+        if(projAnimals.has(aid)) return false;
+        const a=(d.animals||[]).find(x=>x.id===aid);
+        if(a && animalInactive(a) && !showDeceased) return false;
+        return true;
+      });
       if(indInThisCage.length){
         cagesWithInd.push({arm, cage, indAnimals: indInThisCage});
       }
@@ -5636,11 +5655,18 @@ function rIndPanel(){
   });
   const withoutCage = indFromDB.filter(a=>!allCageAnimals.has(a.id));
 
+  const deceasedToggleHtml = indDeceasedCount>0 ? `<div style="margin-top:14px;text-align:center">
+    <button onclick="window._showIndDeceased=!window._showIndDeceased;rIndPanel()" style="font-size:11px;padding:5px 14px;border-radius:20px;border:.5px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer">
+      ${showDeceased?'Masquer les décédés/sacrifiés':'Afficher les décédés/sacrifiés ('+indDeceasedCount+')'}
+    </button>
+  </div>` : '';
+
   if(!cagesWithInd.length && !withoutCage.length){
     el.innerHTML = `<div class="ind-empty">
       <div style="font-size:24px;margin-bottom:8px">🐭</div>
-      <div>Aucun animal indépendant</div>
+      <div>Aucun animal indépendant${!showDeceased&&indDeceasedCount?' actif':''}</div>
       <div style="font-size:11px;margin-top:6px;color:var(--text3)">Les animaux sans projet apparaissent ici</div>
+      ${deceasedToggleHtml}
     </div>`;
     return;
   }
@@ -5723,6 +5749,8 @@ function rIndPanel(){
     });
     html += `</div>`;
   }
+
+  html += deceasedToggleHtml;
 
   el.innerHTML = html;
 }
@@ -6070,6 +6098,91 @@ function renderOverview(animalId, el){
   el.innerHTML=html;
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   PANNEAU LATÉRAL — Fiche complète d'un animal
+   ═══════════════════════════════════════════════════════════════════ */
+function openAnimalFiche(animalId){
+  rAnimalFiche(animalId);
+  document.getElementById('af-panel').classList.add('open');
+  document.getElementById('af-overlay').classList.add('open');
+}
+function closeAnimalFiche(){
+  document.getElementById('af-panel').classList.remove('open');
+  document.getElementById('af-overlay').classList.remove('open');
+}
+function rAnimalFiche(animalId){
+  const d=gD();
+  const a=d.animals.find(x=>x.id===animalId);
+  const body=document.getElementById('af-panel-body');
+  const titleEl=document.getElementById('af-panel-title');
+  if(!a){ if(body)body.innerHTML='<div class="empty">Animal introuvable</div>'; return; }
+  if(titleEl) titleEl.textContent=(a.sx==='M'?'♂ ':a.sx==='F'?'♀ ':'🐭 ')+a.id;
+  const logs=(d.dailyLogs||[]).filter(l=>l.animal===a.id).sort((x,y)=>y.date.localeCompare(x.date));
+  const trs=(d.trainings||[]).filter(t=>t.animal===a.id).sort((x,y)=>y.date.localeCompare(x.date));
+  const chirs=(d.chirurgies||[]).filter(c=>c.animal===a.id);
+  const recs=(d.recordings||[]).filter(r=>r.animal===a.id);
+  const ll=logs[0],lt=trs[0];
+  const age=animalAgeLabel(a),status=animalStatusLabel(a);
+  const fc=findAnimalCage(a.id);
+  const cageStr=fc?`🗄️ ${escHtml(fc.arm.name)} · ${escHtml(fc.cage.name)}${fc.cage.level?' · N'+fc.cage.level+'·S'+fc.cage.slot:''}`:`Cage ${escHtml(a.cage||'—')}`;
+  const hw=hardwareWeight(a);
+  const pct=ll&&ll.weight&&a.wi?(ll.weight/a.wi*100):null;
+  const html=`
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+      ${genoBadgeHtml(a)}
+      ${age?`<span class="age-pill">${age}</span>`:''}
+      ${status?`<span class="status-badge">${status}</span>`:''}
+    </div>
+    <div class="astats">
+      <div class="sm"><div class="smv">${ll&&ll.weight?ll.weight+'g':'—'}</div><div class="sml">Dernier poids${pct?' ('+pct.toFixed(0)+'%)':''}</div></div>
+      <div class="sm"><div class="smv">${lt?lt.ar:'—'}</div><div class="sml">Derniers AR</div></div>
+      <div class="sm"><div class="smv">${ll?(ll.scoreTotal??0):'—'}</div><div class="sml">NC3Rs</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Identification</div>
+    <div class="fg2">
+      <div class="fs"><div class="fsl">Espèce</div><div class="fsv">${escHtml(a.sp||'—')}</div></div>
+      <div class="fs"><div class="fsl">Sexe</div><div class="fsv">${a.sx==='M'?'♂ M':a.sx==='F'?'♀ F':escHtml(a.sx||'—')}</div></div>
+      <div class="fs"><div class="fsl">DDN</div><div class="fsv">${a.dob?fd(a.dob):'—'}</div></div>
+      <div class="fs"><div class="fsl">Souche</div><div class="fsv">${escHtml(a.line||'—')}</div></div>
+      <div class="fs"><div class="fsl">Génotype</div><div class="fsv">${a.geno?(a.geno==='other'?escHtml(a.genoLabel||'Autre'):a.geno.toUpperCase()):'—'}</div></div>
+      <div class="fs"><div class="fsl">Protocole</div><div class="fsv">${escHtml(a.proto||'—')}</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--text2);margin-top:8px">${cageStr}</div>
+    <div style="font-size:11px;color:var(--text2);margin-top:4px">${a.experboard?'💻 ExpéBoard : '+escHtml(a.experboard):''}${a.experboard&&a.numero?' · ':''}${a.numero?'📋 APAFIS : '+escHtml(a.numero):''}</div>
+  </div>
+  <div class="card">
+    <div class="ct">Poids &amp; matériel</div>
+    <div class="fg2">
+      <div class="fs"><div class="fsl">Poids initial</div><div class="fsv">${a.wi?a.wi+'g':'—'}</div></div>
+      <div class="fs"><div class="fsl">Seuil 80%</div><div class="fsv">${a.wi?(a.wi*0.8).toFixed(1)+'g':'—'}</div></div>
+      <div class="fs"><div class="fsl">Poids post-chir</div><div class="fsv">${a.wpc?a.wpc+'g':'—'}</div></div>
+      <div class="fs"><div class="fsl">Matériel déduit</div><div class="fsv">${hw?hw.toFixed(2)+'g':'—'}</div></div>
+    </div>
+    ${a.hardwareNote?`<div style="font-size:11px;color:var(--text3);margin-top:6px">🎩 ${escHtml(a.hardwareNote)}</div>`:''}
+  </div>
+  ${(status||a.statusNote)?`<div class="card"><div class="ct">Statut</div><div style="font-size:12px;color:var(--text2)">${status||'—'}${a.deces?' · '+fd(a.deces):''}</div>${a.statusNote?`<div style="font-size:11px;color:var(--text3);margin-top:4px">${escHtml(a.statusNote)}</div>`:''}</div>`:''}
+  ${a.notes?`<div class="card"><div class="ct">Notes</div><div style="font-size:12px;color:var(--text2);white-space:pre-wrap">${escHtml(a.notes)}</div></div>`:''}
+  <div class="card">
+    <div class="ct">Volume</div>
+    <div class="fc"><span>🔬 ${chirs.length} chirurgies</span><span>📡 ${recs.length} enregistrements</span><span>🏃 ${trs.length} trainings</span><span>📋 ${logs.length} suivis</span></div>
+  </div>
+  <div class="egrid" style="margin-top:4px">
+    <button class="eb" onclick="closeAnimalFiche();editAnimal('${a.id}')"><span class="ei">✏️</span>Modifier</button>
+    <button class="eb" onclick="closeAnimalFiche();gotoStats('${a.id}')"><span class="ei">📈</span>Statistiques</button>
+    <button class="eb" style="grid-column:span 2;border-color:#e24b4a;color:#f07070" onclick="closeAnimalFiche();deleteAnimal('${a.id}')"><span class="ei">🗑</span>Supprimer l'animal</button>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="ct">Historique récent</div>
+    <div id="af-timeline"></div>
+  </div>`;
+  if(body) body.innerHTML=html;
+  const tlEl=document.getElementById('af-timeline');
+  if(tlEl) renderOverview(a.id, tlEl);
+}
+
 function gotoStats(animalId){
   const d=gD();
   const animal=d.animals.find(a=>a.id===animalId);
@@ -6107,6 +6220,7 @@ function savDEdit(itemId){
   // Récupérer les scores NC3Rs depuis la grille native
   const d=gD(), res=findItem(d,'daily',itemId), it=res.item;
   if(!it){toast('Saisie introuvable');return;}
+  if(!confirm('Tu vas modifier cette saisie du '+fd(it.date)+' — '+it.animal+' — '+(it.weight?it.weight+'g':'poids non renseigné')+'.\n\nConfirmer la modification ?'))return;
   // Poids
   const rawW=parseFloat(document.getElementById('dw')?.value)||null;
   const hw=hardwareWeight(d.animals.find(a=>a.id===it.animal));
@@ -6136,6 +6250,7 @@ function savDEdit(itemId){
 function savTrEdit(itemId){
   const d=gD(), res=findItem(d,'training',itemId), it=res.item;
   if(!it){toast('Training introuvable');return;}
+  if(!confirm('Tu vas modifier ce training du '+fd(it.date)+' — '+it.animal+' — '+(it.ar||'—')+' AR.\n\nConfirmer la modification ?'))return;
   const ar=parseInt(document.getElementById('trar')?.value)||null;
   const dur=parseFloat(document.getElementById('trd2')?.value)||null;
   const cond=document.getElementById('trc')?.value||it.cond;
@@ -6162,6 +6277,7 @@ function savTrEdit(itemId){
 function savChEdit(itemId){
   const d=gD(), res=findItem(d,'chirurgie',itemId), it=res.item;
   if(!it){toast('Chirurgie introuvable');return;}
+  if(!confirm('Tu vas modifier cette chirurgie du '+fd(it.date)+' — '+it.animal+' — '+(it.type||'type non renseigné')+'.\n\nConfirmer la modification ?'))return;
   let ty=document.getElementById('cty')?.value||it.type;
   if(ty==='custom') ty=document.getElementById('cty-custom')?.value||'Inconnu';
   const hatVal=document.getElementById('c-hat')?.value==='1';
@@ -6192,6 +6308,7 @@ function savChEdit(itemId){
 function savRecEdit(itemId){
   const d=gD(), res=findItem(d,'recording',itemId), it=res.item;
   if(!it){toast('Enregistrement introuvable');return;}
+  if(!confirm('Tu vas modifier cet enregistrement du '+fd(it.date)+' — '+it.animal+' — '+(it.zone||'zone non renseignée')+'.\n\nConfirmer la modification ?'))return;
   let elec=document.getElementById('re')?.value||it.elec;
   if(elec==='custom') elec=document.getElementById('ec')?.value||'Inconnu';
   let zone=document.getElementById('rz')?.value||it.zone;
