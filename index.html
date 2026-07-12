@@ -382,6 +382,28 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .geno-het{background:rgba(255,152,0,.15);color:#ff9800;border:.5px solid rgba(255,152,0,.35)}
 .geno-ctrl{background:rgba(33,150,243,.15);color:#2196f3;border:.5px solid rgba(33,150,243,.35)}
 .geno-other{background:rgba(156,39,176,.12);color:#9c27b0;border:.5px solid rgba(156,39,176,.3)}
+
+/* ─── Modal édition complète ─────────────────────────────── */
+.edit-modal-section{background:var(--bg3);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;border:.5px solid var(--border)}
+.edit-modal-section-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+
+/* ─── Timeline overview animal ───────────────────────────── */
+.animal-timeline{margin-top:10px;border-top:.5px solid var(--border);padding-top:10px;display:none}
+.animal-timeline.open{display:block}
+.atl-item{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start}
+.atl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.atl-content{flex:1;min-width:0}
+.atl-date{font-size:10px;color:var(--text3);font-family:var(--m)}
+.atl-title{font-size:12px;font-weight:600;color:var(--text);line-height:1.4}
+.atl-meta{font-size:11px;color:var(--text2);margin-top:1px;line-height:1.4}
+.atl-connector{width:1px;background:var(--border2);margin-left:3px;height:8px}
+.atl-empty{font-size:12px;color:var(--text3);padding:8px 0;text-align:center}
+.atl-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.atl-stat{background:var(--bg3);border:.5px solid var(--border);border-radius:var(--rs);padding:5px 10px;font-size:11px;color:var(--text2);font-family:var(--m)}
+.atl-stat strong{color:var(--text);font-size:13px;display:block}
+.atl-goto{font-size:11px;padding:5px 12px;border-radius:20px;border:.5px solid var(--pc);color:var(--pc);background:transparent;cursor:pointer;font-family:var(--f);width:100%;margin-bottom:8px}
+.overview-btn{font-size:11px;padding:4px 10px;border-radius:20px;border:.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--f)}
+.overview-btn.on{border-color:var(--pc);color:var(--pc);background:var(--pc-dim)}
 </style>
 </head>
 <body>
@@ -547,8 +569,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   <button type="button" class="btns" onclick="closeM('modal-grp')">Annuler</button>
 </div></div>
 
-<div id="t-chirurgie" class="sec content"><div class="fr" id="cf"></div><div id="cl"></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><path d="M20 7l-9 9-4-4"/><path d="M3 21l4-4"/></svg>Nouvelle chirurgie</div><div class="fl"><div class="fg"><label class="lbl">Animal</label><select id="ca"></select></div><div class="fg"><label class="lbl">Date</label><input type="date" id="cd"/></div></div><div class="fg"><label class="lbl">Type</label><select id="cty" onchange="surgeryTypeChanged()"><option>Crâniotomie hippocampe droit</option><option>Crâniotomie hippocampe gauche</option><option>Crâniotomie double</option><option>Chirurgie chapeau VR</option><option>Remplacement crâniotomie</option><option value="custom">+ Nouveau type de chirurgie...</option></select></div><div id="cty-custom-wrap" class="fg" style="display:none"><label class="lbl">Nouveau type de chirurgie</label><input type="text" id="cty-custom" placeholder="ex : Injection virale AAV, implantation fibre, EEG..."/></div><div class="fl"><div class="fg"><label class="lbl">Poids (g)</label><input type="number" id="cw" step=".01"/></div><div class="fg"><label class="lbl">Anesthésie</label><select id="can"><option>Keta/Xyla</option><option>Isoflurane</option><option>Keta/Xyla + ISO</option></select></div></div><div class="fl"><div class="fg"><label class="lbl">Chapeau posé / présent ?</label><select id="c-hat" onchange="document.getElementById('c-hat-w').disabled=this.value==='0'"><option value="0">Non</option><option value="1">Oui</option></select></div><div class="fg"><label class="lbl">Poids du chapeau (g)</label><input type="number" id="c-hat-w" step="0.01" placeholder="ex: 0.70" disabled/></div></div><div class="fl"><div class="fg"><label class="lbl">Ciment/dental cement (g)</label><input type="number" id="c-cement-w" step="0.01" placeholder="ex: 0.20"/></div><div class="fg"><label class="lbl">Implant/électrode/fibre (g)</label><input type="number" id="c-implant-w" step="0.01" placeholder="ex: 0.15"/></div></div><div class="fg"><label class="lbl">Description matériel ajouté</label><input type="text" id="c-hardware-note" placeholder="ex : chapeau VR + ciment + connecteur"/></div><div class="fl"><div class="fg"><label class="lbl">Dose anesthésie (ml)</label><input type="number" id="cad" step=".01"/></div><div class="fg"><label class="lbl">Bupré (ml)</label><input type="number" id="cb2" step=".01"/></div></div><div class="fl"><div class="fg"><label class="lbl">Heure début</label><input type="time" id="ch1"/></div><div class="fg"><label class="lbl">Heure fin</label><input type="time" id="ch2"/></div></div><div class="fg"><label class="lbl">Observations</label><textarea id="cn" placeholder="Déroulement, incidents, température, réveil..."></textarea></div><button class="btnp" onclick="savCh()">Enregistrer</button></div></div>
-<div id="t-daily" class="sec content"><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Animal & date</div><div class="fl"><div class="fg"><label class="lbl">Animal</label><select id="da" onchange="updateHatDeduct();cWA()"></select></div><div class="fg"><label class="lbl">Date</label><input type="date" id="dd"/></div></div><div class="fl"><div class="fg"><label class="lbl">Poids brut avec matériel (g)</label><input type="number" id="dw" step=".01" oninput="cWA();updateHatDeduct()"/></div>
+<div id="t-chirurgie" class="sec content"><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><path d="M20 7l-9 9-4-4"/><path d="M3 21l4-4"/></svg>Nouvelle chirurgie</div><div class="fl"><div class="fg"><label class="lbl">Animal</label><select id="ca"></select></div><div class="fg"><label class="lbl">Date</label><input type="date" id="cd"/></div></div><div class="fg"><label class="lbl">Type</label><select id="cty" onchange="surgeryTypeChanged()"><option>Crâniotomie hippocampe droit</option><option>Crâniotomie hippocampe gauche</option><option>Crâniotomie double</option><option>Chirurgie chapeau VR</option><option>Remplacement crâniotomie</option><option value="custom">+ Nouveau type de chirurgie...</option></select></div><div id="cty-custom-wrap" class="fg" style="display:none"><label class="lbl">Nouveau type de chirurgie</label><input type="text" id="cty-custom" placeholder="ex : Injection virale AAV, implantation fibre, EEG..."/></div><div class="fl"><div class="fg"><label class="lbl">Poids (g)</label><input type="number" id="cw" step=".01"/></div><div class="fg"><label class="lbl">Anesthésie</label><select id="can"><option>Keta/Xyla</option><option>Isoflurane</option><option>Keta/Xyla + ISO</option></select></div></div><div class="fl"><div class="fg"><label class="lbl">Chapeau posé / présent ?</label><select id="c-hat" onchange="document.getElementById('c-hat-w').disabled=this.value==='0'"><option value="0">Non</option><option value="1">Oui</option></select></div><div class="fg"><label class="lbl">Poids du chapeau (g)</label><input type="number" id="c-hat-w" step="0.01" placeholder="ex: 0.70" disabled/></div></div><div class="fl"><div class="fg"><label class="lbl">Ciment/dental cement (g)</label><input type="number" id="c-cement-w" step="0.01" placeholder="ex: 0.20"/></div><div class="fg"><label class="lbl">Implant/électrode/fibre (g)</label><input type="number" id="c-implant-w" step="0.01" placeholder="ex: 0.15"/></div></div><div class="fg"><label class="lbl">Description matériel ajouté</label><input type="text" id="c-hardware-note" placeholder="ex : chapeau VR + ciment + connecteur"/></div><div class="fl"><div class="fg"><label class="lbl">Dose anesthésie (ml)</label><input type="number" id="cad" step=".01"/></div><div class="fg"><label class="lbl">Bupré (ml)</label><input type="number" id="cb2" step=".01"/></div></div><div class="fl"><div class="fg"><label class="lbl">Heure début</label><input type="time" id="ch1"/></div><div class="fg"><label class="lbl">Heure fin</label><input type="time" id="ch2"/></div></div><div class="fg"><label class="lbl">Observations</label><textarea id="cn" placeholder="Déroulement, incidents, température, réveil..."></textarea></div><button class="btnp" onclick="savCh()">Enregistrer</button></div><div class="fr" id="cf" style="margin-top:12px"></div><div id="cl" style="margin-top:8px"></div></div><div id="t-daily" class="sec content"><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Animal & date</div><div class="fl"><div class="fg"><label class="lbl">Animal</label><select id="da" onchange="updateHatDeduct();cWA()"></select></div><div class="fg"><label class="lbl">Date</label><input type="date" id="dd"/></div></div><div class="fl"><div class="fg"><label class="lbl">Poids brut avec matériel (g)</label><input type="number" id="dw" step=".01" oninput="cWA();updateHatDeduct()"/></div>
 <div id="hat-deduct-info" style="display:none;font-size:12px;padding:8px 11px;background:var(--bg3);border-radius:var(--rs);margin-top:-6px;margin-bottom:8px;border:.5px solid var(--border2)">
   <div style="display:flex;justify-content:space-between;align-items:center">
     <span style="color:var(--text2)">Matériel déduit : <span id="hat-w-display" style="color:var(--text);font-weight:600">0g</span></span>
@@ -570,8 +591,8 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   </div>
   <div id="daily-list"></div>
 </div></div>
-<div id="t-training" class="sec content"><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Nouvelle session</div><div class="fl"><div class="fg"><label class="lbl">Animal</label><select id="tra"></select></div><div class="fg"><label class="lbl">Date</label><input type="date" id="trd"/></div></div><div class="fl"><div class="fg"><label class="lbl">Condition</label><select id="trc" onchange="cR()"><option>1m VR</option><option>60cm VR</option><option>80cm VR</option><option>120cm VR</option><option>Habituation</option><option>Gain protocol</option><option>Open Field</option><option>Autre</option></select></div><div class="fg"><label class="lbl">Durée (min)</label><input type="number" id="trd2" oninput="cR()"/></div></div><div class="fl"><div class="fg"><label class="lbl">Allers-retours</label><input type="number" id="trar" oninput="cR()"/></div><div class="fg"><label class="lbl">Récomp./min</label><input type="text" id="trr" readonly/></div></div><div class="fl"><div class="fg"><label class="lbl">Vitesse moyenne</label><input type="text" id="trv" readonly placeholder="cm/s"/></div><div class="fg"><label class="lbl">Distance estimée</label><input type="text" id="trdist" readonly placeholder="m"/></div></div><div class="fg"><label class="lbl">Engagement</label><select id="tre"><option>Très engagé (autonome)</option><option>Engagé (quelques pauses)</option><option>Modéré (aide ponctuelle)</option><option>Peu engagé (aide fréquente)</option><option>Désengagé</option></select></div><div class="fg"><label class="lbl">Observations</label><textarea id="trn"></textarea></div><div class="fg"><label class="lbl">Photo / vidéo (optionnel)</label><label style="display:flex;align-items:center;gap:9px;padding:9px;background:var(--bg3);border-radius:var(--rs);cursor:pointer;border:.5px dashed var(--border2)"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:var(--pc);stroke-width:2;stroke-linecap:round;flex-shrink:0"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span style="font-size:12px;color:var(--text2)">Ajouter photo ou vidéo</span><input type="file" id="tr-media" accept="image/*,video/*" multiple capture="environment" style="display:none" onchange="prvMedia('tr-media','tr-mp')"/></label><div id="tr-mp" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:5px"></div></div><button class="btnp" onclick="savTr()">Enregistrer</button></div><div class="sh">Sessions récentes</div><div id="trl"></div></div>
-<div id="t-recording" class="sec content"><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Session d'enregistrement</div><div class="fl"><div class="fg"><label class="lbl">Animal</label><select id="ra"></select></div><div class="fg"><label class="lbl">Date</label><input type="date" id="rd"/></div></div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>Électrode</div><div class="fg"><label class="lbl">Type</label><select id="re" onchange="eCh()"><option value="Buzaki64">Buzaki 64</option><option value="Buzlin64">Buzlin 64</option><option value="Probe Rachel">Probe de Rachel (64ch)</option><option value="Bus3">Bus3</option><option value="custom">+ Nouveau type...</option></select></div><div id="ecw" class="fg" style="display:none"><label class="lbl">Nom</label><input type="text" id="ec"/></div><div class="fl"><div class="fg"><label class="lbl">Shanks totaux</label><input type="number" id="rst" oninput="uSh()"/></div><div class="fg"><label class="lbl">Shanks fonctionnels</label><input type="number" id="rsf" oninput="uSh()"/></div></div><div id="shw" style="display:none;font-size:11px;padding:7px 10px;background:rgba(186,117,23,.12);color:#e8a23a;border-radius:var(--rs);margin-bottom:8px;border:.5px solid rgba(186,117,23,.3)"></div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>Cible & profondeur</div><div class="fg"><label class="lbl">Zone</label><select id="rz" onchange="zCh()"><option value="Hippocampe droit">Hippocampe droit</option><option value="Hippocampe gauche">Hippocampe gauche</option><option value="CA1 droit">CA1 droit</option><option value="CA1 gauche">CA1 gauche</option><option value="CA3 droit">CA3 droit</option><option value="Cortex préfrontal">Cortex préfrontal</option><option value="custom">+ Autre zone...</option></select></div><div id="zcw" class="fg" style="display:none"><label class="lbl">Préciser</label><input type="text" id="zc"/></div><div class="fg"><label class="lbl">Profondeur Z (µm)</label><input type="number" id="rdp" placeholder="1500"/></div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Protocole</div><div id="rco"></div><button class="btns" onclick="addC()">+ Ajouter une condition</button><div style="margin-top:11px"><div class="lbl" style="margin-bottom:5px">Conditions fréquentes</div><div id="sc2"></div></div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Performance & signal</div><div class="fg"><label class="lbl">Engagement</label><select id="ren"><option>Très engagé (autonome)</option><option>Engagé</option><option>Modéré (aide ponctuelle)</option><option>Peu engagé</option><option>Désengagé</option></select></div><div class="fl"><div class="fg"><label class="lbl">Allers-retours</label><input type="number" id="rar"/></div><div class="fg"><label class="lbl">Durée (min)</label><input type="number" id="rdur"/></div></div><div class="fg"><label class="lbl">Qualité signal</label><select id="rs2"><option>Excellente (pas de bruit)</option><option>Bonne</option><option>Moyenne (quelques artefacts)</option><option>Mauvaise (bruit mouvement)</option></select></div><div class="fg"><label class="lbl">Commentaires</label><textarea id="rn"></textarea></div><div class="fg"><label class="lbl">Photo / vidéo (optionnel)</label><label style="display:flex;align-items:center;gap:9px;padding:9px;background:var(--bg3);border-radius:var(--rs);cursor:pointer;border:.5px dashed var(--border2)"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:var(--pc);stroke-width:2;stroke-linecap:round;flex-shrink:0"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span style="font-size:12px;color:var(--text2)">Ajouter photo ou vidéo</span><input type="file" id="r-media" accept="image/*,video/*" multiple capture="environment" style="display:none" onchange="prvMedia('r-media','r-mp')"/></label><div id="r-mp" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:5px"></div></div><button class="btnp" onclick="savR()">Enregistrer</button></div><div class="sh">Enregistrements récents</div><div id="rl"></div></div>
+<div id="t-training" class="sec content"><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Nouvelle session</div><div class="fl"><div class="fg"><label class="lbl">Animal</label><select id="tra"></select></div><div class="fg"><label class="lbl">Date</label><input type="date" id="trd"/></div></div><div class="fl"><div class="fg"><label class="lbl">Condition</label><select id="trc" onchange="cR()"><option>1m VR</option><option>60cm VR</option><option>80cm VR</option><option>120cm VR</option><option>Habituation</option><option>Gain protocol</option><option>Open Field</option><option>Autre</option></select></div><div class="fg"><label class="lbl">Durée (min)</label><input type="number" id="trd2" oninput="cR()"/></div></div><div class="fl"><div class="fg"><label class="lbl">Allers-retours</label><input type="number" id="trar" oninput="cR()"/></div><div class="fg"><label class="lbl">Récomp./min</label><input type="text" id="trr" readonly/></div></div><div class="fl"><div class="fg"><label class="lbl">Vitesse moyenne</label><input type="text" id="trv" readonly placeholder="cm/s"/></div><div class="fg"><label class="lbl">Distance estimée</label><input type="text" id="trdist" readonly placeholder="m"/></div></div><div class="fg"><label class="lbl">Engagement</label><select id="tre"><option>Très engagé (autonome)</option><option>Engagé (quelques pauses)</option><option>Modéré (aide ponctuelle)</option><option>Peu engagé (aide fréquente)</option><option>Désengagé</option></select></div><div class="fg"><label class="lbl">Observations</label><textarea id="trn"></textarea></div><div class="fg"><label class="lbl">Photo / vidéo (optionnel)</label><label style="display:flex;align-items:center;gap:9px;padding:9px;background:var(--bg3);border-radius:var(--rs);cursor:pointer;border:.5px dashed var(--border2)"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:var(--pc);stroke-width:2;stroke-linecap:round;flex-shrink:0"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span style="font-size:12px;color:var(--text2)">Ajouter photo ou vidéo</span><input type="file" id="tr-media" accept="image/*,video/*" multiple capture="environment" style="display:none" onchange="prvMedia('tr-media','tr-mp')"/></label><div id="tr-mp" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:5px"></div></div><button class="btnp" onclick="savTr()">Enregistrer</button></div><div class="fr" id="tr-filter" style="margin-top:12px"></div><div class="sh">Sessions récentes</div><div id="trl"></div></div>
+<div id="t-recording" class="sec content"><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Session d'enregistrement</div><div class="fl"><div class="fg"><label class="lbl">Animal</label><select id="ra"></select></div><div class="fg"><label class="lbl">Date</label><input type="date" id="rd"/></div></div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>Électrode</div><div class="fg"><label class="lbl">Type</label><select id="re" onchange="eCh()"><option value="Buzaki64">Buzaki 64</option><option value="Buzlin64">Buzlin 64</option><option value="Probe Rachel">Probe de Rachel (64ch)</option><option value="Bus3">Bus3</option><option value="custom">+ Nouveau type...</option></select></div><div id="ecw" class="fg" style="display:none"><label class="lbl">Nom</label><input type="text" id="ec"/></div><div class="fl"><div class="fg"><label class="lbl">Shanks totaux</label><input type="number" id="rst" oninput="uSh()"/></div><div class="fg"><label class="lbl">Shanks fonctionnels</label><input type="number" id="rsf" oninput="uSh()"/></div></div><div id="shw" style="display:none;font-size:11px;padding:7px 10px;background:rgba(186,117,23,.12);color:#e8a23a;border-radius:var(--rs);margin-bottom:8px;border:.5px solid rgba(186,117,23,.3)"></div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>Cible & profondeur</div><div class="fg"><label class="lbl">Zone</label><select id="rz" onchange="zCh()"><option value="Hippocampe droit">Hippocampe droit</option><option value="Hippocampe gauche">Hippocampe gauche</option><option value="CA1 droit">CA1 droit</option><option value="CA1 gauche">CA1 gauche</option><option value="CA3 droit">CA3 droit</option><option value="Cortex préfrontal">Cortex préfrontal</option><option value="custom">+ Autre zone...</option></select></div><div id="zcw" class="fg" style="display:none"><label class="lbl">Préciser</label><input type="text" id="zc"/></div><div class="fg"><label class="lbl">Profondeur Z (µm)</label><input type="number" id="rdp" placeholder="1500"/></div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Protocole</div><div id="rco"></div><button class="btns" onclick="addC()">+ Ajouter une condition</button><div style="margin-top:11px"><div class="lbl" style="margin-bottom:5px">Conditions fréquentes</div><div id="sc2"></div></div></div><div class="card"><div class="ct"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Performance & signal</div><div class="fg"><label class="lbl">Engagement</label><select id="ren"><option>Très engagé (autonome)</option><option>Engagé</option><option>Modéré (aide ponctuelle)</option><option>Peu engagé</option><option>Désengagé</option></select></div><div class="fl"><div class="fg"><label class="lbl">Allers-retours</label><input type="number" id="rar"/></div><div class="fg"><label class="lbl">Durée (min)</label><input type="number" id="rdur"/></div></div><div class="fg"><label class="lbl">Qualité signal</label><select id="rs2"><option>Excellente (pas de bruit)</option><option>Bonne</option><option>Moyenne (quelques artefacts)</option><option>Mauvaise (bruit mouvement)</option></select></div><div class="fg"><label class="lbl">Commentaires</label><textarea id="rn"></textarea></div><div class="fg"><label class="lbl">Photo / vidéo (optionnel)</label><label style="display:flex;align-items:center;gap:9px;padding:9px;background:var(--bg3);border-radius:var(--rs);cursor:pointer;border:.5px dashed var(--border2)"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:var(--pc);stroke-width:2;stroke-linecap:round;flex-shrink:0"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span style="font-size:12px;color:var(--text2)">Ajouter photo ou vidéo</span><input type="file" id="r-media" accept="image/*,video/*" multiple capture="environment" style="display:none" onchange="prvMedia('r-media','r-mp')"/></label><div id="r-mp" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:5px"></div></div><button class="btnp" onclick="savR()">Enregistrer</button></div><div class="fr" id="rec-filter" style="margin-top:12px"></div><div class="sh">Enregistrements récents</div><div id="rl"></div></div>
 <div id="t-planning" class="sec content">
   <div class="card">
     <div class="ct"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Planning expérimental</div>
@@ -701,7 +722,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
       <div class="fg"><label class="lbl">Animal</label><select id="ana-a" onchange="rAnalysis()"></select></div>
       <div class="fg"><label class="lbl">Période</label><select id="ana-window" onchange="rAnalysis()"><option value="all">Toute la période</option><option value="30">30 derniers jours</option><option value="14">14 derniers jours</option><option value="7">7 derniers jours</option></select></div>
     </div>
-    <div class="fg"><label class="lbl">Comparaison</label><select id="ana-mode" onchange="rAnalysis()"><option value="animal">Animal sélectionné</option><option value="project">Projet actif</option></select></div>
+    <div class="fg"><label class="lbl">Comparaison</label><select id="ana-mode" onchange="rAnalysis()"><option value="animal" selected>Animal sélectionné</option><option value="project">Projet actif</option></select></div>
   </div>
   <div id="ana-p"></div>
 </div>
@@ -869,6 +890,170 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   <p style="font-size:11px;color:var(--text3);line-height:1.5;margin-top:10px">Les nouvelles saisies seront automatiquement marquées avec l’opérateur actif. Cette version est volontairement légère pour ne pas casser les onglets existants.</p>
 </div></div>
 <div class="toast" id="toast"></div>
+<!-- Modal édition saisie journalière -->
+<div id="modal-edit-daily" class="mw"><div class="modal">
+  <div class="mh"><span>Modifier la saisie journalière</span><button class="xb" onclick="closeM('modal-edit-daily')">✕</button></div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Informations de base</div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Animal</label><input id="eed-animal" readonly style="opacity:.6"/></div>
+      <div class="fg"><label class="lbl">Date</label><input type="date" id="eed-date"/></div>
+    </div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Poids brut (g)</label><input type="number" id="eed-weight-brut" step=".01" placeholder="poids avec chapeau"/></div>
+      <div class="fg"><label class="lbl">Poids réel (g)</label><input type="number" id="eed-weight" step=".01" placeholder="poids net"/></div>
+    </div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Eau reçue (mL)</label><input type="number" id="eed-water" step=".1"/></div>
+      <div class="fg"><label class="lbl">Restriction</label><select id="eed-restriction"><option value="">Standard</option><option value="Restriction hydrique">Restriction hydrique</option><option value="Restriction calorique">Restriction calorique</option><option value="Libre accès">Libre accès</option></select></div>
+    </div>
+  </div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Score NC3Rs (0-2 par critère)</div>
+    <div id="eed-scores-grid" class="fl" style="flex-wrap:wrap;gap:6px"></div>
+    <div style="font-size:11px;color:var(--text2);margin-top:6px">Total : <strong id="eed-score-total">—</strong> / 16</div>
+  </div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Statut et observations</div>
+    <div class="fg"><label class="lbl">Statut</label>
+      <select id="eed-status">
+        <option value="active">Actif</option>
+        <option value="sick">Malade / En observation</option>
+        <option value="recovery">Récupération post-op</option>
+        <option value="pause">En pause</option>
+        <option value="dead">Décédé</option>
+      </select>
+    </div>
+    <div class="fg"><label class="lbl">Note de statut</label><input id="eed-status-note" placeholder="ex: légère boiterie, récupère bien..."/></div>
+    <div class="fg"><label class="lbl">Observations générales</label><textarea id="eed-notes" style="min-height:60px"></textarea></div>
+  </div>
+  <button type="button" class="btnp" onclick="saveEditDaily()">✓ Enregistrer les modifications</button>
+  <button type="button" class="btns" onclick="closeM('modal-edit-daily')">Annuler</button>
+</div></div>
+
+<!-- Modal édition training -->
+<div id="modal-edit-training" class="mw"><div class="modal">
+  <div class="mh"><span>Modifier le training</span><button class="xb" onclick="closeM('modal-edit-training')">✕</button></div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Informations de base</div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Animal</label><input id="etr-animal" readonly style="opacity:.6"/></div>
+      <div class="fg"><label class="lbl">Date</label><input type="date" id="etr-date"/></div>
+    </div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Heure début</label><input type="time" id="etr-h1"/></div>
+      <div class="fg"><label class="lbl">Heure fin</label><input type="time" id="etr-h2"/></div>
+    </div>
+  </div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Performance</div>
+    <div class="fg"><label class="lbl">Condition</label><select id="etr-cond"></select></div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Allers-retours</label><input type="number" id="etr-ar" placeholder="ex: 40" oninput="etrUpdatePerf()"/></div>
+      <div class="fg"><label class="lbl">Durée (min)</label><input type="number" id="etr-dur" step=".1" placeholder="ex: 7.5" oninput="etrUpdatePerf()"/></div>
+    </div>
+    <div id="etr-perf-summary" style="font-size:11px;color:var(--pc);font-weight:600;min-height:16px;margin-top:4px"></div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Poids avant (g)</label><input type="number" id="etr-weight" step=".01"/></div>
+      <div class="fg"><label class="lbl">Eau reçue (mL)</label><input type="number" id="etr-water" step=".1"/></div>
+    </div>
+  </div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Observations</div>
+    <div class="fg"><label class="lbl">Comportement / notes</label><textarea id="etr-notes" style="min-height:60px"></textarea></div>
+    <div class="fg"><label class="lbl">Statut de l'animal ce jour</label><input id="etr-status-note" placeholder="ex: motivé, fatigue, bonne session..."/></div>
+  </div>
+  <button type="button" class="btnp" onclick="saveEditTraining()">✓ Enregistrer les modifications</button>
+  <button type="button" class="btns" onclick="closeM('modal-edit-training')">Annuler</button>
+</div></div>
+
+<!-- Modal édition chirurgie -->
+<div id="modal-edit-chir" class="mw"><div class="modal">
+  <div class="mh"><span>Modifier la chirurgie</span><button class="xb" onclick="closeM('modal-edit-chir')">✕</button></div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Informations de base</div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Animal</label><input id="ech-animal" readonly style="opacity:.6"/></div>
+      <div class="fg"><label class="lbl">Date</label><input type="date" id="ech-date"/></div>
+    </div>
+    <div class="fg"><label class="lbl">Type de chirurgie</label><input id="ech-type" placeholder="ex: Crâniotomie hippocampe droit"/></div>
+  </div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Paramètres cliniques</div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Poids (g)</label><input type="number" id="ech-weight" step=".01"/></div>
+      <div class="fg"><label class="lbl">Anesthésie</label><select id="ech-anesthesia"><option>Keta/Xyla</option><option>Isoflurane</option><option>Keta/Xyla + ISO</option></select></div>
+    </div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Dose anesthésie (mL)</label><input type="number" id="ech-dose" step=".01"/></div>
+      <div class="fg"><label class="lbl">Bupré (mL)</label><input type="number" id="ech-bupre" step=".01"/></div>
+    </div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Heure début</label><input type="time" id="ech-h1"/></div>
+      <div class="fg"><label class="lbl">Heure fin</label><input type="time" id="ech-h2"/></div>
+    </div>
+  </div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Matériel implanté</div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Chapeau posé ?</label><select id="ech-hat" onchange="document.getElementById('ech-hat-w').disabled=this.value==='0'"><option value="0">Non</option><option value="1">Oui</option></select></div>
+      <div class="fg"><label class="lbl">Poids chapeau (g)</label><input type="number" id="ech-hat-w" step=".01" disabled/></div>
+    </div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Ciment (g)</label><input type="number" id="ech-cement" step=".01"/></div>
+      <div class="fg"><label class="lbl">Implant (g)</label><input type="number" id="ech-implant-w" step=".01"/></div>
+    </div>
+    <div class="fg"><label class="lbl">Description matériel</label><input id="ech-hardware-note" placeholder="ex: chapeau VR + ciment + connecteur"/></div>
+  </div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Observations</div>
+    <div class="fg"><label class="lbl">Déroulement, incidents, réveil...</label><textarea id="ech-notes" style="min-height:80px"></textarea></div>
+  </div>
+  <button type="button" class="btnp" onclick="saveEditChir()">✓ Enregistrer les modifications</button>
+  <button type="button" class="btns" onclick="closeM('modal-edit-chir')">Annuler</button>
+</div></div>
+
+<!-- Modal édition enregistrement -->
+<div id="modal-edit-rec" class="mw"><div class="modal">
+  <div class="mh"><span>Modifier l'enregistrement</span><button class="xb" onclick="closeM('modal-edit-rec')">✕</button></div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Informations de base</div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Animal</label><input id="erec-animal" readonly style="opacity:.6"/></div>
+      <div class="fg"><label class="lbl">Date</label><input type="date" id="erec-date"/></div>
+    </div>
+  </div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Configuration électrophysio</div>
+    <div class="fg"><label class="lbl">Électrode / Sonde</label><input id="erec-elec" placeholder="ex: Neuropixels 1.0, tetrode..."/></div>
+    <div class="fg"><label class="lbl">Zone / Cible</label><input id="erec-zone" placeholder="ex: CA1, DG, PFC..."/></div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Profondeur (µm)</label><input type="number" id="erec-depth"/></div>
+      <div class="fg"><label class="lbl">Engagement</label><select id="erec-engage"><option value="">—</option><option>Oui</option><option>Non</option><option>Partiel</option></select></div>
+    </div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Shanks total</label><input type="number" id="erec-shanks-total"/></div>
+      <div class="fg"><label class="lbl">Shanks OK</label><input type="number" id="erec-shanks-ok"/></div>
+    </div>
+    <div class="fg"><label class="lbl">Qualité du signal</label>
+      <select id="erec-signal"><option value="">—</option><option>Excellente</option><option>Bonne</option><option>Moyenne</option><option>Mauvaise</option><option>Pas de signal</option></select>
+    </div>
+  </div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Performance comportementale</div>
+    <div class="fl">
+      <div class="fg"><label class="lbl">Allers-retours</label><input type="number" id="erec-ar"/></div>
+      <div class="fg"><label class="lbl">Durée (min)</label><input type="number" id="erec-dur" step=".1"/></div>
+    </div>
+  </div>
+  <div class="edit-modal-section">
+    <div class="edit-modal-section-title">Commentaires</div>
+    <div class="fg"><label class="lbl">Notes</label><textarea id="erec-notes" style="min-height:70px"></textarea></div>
+  </div>
+  <button type="button" class="btnp" onclick="saveEditRec()">✓ Enregistrer les modifications</button>
+  <button type="button" class="btns" onclick="closeM('modal-edit-rec')">Annuler</button>
+</div></div>
+
 <script>
 if(location.search.includes('reset')){localStorage.clear();location.href=location.pathname;}
 const PR={LT:{c:'#1D9E75',d:'rgba(29,158,117,.12)',m:'rgba(29,158,117,.25)'},LK:{c:'#378ADD',d:'rgba(55,138,221,.12)',m:'rgba(55,138,221,.25)'},ER:{c:'#D4537E',d:'rgba(212,83,126,.12)',m:'rgba(212,83,126,.25)'},PP:{c:'#7B5EA7',d:'rgba(123,94,167,.12)',m:'rgba(123,94,167,.25)'}};
@@ -908,7 +1093,7 @@ function rUsers(){
     }).join(' ');
     const sub=assigned.length?(assigned.length+' projet'+(assigned.length>1?'s':'')):'tous les projets (aucun filtre)';
     return '<div class="rc"><div class="rc-top"><div><div class="rc-name">'+esc(u.name)+(u.id===d.activeUserId?' <span class="user-pill">actif</span>':'')+'</div><div class="rc-sub">'+esc(u.role||'—')+' · '+sub+'</div></div><button class="opbtn" onclick="setActiveUser(\''+u.id+'\')">Activer</button></div><div style="margin-top:8px"><div class="lbl" style="margin-bottom:5px">Projets de cet utilisateur</div><div style="display:flex;flex-wrap:wrap;gap:6px">'+chips+'</div></div></div>';
-  }).join('');}
+  }).join('')+'</div>';}
   updateOperatorBar();
 }
 function toggleUserProject(uid,code){
@@ -938,10 +1123,24 @@ function rProjectsList(){
 }
 function switchToProject(code){
   if(!PR[code])return;
-  cp=code;sPC(code);
+  cp=code; sPC(code);
   clM('modal-projects');
-  syncProjects();setTimeout(rPjBanner,50);pS();rA();if(typeof rTr==='function')rTr();if(typeof rR==='function')rR();if(typeof rCh==='function')rCh();
-  toast('Projet '+code);
+  // Réinitialiser les filtres
+  if(typeof chirF !== 'undefined') chirF='Tous';
+  if(typeof trF !== 'undefined') trF='Tous';
+  // Peupler TOUS les sélecteurs d'animaux
+  syncProjects();
+  pS();
+  setTimeout(rPjBanner, 50);
+  // Rafraîchir tous les onglets actifs et les listes
+  window._recFilter=''; window._trFilter=''; const allRenderers = [rA, rTr, rR, rDailyList, rDash, rAlerts, rConditions]; // rCh/rChir: appelées uniquement quand l'onglet chir est visible
+  allRenderers.forEach(fn => { try{ if(typeof fn==='function') fn(); }catch(e){} });
+  // Forcer la mise à jour des selects dans chaque onglet
+  ['ca','tra','ra','da'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.dispatchEvent(new Event('change'));
+  });
+  toast('Projet '+code+' — '+PR[code]?.name);
 }
 function setActiveUser(id){const d=ensureUsers(gD());d.activeUserId=id;d.users.forEach(u=>u.active=(u.id===id));sv(d);rUsers();syncProjects();setTimeout(rPjBanner,50);pS();rA();if(typeof rTr==='function')rTr();if(typeof rR==='function')rR();if(typeof rCh==='function')rCh();toast('Opérateur actif : '+currentUser(d).name);}
 function addUser(){const name=(document.getElementById('user-new-name')?.value||'').trim(),role=(document.getElementById('user-new-role')?.value||'').trim();if(!name){toast('Nom requis');return;}const d=ensureUsers(gD());const id='u'+Date.now();d.users.push({id,name,role,active:false});sv(d);document.getElementById('user-new-name').value='';document.getElementById('user-new-role').value='';rUsers();toast('Utilisateur ajouté');}
@@ -1070,7 +1269,16 @@ function alts(proj){
   });
   return{crit,vig};
 }
-function swP(p,el){cp=p;sPC(p);setTimeout(rPjBanner,50);document.querySelectorAll('.pp').forEach(b=>b.classList.remove('on'));el.classList.add('on');pS();rA();rTr();rR();rCh();}
+function swP(p,el){
+  cp=p; sPC(p);
+  setTimeout(rPjBanner,50);
+  document.querySelectorAll('.pp').forEach(b=>b.classList.remove('on'));
+  if(el)el.classList.add('on');
+  if(typeof chirF!=='undefined')chirF='Tous';
+  if(typeof trF!=='undefined')trF='Tous';
+  pS();
+  [rA,rTr,rR,rDailyList].forEach(fn=>{try{if(typeof fn==='function')fn();}catch(e){}});
+}
 
 function escHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 function asText(o){
@@ -1140,28 +1348,273 @@ function itemActions(type,id){return '<div class="row-actions"><button class="mi
 function refreshAfterChange(type){pS();rA(); if(type==='daily'){rDailyList();rDash&&rDash();} if(type==='training'){rTr();rDash&&rDash();} if(type==='chirurgie'){rCh();} if(type==='recording'){rR();} if(document.getElementById('t-planning')&&document.getElementById('t-planning').classList.contains('on'))rPlanning();}
 function editItem(type,id){
   const d=gD(),res=findItem(d,type,id),it=res.item;if(!it){toast('Saisie introuvable');return;}
+  window._editItemId=id; window._editItemType=type;
   if(type==='daily'){
-    const w=prompt('Poids réel (g)',it.weight??''); if(w===null)return; it.weight=w===''?null:parseFloat(w);
-    const water=prompt('Eau (mL)',it.water??''); if(water===null)return; it.water=water===''?null:parseFloat(water);
-    const notes=prompt('Observations',it.notes||''); if(notes===null)return; it.notes=notes;
+    // Naviguer vers l'onglet saisie et pré-remplir le vrai formulaire
+    tab('daily');
+    setTimeout(()=>{
+      // Animal
+      const da=document.getElementById('da');
+      if(da){da.value=it.animal;da.dispatchEvent(new Event('change'));}
+      // Date
+      const dd=document.getElementById('dd');
+      if(dd) dd.value=it.date||'';
+      // Poids
+      const dw=document.getElementById('dw');
+      if(dw){dw.value=it.weightBrut??it.weight??''; dw.dispatchEvent(new Event('input'));}
+      // Eau
+      const dea=document.getElementById('dea');
+      if(dea) dea.value=it.water??'';
+      // Restriction
+      const dr=document.getElementById('dr');
+      if(dr) dr.value=it.restriction||'Non';
+      // Statut
+      const ds=document.getElementById('d-status');
+      if(ds) ds.value=it.status||'active';
+      const dsn=document.getElementById('d-status-note');
+      if(dsn) dsn.value=it.statusNote||'';
+      // Notes
+      const dn=document.getElementById('dn');
+      if(dn) dn.value=it.notes||'';
+      // Scores NC3Rs — remplir la grille après rendu
+      setTimeout(()=>{
+        const scores=it.scores||{};
+        Object.keys(scores).forEach(k=>{
+          const scoreEl=document.querySelector(`[data-score-key="${k}"]`);
+          if(scoreEl) scoreEl.value=scores[k];
+        });
+        // Mettre à jour le total
+        if(typeof uSD==='function') uSD();
+      }, 200);
+      // Mettre le bouton en mode édition
+      const btn=document.querySelector('#t-daily .btnp');
+      if(btn){
+        btn.textContent='✓ Modifier la saisie';
+        btn.onclick=function(){savDEdit(id);};
+      }
+      toast('Saisie chargée — modifie et clique "Modifier la saisie"', 3000);
+      // Scroll vers le haut du formulaire
+      document.getElementById('t-daily')?.scrollTo(0,0);
+    }, 100);
   }else if(type==='training'){
-    const cond=prompt('Condition',it.cond||''); if(cond===null)return; it.cond=cond;
-    const dur=prompt('Durée (min)',it.dur??''); if(dur===null)return; it.dur=dur===''?null:parseFloat(dur);
-    const ar=prompt('Allers-retours',it.ar??''); if(ar===null)return; it.ar=ar===''?null:parseInt(ar);
-    it.rate=(it.ar&&it.dur)?(it.ar/it.dur).toFixed(2):it.rate;
-    const notes=prompt('Observations',it.notes||''); if(notes===null)return; it.notes=notes;
+    tab('training');
+    setTimeout(()=>{
+      const ta=document.getElementById('tra');
+      if(ta){ta.value=it.animal;ta.dispatchEvent(new Event('change'));}
+      const td=document.getElementById('trd');
+      if(td) td.value=it.date||'';
+      const th1=document.getElementById('trh1');if(th1)th1.value=it.h1||'';
+      const th2=document.getElementById('trh2');if(th2)th2.value=it.h2||'';
+      const tc=document.getElementById('trc');
+      if(tc){tc.value=it.cond||'';tc.dispatchEvent(new Event('change'));}
+      const tar=document.getElementById('trar');if(tar)tar.value=it.ar??'';
+      const td2=document.getElementById('trd2');if(td2)td2.value=it.dur??'';
+      const tw=document.getElementById('trw');if(tw)tw.value=it.weight??'';
+      const twa=document.getElementById('trwa');if(twa)twa.value=it.water??'';
+      const tn=document.getElementById('trn');if(tn)tn.value=it.notes||'';
+      if(typeof cR==='function') cR();
+      // Mode édition
+      const btn=document.querySelector('#t-training .btnp');
+      if(btn){btn.textContent='✓ Modifier le training';btn.onclick=function(){savTrEdit(id);};}
+      toast('Training chargé — modifie et clique "Modifier le training"', 3000);
+      document.getElementById('t-training')?.scrollTo(0,0);
+    }, 100);
   }else if(type==='chirurgie'){
-    const ty=prompt('Type de chirurgie',it.type||''); if(ty===null)return; it.type=ty;
-    const w=prompt('Poids (g)',it.weight??''); if(w===null)return; it.weight=w===''?null:parseFloat(w);
-    const notes=prompt('Observations',it.notes||''); if(notes===null)return; it.notes=notes;
+    tab('chirurgie');
+    setTimeout(()=>{
+      const ca=document.getElementById('ca');
+      if(ca){ca.value=it.animal;ca.dispatchEvent(new Event('change'));}
+      const cd=document.getElementById('cd');if(cd)cd.value=it.date||'';
+      // Type chirurgie
+      const cty=document.getElementById('cty');
+      if(cty){
+        const exists=[...cty.options].some(o=>o.value===it.type||o.textContent===it.type);
+        if(exists){cty.value=it.type;}
+        else{
+          const customWrap=document.getElementById('cty-custom-wrap');
+          if(customWrap)customWrap.style.display='block';
+          const customInput=document.getElementById('cty-custom');
+          if(customInput)customInput.value=it.type||'';
+          cty.value='custom';
+        }
+      }
+      const cw=document.getElementById('cw');if(cw)cw.value=it.weight??'';
+      const can=document.getElementById('can');if(can)can.value=it.anesthesia||'Keta/Xyla';
+      const cad=document.getElementById('cad');if(cad)cad.value=it.dose??'';
+      const cb2=document.getElementById('cb2');if(cb2)cb2.value=it.bupre??'';
+      const ch1=document.getElementById('ch1');if(ch1)ch1.value=it.h1||'';
+      const ch2=document.getElementById('ch2');if(ch2)ch2.value=it.h2||'';
+      const chat=document.getElementById('c-hat');
+      if(chat){chat.value=it.hat?'1':'0';const hw=document.getElementById('c-hat-w');if(hw){hw.disabled=!it.hat;hw.value=it.hatWeight??'';}}
+      const cce=document.getElementById('c-cement-w');if(cce)cce.value=it.cementWeight??'';
+      const cim=document.getElementById('c-implant-w');if(cim)cim.value=it.implantWeight??'';
+      const chn=document.getElementById('c-hardware-note');if(chn)chn.value=it.hardwareNote||'';
+      const cn=document.getElementById('cn');if(cn)cn.value=it.notes||'';
+      // Mode édition
+      const btn=document.querySelector('#t-chirurgie .btnp[onclick*="savCh"]');
+      if(btn){btn.textContent='✓ Modifier la chirurgie';btn.onclick=function(){savChEdit(id);};}
+      toast('Chirurgie chargée — modifie et clique "Modifier la chirurgie"', 3000);
+      document.getElementById('t-chirurgie')?.scrollTo(0,0);
+    }, 100);
   }else if(type==='recording'){
-    const zone=prompt('Zone/cible',it.zone||''); if(zone===null)return; it.zone=zone;
-    const elec=prompt('Électrode',it.elec||''); if(elec===null)return; it.elec=elec;
-    const notes=prompt('Commentaires',it.notes||''); if(notes===null)return; it.notes=notes;
+    tab('recording');
+    setTimeout(()=>{
+      const ra=document.getElementById('ra');
+      if(ra){ra.value=it.animal;ra.dispatchEvent(new Event('change'));}
+      const rd=document.getElementById('rd');if(rd)rd.value=it.date||'';
+      // Électrode
+      const re=document.getElementById('re');
+      if(re){
+        const exists=[...re.options].some(o=>o.value===it.elec||o.textContent===it.elec);
+        if(exists){re.value=it.elec;if(typeof eCh==='function')eCh();}
+        else{re.value='custom';const ecw=document.getElementById('ecw');if(ecw)ecw.style.display='block';const ec=document.getElementById('ec');if(ec)ec.value=it.elec||'';}
+      }
+      // Shanks
+      const rst=document.getElementById('rst');if(rst)rst.value=it.shanksTotal??'';
+      const rsf=document.getElementById('rsf');if(rsf)rsf.value=it.shanksOk??'';
+      if(typeof uSh==='function')uSh();
+      // Zone
+      const rz=document.getElementById('rz');
+      if(rz){
+        const exists=[...rz.options].some(o=>o.value===it.zone||o.textContent===it.zone);
+        if(exists){rz.value=it.zone;if(typeof zCh==='function')zCh();}
+        else{rz.value='custom';const zcw=document.getElementById('zcw');if(zcw)zcw.style.display='block';const zc=document.getElementById('zc');if(zc)zc.value=it.zone||'';}
+      }
+      const rdp=document.getElementById('rdp');if(rdp)rdp.value=it.depth??'';
+      // Protocole — recharger les conditions
+      if(it.protocol&&it.protocol.length){
+        cL=[...it.protocol]; if(typeof rCL==='function')rCL();
+      } else {
+        cL=[]; if(typeof rCL==='function')rCL();
+      }
+      // Performance
+      const ren=document.getElementById('ren');if(ren)ren.value=it.engage||'Engagé';
+      const rar=document.getElementById('rar');if(rar)rar.value=it.ar??'';
+      const rdur=document.getElementById('rdur');if(rdur)rdur.value=it.dur??'';
+      const rs2=document.getElementById('rs2');if(rs2)rs2.value=it.signal||'';
+      const rn=document.getElementById('rn');if(rn)rn.value=it.notes||'';
+      // Mode édition
+      const btn=document.querySelector('#t-recording .btnp[onclick*="savR"]');
+      if(btn){btn.textContent='✓ Modifier l\u2019enregistrement';btn.onclick=function(){savRecEdit(id);};}
+      toast('Enregistrement chargé — modifie les conditions et clique "Modifier"', 3000);
+      document.getElementById('t-recording')?.scrollTo(0,0);
+    }, 150);
   }else{
     const notes=prompt('Note/description',it.notes||it.desc||''); if(notes===null)return; it.notes=notes;
+    it.updatedAt=new Date().toISOString(); logAction(d,'edit',type,it); sv(d); refreshAfterChange(type); toast('✓ Modifié');
   }
-  it.updatedAt=new Date().toISOString(); logAction(d,'edit',type,it); sv(d); refreshAfterChange(type); toast('✓ Saisie modifiée');
+}
+function set(id,v){const el=document.getElementById(id);if(el)el.value=v;}
+function eedUpdateTotal(){
+  const names=['Orbital tightening','Nose bulge','Cheek bulge','Ear position','Whisker change','Coat/fur change','Posture','Activity'];
+  const total=names.reduce((s,n,i)=>s+parseInt(document.getElementById('eed-sc-'+i)?.value||0),0);
+  const el=document.getElementById('eed-score-total');if(el)el.textContent=total;
+}
+function etrUpdatePerf(){
+  const ar=parseFloat(document.getElementById('etr-ar')?.value)||0;
+  const dur=parseFloat(document.getElementById('etr-dur')?.value)||0;
+  const cond=document.getElementById('etr-cond')?.value||'';
+  const p=calcConditionPerf(cond,ar,dur);
+  const el=document.getElementById('etr-perf-summary');
+  if(!el)return;
+  const gain=p.spec?.gain??1;
+  let distStr=p.distanceM?p.distanceM.toFixed(1)+' m VR':'—';
+  if(p.wheelDistanceM&&Math.abs(gain-1)>0.01) distStr+=' / '+p.wheelDistanceM.toFixed(1)+' m roue';
+  el.textContent=ar&&dur?`${p.arMin?.toFixed(2)||'—'} AR/min · ${p.speedCms?.toFixed(1)||'—'} cm/s · ${distStr}`:'';
+}
+function saveEditDaily(){
+  try{
+    const d=gD(),res=findItem(d,'daily',window._editItemId),it=res.item;
+    if(!it){toast('Saisie introuvable');return;}
+    const names=['Orbital tightening','Nose bulge','Cheek bulge','Ear position','Whisker change','Coat/fur change','Posture','Activity'];
+    const sc={};names.forEach((n,i)=>{sc[n]=parseInt(document.getElementById('eed-sc-'+i)?.value||0);});
+    Object.assign(it,{
+      date:document.getElementById('eed-date').value,
+      weightBrut:parseFloat(document.getElementById('eed-weight-brut').value)||null,
+      weight:parseFloat(document.getElementById('eed-weight').value)||null,
+      water:parseFloat(document.getElementById('eed-water').value)||null,
+      restriction:document.getElementById('eed-restriction').value,
+      status:document.getElementById('eed-status').value,
+      statusNote:document.getElementById('eed-status-note').value,
+      notes:document.getElementById('eed-notes').value,
+      scores:sc, scoreTotal:Object.values(sc).reduce((a,b)=>a+b,0),
+      updatedAt:new Date().toISOString()
+    });
+    logAction(d,'edit','daily',it); sv(d); closeM('modal-edit-daily'); refreshAfterChange('daily'); toast('✓ Saisie modifiée');
+  }catch(e){toast('Erreur: '+e.message);}
+}
+function saveEditTraining(){
+  try{
+    const d=gD(),res=findItem(d,'training',window._editItemId),it=res.item;
+    if(!it){toast('Training introuvable');return;}
+    const ar=parseInt(document.getElementById('etr-ar')?.value)||null;
+    const dur=parseFloat(document.getElementById('etr-dur')?.value)||null;
+    const cond=document.getElementById('etr-cond')?.value||it.cond;
+    const p=calcConditionPerf(cond,ar,dur);
+    Object.assign(it,{
+      date:document.getElementById('etr-date').value,
+      h1:document.getElementById('etr-h1').value,
+      h2:document.getElementById('etr-h2').value,
+      cond, ar, dur,
+      rate:p.arMin?parseFloat(p.arMin.toFixed(2)):null,
+      distanceM:p.distanceM,
+      wheelDistanceM:p.wheelDistanceM,
+      speedCms:p.speedCms,
+      condSpec:p.spec,
+      weight:parseFloat(document.getElementById('etr-weight')?.value)||null,
+      water:parseFloat(document.getElementById('etr-water')?.value)||null,
+      notes:document.getElementById('etr-notes').value,
+      statusNote:document.getElementById('etr-status-note').value,
+      updatedAt:new Date().toISOString()
+    });
+    logAction(d,'edit','training',it); sv(d); closeM('modal-edit-training'); refreshAfterChange('training'); toast('✓ Training modifié');
+  }catch(e){toast('Erreur: '+e.message);}
+}
+function saveEditChir(){
+  try{
+    const d=gD(),res=findItem(d,'chirurgie',window._editItemId),it=res.item;
+    if(!it){toast('Chirurgie introuvable');return;}
+    const hatVal=document.getElementById('ech-hat')?.value==='1';
+    Object.assign(it,{
+      date:document.getElementById('ech-date').value,
+      type:document.getElementById('ech-type').value,
+      weight:parseFloat(document.getElementById('ech-weight')?.value)||null,
+      anesthesia:document.getElementById('ech-anesthesia')?.value,
+      dose:parseFloat(document.getElementById('ech-dose')?.value)||null,
+      bupre:parseFloat(document.getElementById('ech-bupre')?.value)||null,
+      h1:document.getElementById('ech-h1').value,
+      h2:document.getElementById('ech-h2').value,
+      hat:hatVal,
+      hatWeight:hatVal?parseFloat(document.getElementById('ech-hat-w')?.value)||null:null,
+      cementWeight:parseFloat(document.getElementById('ech-cement')?.value)||null,
+      implantWeight:parseFloat(document.getElementById('ech-implant-w')?.value)||null,
+      hardwareNote:document.getElementById('ech-hardware-note').value,
+      notes:document.getElementById('ech-notes').value,
+      updatedAt:new Date().toISOString()
+    });
+    logAction(d,'edit','chirurgie',it); sv(d); closeM('modal-edit-chir'); refreshAfterChange('chirurgie'); rChir && rChir(); toast('✓ Chirurgie modifiée');
+  }catch(e){toast('Erreur: '+e.message);}
+}
+function saveEditRec(){
+  try{
+    const d=gD(),res=findItem(d,'recording',window._editItemId),it=res.item;
+    if(!it){toast('Enregistrement introuvable');return;}
+    Object.assign(it,{
+      date:document.getElementById('erec-date').value,
+      elec:document.getElementById('erec-elec').value,
+      zone:document.getElementById('erec-zone').value,
+      depth:parseInt(document.getElementById('erec-depth')?.value)||null,
+      engage:document.getElementById('erec-engage').value,
+      shanksTotal:parseInt(document.getElementById('erec-shanks-total')?.value)||null,
+      shanksOk:parseInt(document.getElementById('erec-shanks-ok')?.value)||null,
+      signal:document.getElementById('erec-signal').value,
+      ar:parseInt(document.getElementById('erec-ar')?.value)||null,
+      dur:parseFloat(document.getElementById('erec-dur')?.value)||null,
+      notes:document.getElementById('erec-notes').value,
+      updatedAt:new Date().toISOString()
+    });
+    logAction(d,'edit','recording',it); sv(d); closeM('modal-edit-rec'); refreshAfterChange('recording'); toast('✓ Enregistrement modifié');
+  }catch(e){toast('Erreur: '+e.message);}
 }
 function deleteItem(type,id){
   const d=gD(),res=findItem(d,type,id),it=res.item;if(!it){toast('Saisie introuvable');return;}
@@ -1190,7 +1643,6 @@ function rHistory(){
 }
 
 function tab(t){
-  if(t==='analysis')t='dashboard';
   if(t==='tags')t='search';
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
@@ -1198,7 +1650,7 @@ function tab(t){
   const btn=[...document.querySelectorAll('.nb')].find(b=>(b.getAttribute('onclick')||'').includes("tab('"+t+"')"));
   if(btn)btn.classList.add('on');
   pS();
-  ({animals:rA,chirurgie:rCh,training:rTr,recording:()=>{rR();bSC();},timeline:rTimeline,dashboard:rDash,alerts:rAlerts,media:rMedia,links:rLinks,tags:rTags,analysis:rAnalysis,calendar:rCalendar,search:rSearch,fiche:rF,daily:()=>{rDailyList();}})[t]?.();
+  ({animals:rA,chirurgie:()=>{rCh();rChir();},training:rTr,recording:()=>{rR();bSC();},timeline:rTimeline,planning:rPlanning,dashboard:rDash,alerts:rAlerts,media:rMedia,links:rLinks,tags:rTags,analysis:rAnalysis,calendar:rCalendar,search:rSearch,fiche:rF,daily:()=>{rDailyList();},groupes:rGroupes,armoire:rArmoire,backup:rBackup,export:rExport,history:rHistory})[t]?.();
 }
 function pS(){
   const d=gD(),animals=d.animals.filter(a=>a.proj===cp);
@@ -1255,7 +1707,13 @@ function rA(){
       dc=`<span class="dchip" style="background:rgba(99,153,34,.15);color:#8fce4a">${days}j</span>`;
     }
     const age=animalAgeLabel(a), status=animalStatusLabel(a);
-    return `<div class="acard${animalInactive(a)?' inactive':''}"><div class="ac-top"><div class="av">${init}</div><div style="flex:1;min-width:0"><div class="aname">${a.id}${genoBadgeHtml(a)}${age?`<span class="age-pill">${age}</span>`:''}${status?` <span class="status-badge">${status}</span>`:''}</div><div class="asub">${(()=>{const fc=findAnimalCage(a.id);return fc?`🗄️ ${escHtml(fc.arm.name)} · ${escHtml(fc.cage.name)}`:`Cage ${a.cage||'—'}`;})()}${a.experboard?' · EB#'+a.experboard:''}${a.numero?' · '+a.numero:''}${hardwareWeight(a)>0?' · 🎩 '+hardwareWeight(a).toFixed(2)+'g':''} · ${a.sp} · ${a.sx} · ${chirs.length} chir · ${recs.length} enreg.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${badges}</div></div><div class="astats"><div class="sm"><div class="smv">${w?w+'g':'—'}</div><div class="sml">Poids</div></div><div class="sm"><div class="smv">${lt?lt.ar:'—'}</div><div class="sml">Derniers AR</div></div><div class="sm" style="display:flex;flex-direction:column;align-items:center;justify-content:center">${dc}<div class="sml" style="margin-top:3px">Pesée</div></div></div><div class="row-actions" style="margin-top:8px"><button class="mini-btn" onclick="editAnimal('${a.id}')">Modifier</button><button class="mini-btn" onclick="deleteAnimal('${a.id}')">Supprimer</button></div></div>`;
+    return `<div class="acard${animalInactive(a)?' inactive':''}"><div class="ac-top"><div class="av">${init}</div><div style="flex:1;min-width:0"><div class="aname">${a.id}${genoBadgeHtml(a)}${age?`<span class="age-pill">${age}</span>`:''}${status?` <span class="status-badge">${status}</span>`:''}</div><div class="asub">${(()=>{const fc=findAnimalCage(a.id);return fc?`🗄️ ${escHtml(fc.arm.name)} · ${escHtml(fc.cage.name)}`:`Cage ${a.cage||'—'}`;})()}${a.experboard?' · EB#'+a.experboard:''}${a.numero?' · '+a.numero:''}${hardwareWeight(a)>0?' · 🎩 '+hardwareWeight(a).toFixed(2)+'g':''} · ${a.sp} · ${a.sx} · ${chirs.length} chir · ${recs.length} enreg.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${badges}</div></div><div class="astats"><div class="sm"><div class="smv">${w?w+'g':'—'}</div><div class="sml">Poids</div></div><div class="sm"><div class="smv">${lt?lt.ar:'—'}</div><div class="sml">Derniers AR</div></div><div class="sm" style="display:flex;flex-direction:column;align-items:center;justify-content:center">${dc}<div class="sml" style="margin-top:3px">Pesée</div></div></div><div class="row-actions" style="margin-top:8px">
+        <button class="mini-btn overview-btn" id="ovbtn-${a.id}" onclick="toggleOverview('${a.id}')">📊 Vue d'ensemble</button>
+        <button class="mini-btn" onclick="editAnimal('${a.id}')">Modifier</button>
+        <button class="mini-btn" onclick="deleteAnimal('${a.id}')">Supprimer</button>
+      </div>
+      <div class="animal-timeline" id="overview-${a.id}"></div>
+    </div>`;
   }).join('');
   } // end if visibleAnimals
 
@@ -1279,7 +1737,7 @@ function rA(){
 let chirF='Tous';
 function rCh(){
   const d=gD(),pa=d.animals.filter(a=>a.proj===cp).map(a=>a.id);
-  document.getElementById('cf').innerHTML=['Tous',...pa].map(id=>`<button class="fp${chirF===id?' on':''}" onclick="fCh(this,'${id}')">${id}</button>`).join('');
+  buildAnimalFilter('cf', chirF==='Tous'?'':chirF, 'fChFilter');
   let ch=d.chirurgies.filter(c=>pa.includes(c.animal)).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   if(chirF!=='Tous')ch=ch.filter(c=>c.animal===chirF);
   const list=document.getElementById('cl');
@@ -1384,11 +1842,13 @@ function savTr(){
 }
 function rTr(){
   const d=gD(),pa=d.animals.filter(a=>a.proj===cp).map(a=>a.id);
-  const sel=document.getElementById('tr-fa');
-  if(sel){const cur=sel.value;sel.innerHTML='<option value="">Tous</option>'+pa.map(id=>'<option value="'+id+'">'+id+'</option>').join('');if(cur)sel.value=cur;}
-  const fA=sel?sel.value:'',fnEl=document.getElementById('tr-fn'),fN=fnEl?parseInt(fnEl.value)||10:10;
-  let sess=d.trainings.filter(t=>pa.includes(t.animal));
-  if(fA)sess=sess.filter(t=>t.animal===fA);
+  // Peupler le filtre par animal au-dessus de la liste
+  const _trF=window._trFilter||'';
+  buildAnimalFilter('tr-filter', _trF, 'trFilterAnimal');
+  const fnEl=document.getElementById('tr-fn'),fN=fnEl?parseInt(fnEl.value)||10:10;
+  const allTrIds=d.animals.filter(a=>a.proj===cp).map(a=>a.id);
+  let sess=d.trainings.filter(t=>allTrIds.includes(t.animal));
+  if(_trF)sess=sess.filter(t=>t.animal===_trF);
   sess=sess.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   if(fN>0)sess=sess.slice(0,fN);
   const list=document.getElementById('tr-list')||document.getElementById('trl');
@@ -1418,8 +1878,29 @@ function savR(){
   }
   cL=[];rCL();rR();bSC();toast('✓ Enregistrement sauvegardé');
 }
+function trFilterAnimal(id,el){
+  window._trFilter=id;
+  document.querySelectorAll('#tr-filter .fp').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  const sel=document.getElementById('tr-fa');
+  if(sel){sel.value=id;}
+  rTr();
+}
+function recFilterAnimal(id,el){
+  window._recFilter=id;
+  document.querySelectorAll('#rec-filter .fp').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  rR();
+}
 function rR(){
-  const d=gD(),pa=d.animals.filter(a=>a.proj===cp).map(a=>a.id),recent=d.recordings.filter(r=>pa.includes(r.animal)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8),list=document.getElementById('rl');
+  const d=gD(),pa=d.animals.filter(a=>a.proj===cp).map(a=>a.id);
+  // Filtre par animal
+  const curFilter=window._recFilter||'';
+  buildAnimalFilter('rec-filter', curFilter, 'recFilterAnimal');
+  let recs=d.recordings.filter(r=>pa.includes(r.animal)).sort((a,b)=>b.date.localeCompare(a.date));
+  if(curFilter) recs=recs.filter(r=>r.animal===curFilter);
+  const recent=recs; // Afficher toutes (plus de slice(0,8))
+  const list=document.getElementById('rl');
   if(!recent.length){list.innerHTML='<div class="empty">Aucun enregistrement</div>';return;}
   list.innerHTML=recent.map(r=>{const sc=r.signal&&r.signal.startsWith('Excell')||r.signal&&r.signal.startsWith('Bonne')?['rgba(99,153,34,.15)','#8fce4a']:['rgba(186,117,23,.15)','#e8a23a'];return`<div class="rc"><div class="rc-top"><div><div class="rc-name">${r.animal} <span style="color:var(--text2);font-weight:400">· ${r.zone}</span></div><div class="rc-sub">${fd(r.date)} · ${r.elec} · ${r.depth||'—'}µm</div></div><span class="bdg binf">${r.shanksOk||'?'}/${r.shanksTotal||'?'} sh.</span></div>${r.protocol&&r.protocol.length?`<div class="proto">${r.protocol.map(c=>`${c.essais}× ${c.cond}`).join(' → ')}</div>`:''}<div style="margin-top:5px"><span class="bdg" style="background:${sc[0]};color:${sc[1]}">${r.signal}</span></div>${r.needsCheck?'<span class="check-flag">À vérifier</span>':''}${r.notes?`<div class="rc-note">${r.notes}</div>`:''}${itemActions('recording',r.id)}</div>`;}).join('');
 }
@@ -2124,11 +2605,25 @@ function analysisCard(res){
 }
 function rAnalysis(){
   const d=gD(),pa=d.animals.filter(a=>a.proj===cp),sel=document.getElementById('ana-a');
-  if(sel){const cur=sel.value;sel.innerHTML='<option value="">— choisir —</option>'+pa.map(a=>`<option value="${a.id}">${a.id}</option>`).join('');if(cur)sel.value=cur;if(!sel.value&&pa[0])sel.value=pa[0].id;}
+  if(sel){
+    const cur=window._gotoStatsAnimal||sel.value;
+    sel.innerHTML='<option value="">— choisir —</option>'+pa.map(a=>`<option value="${a.id}">${a.id}</option>`).join('');
+    if(cur&&pa.some(a=>a.id===cur)) sel.value=cur;
+    // Auto-sélectionner le premier animal si rien de sélectionné
+    if(!sel.value&&pa[0]) sel.value=pa[0].id;
+  }
   const out=document.getElementById('ana-p');if(!out)return;
-  const win=document.getElementById('ana-window')?.value||'all',mode=document.getElementById('ana-mode')?.value||'animal';
+  const win=document.getElementById('ana-window')?.value||'all';
+  const modeEl=document.getElementById('ana-mode');
+  const mode=modeEl?.value||'animal';
+  // Mode par défaut : animal sélectionné
+  if(modeEl&&!modeEl.dataset.initialized){modeEl.value='animal';modeEl.dataset.initialized='1';}
   let animals=mode==='project'?pa:pa.filter(a=>a.id===(sel?.value||''));
-  if(!animals.length){out.innerHTML='<div class="empty">Aucun animal sélectionné</div>';return;}
+  if(!animals.length&&pa.length){
+    // Fallback : prendre le premier animal plutôt qu'afficher vide
+    animals=[pa[0]]; if(sel)sel.value=pa[0].id;
+  }
+  if(!animals.length){out.innerHTML='<div class="empty">Aucun animal dans ce projet</div>';return;}
   const results=animals.map(a=>analyseAnimal(a,d,win));
   if(mode==='project'){
     const best=[...results].filter(r=>r.meanRate!==null).sort((a,b)=>(b.meanRate||0)-(a.meanRate||0))[0];
@@ -2380,7 +2875,7 @@ function tab(t){
   if(moreTabs.includes(t)){const mb=document.getElementById('nb-more');if(mb)mb.classList.add('on');}
   else{const btn=[...document.querySelectorAll('.nb')].find(b=>(b.getAttribute('onclick')||'').includes("tab('"+t+"')")); if(btn)btn.classList.add('on');}
   pS();
-  ({animals:rA,chirurgie:rCh,training:rTr,recording:()=>{rR();bSC();},planning:rPlanning,more:()=>{},dashboard:rDash,alerts:rAlerts,media:rMedia,links:rLinks,tags:rTags,analysis:rAnalysis,backup:rBackup,search:rSearch,export:rExport,history:rHistory,fiche:rF,daily:()=>{rDailyList();}})[t]?.();
+  ({animals:rA,chirurgie:()=>{rCh();rChir();},training:rTr,recording:()=>{rR();bSC();},planning:rPlanning,more:()=>{},dashboard:rDash,alerts:rAlerts,media:rMedia,links:rLinks,tags:rTags,analysis:rAnalysis,backup:rBackup,search:rSearch,export:rExport,history:rHistory,fiche:rF,daily:()=>{rDailyList();},groupes:rGroupes,armoire:rArmoire})[t]?.();
 }
 
 function toggleFold(id){
@@ -2515,13 +3010,11 @@ function applyV24Ergo(){
   if(document.body.dataset.v24==='1')return;
   document.body.dataset.v24='1';
   const dash=document.getElementById('t-dashboard');
-  const ana=document.getElementById('t-analysis');
   if(dash){
     const dashNodes=Array.from(dash.childNodes);
     const dashBlock=v24WrapSection('Résumé statistique et graphiques', 'Graphiques avec axes et performances séparées par condition.', dashNodes, true);
     dash.appendChild(dashBlock);
   }
-  if(ana){ana.remove();}
   const search=document.getElementById('t-search');
   const tags=document.getElementById('t-tags');
   if(search && tags){
@@ -2675,18 +3168,8 @@ function savTr(){
   const _newTr=markUser({id:'tr'+Date.now(),animal,date,cond,condSpec:perf.spec,dur,ar,rate:perf.arMin?perf.arMin.toFixed(2):'',speedCms:perf.speedCms,distanceM:perf.distanceM,wheelDistanceM:perf.wheelDistanceM,engage:document.getElementById('tre').value,notes:document.getElementById('trn').value},d);
   d.trainings.push(_newTr);logAction(d,'create','training',_newTr);sv(d);rTr();toast('✓ Session enregistrée avec condition structurée');['trar','trd2','trn','trv','trdist'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});const rr=document.getElementById('trr');if(rr)rr.value='';
 }
-function rTr(){
-  fillConditionSelects();
-  const d=gD(),pa=d.animals.filter(a=>a.proj===cp).map(a=>a.id);
-  const sel=document.getElementById('tr-fa');
-  if(sel){const cur=sel.value;sel.innerHTML='<option value="">Tous</option>'+pa.map(id=>'<option value="'+id+'">'+id+'</option>').join('');if(cur)sel.value=cur;}
-  const fA=sel?sel.value:'',fnEl=document.getElementById('tr-fn'),fN=fnEl?parseInt(fnEl.value)||10:10;
-  let sess=d.trainings.filter(t=>pa.includes(t.animal)); if(fA)sess=sess.filter(t=>t.animal===fA); sess=sess.sort((a,b)=>(b.date||'').localeCompare(a.date||'')); if(fN>0)sess=sess.slice(0,fN);
-  const list=document.getElementById('tr-list')||document.getElementById('trl'); if(!list)return;
-  if(!sess.length){list.innerHTML='<div class="empty">Aucune session</div>';return;}
-  list.innerHTML=sess.map(t=>{const p=t.condSpec||condSpecFromName(t.cond);return '<div class="rc"><div class="rc-top"><div><div class="rc-name">'+t.animal+' <span style="color:var(--text2);font-weight:400">· '+escHtml(t.cond||'—')+'</span></div><div class="rc-sub" style="font-family:var(--m);font-size:11px">'+fd(t.date)+' · track '+(p.trackLengthCm||'—')+' cm · gain '+(p.gain??'—')+'</div></div><span class="bdg bok">'+(t.ar||'—')+' AR</span></div><div class="rc-stats"><span><strong>'+(t.dur||'—')+'</strong> min</span><span><strong>'+(t.rate||'—')+'</strong> AR/min</span><span><strong>'+(t.speedCms?Number(t.speedCms).toFixed(1):'—')+'</strong> cm/s</span><span><strong>'+(t.distanceM?Number(t.distanceM).toFixed(1)+(t.wheelDistanceM&&t.condSpec&&Math.abs((t.condSpec.gain??1)-1)>0.01?' m VR / '+Number(t.wheelDistanceM).toFixed(1)+' m roue':' m'):'—')+'</strong></span></div>'+(t.engage&&t.engage!=='Non précisé'?'<div style="font-size:11px;color:var(--text2);margin-top:5px">'+escHtml(t.engage)+'</div>':'')+(t.needsCheck?'<span class="check-flag">À vérifier</span>':'')+(t.notes?'<div class="rc-note">'+escHtml(t.notes)+'</div>':'')+itemActions('training',t.id)+'</div>';}).join('');
-}
-cL=[];
+// rTr supprimée (doublon)
+
 function addC(c,e,dur){const spec=condSpecFromName(c||'1m VR');cL.push({id:Date.now()+Math.random(),cond:spec.name,condSpec:spec,ar:parseInt(e)||null,dur:parseFloat(dur)||null,notes:''});rCL();}
 function rmC(i){cL.splice(i,1);rCL();}
 function updRecCond(i,field,val){
@@ -2732,11 +3215,8 @@ function savR(){
   const _newR=markUser({id:'r'+Date.now(),animal,date,elec:e,shanksTotal:parseInt(document.getElementById('rst').value)||null,shanksOk:parseInt(document.getElementById('rsf').value)||null,zone:z,depth:parseInt(document.getElementById('rdp').value)||null,engage:document.getElementById('ren').value,ar:totalAR,dur:globalDur||totalCondDur,condDur:totalCondDur,signal:document.getElementById('rs2').value,protocol:proto,notes:document.getElementById('rn').value},d);
   d.recordings.push(_newR);logAction(d,'create','recording',_newR);sv(d);cL=[];rCL();rR();bSC();toast('✓ Enregistrement multi-conditions sauvegardé');
 }
-function rR(){
-  const d=gD(),pa=d.animals.filter(a=>a.proj===cp).map(a=>a.id),recent=d.recordings.filter(r=>pa.includes(r.animal)).sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,8),list=document.getElementById('rl');
-  if(!list)return; if(!recent.length){list.innerHTML='<div class="empty">Aucun enregistrement</div>';return;}
-  list.innerHTML=recent.map(r=>{const sc=r.signal&&r.signal.startsWith('Excell')||r.signal&&r.signal.startsWith('Bonne')?['rgba(99,153,34,.15)','#8fce4a']:['rgba(186,117,23,.15)','#e8a23a'];const proto=(r.protocol||[]).map(c=>{const p=c.condSpec||condSpecFromName(c.cond);const rate=c.rate||(c.ar&&c.dur?(c.ar/c.dur).toFixed(2):'');return `<div class="cond-row"><b>${escHtml(c.cond||'—')}</b><br><span style="color:var(--text2)">${c.ar||'—'} AR · ${c.dur||'—'} min · ${rate||'—'} AR/min · ${c.speedCms?Number(c.speedCms).toFixed(1):'—'} cm/s · ${c.distanceM?Number(c.distanceM).toFixed(1)+(c.wheelDistanceM&&p.gain&&Math.abs(p.gain-1)>0.01?' m VR / '+Number(c.wheelDistanceM).toFixed(1)+' m roue':' m'):'—'} · track ${p.trackLengthCm||'—'} cm</span>${c.notes?`<div style="color:var(--text3);margin-top:3px">${escHtml(c.notes)}</div>`:''}</div>`;}).join('');return `<div class="rc"><div class="rc-top"><div><div class="rc-name">${r.animal} <span style="color:var(--text2);font-weight:400">· ${escHtml(r.zone||'—')}</span></div><div class="rc-sub">${fd(r.date)} · ${escHtml(r.elec||'—')} · ${r.depth||'—'}µm · durée globale ${r.dur||'—'} min</div></div><span class="bdg binf">${r.shanksOk||'?'}/${r.shanksTotal||'?'} sh.</span></div>${proto?`<div class="proto" style="font-family:var(--f);line-height:1.45">${proto}</div>`:''}<div style="margin-top:5px"><span class="bdg" style="background:${sc[0]};color:${sc[1]}">${escHtml(r.signal||'—')}</span></div>${r.needsCheck?'<span class="check-flag">À vérifier</span>':''}${r.notes?`<div class="rc-note">${escHtml(r.notes)}</div>`:''}${itemActions('recording',r.id)}</div>`;}).join('');
-}
+// rR() définie plus haut avec filtre par animal
+
 function applyV31Tweaks(){
   fillConditionSelects();bSC();rCL();
   const rar=document.getElementById('rar'); if(rar){const wrap=rar.closest('.fg'); if(wrap)wrap.style.display='none';}
@@ -5185,6 +5665,7 @@ function rIndPanel(){
 })();
 
 // ── Bouton topbar armoire : activer visuellement quand sur l'onglet ─
+// rChir est maintenant dans le dispatch principal de tab()
 const _tab_arm_topbar = tab;
 tab = function(t){
   _tab_arm_topbar(t);
@@ -5410,6 +5891,333 @@ function genoBadgeHtml(a){
   const [lbl,cls]=map[a.geno]||['','geno-other'];
   const label=a.geno==='other'?(a.genoLabel||'?').substring(0,8).toUpperCase():lbl;
   return `<span class="geno-badge ${cls}">${escHtml(label)}</span>`;
+}
+
+/* ─── Liste chirurgies dans l'onglet chirurgie ──────────── */
+function rChir(){
+  const d=gD();
+  const el=document.getElementById('cl');
+  if(!el)return;
+  const pa=d.animals.filter(a=>a.proj===cp).map(a=>a.id);
+  const chirs=d.chirurgies.filter(c=>pa.includes(c.animal)).sort((a,b)=>b.date.localeCompare(a.date));
+  if(!chirs.length){
+    el.innerHTML='<div class="empty">Aucune chirurgie enregistrée pour ce projet.</div>';
+    return;
+  }
+  el.innerHTML='<div class="sh" style="margin-top:16px;display:flex;align-items:center;justify-content:space-between">'+
+    '<span>Chirurgies enregistrées ('+chirs.length+')</span>'+
+    '</div>'+
+  '<div style="max-height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:6px">'+
+  chirs.map(c=>{
+    const dur=(c.h1&&c.h2)?` · ${c.h1}→${c.h2}`:'';
+    const hw=[c.hat?'Chapeau':'',c.cementWeight?'Ciment '+c.cementWeight+'g':'',c.implantWeight?'Implant '+c.implantWeight+'g':''].filter(Boolean).join(' + ');
+    return `<div class="rc">
+      <div class="rc-top">
+        <div>
+          <div class="rc-name">${escHtml(c.animal)} <span style="color:var(--text2);font-weight:400">· ${escHtml(c.type||'—')}</span></div>
+          <div class="rc-sub">${fd(c.date)}${dur} · ${c.weight||'—'}g · ${c.anesthesia||'—'}</div>
+        </div>
+        <span class="bdg binf">${c.dose||'?'} mL</span>
+      </div>
+      ${hw?`<div style="font-size:11px;color:var(--text2);margin-top:4px">🔩 ${escHtml(hw)}</div>`:''}
+      ${c.notes?`<div class="rc-note">${escHtml(c.notes)}</div>`:''}
+      ${c.needsCheck?'<span class="check-flag">À vérifier</span>':''}
+      ${itemActions('chirurgie',c.id)}
+    </div>`;
+  }).join('');
+}
+
+/* ─── Overview animal — timeline + stats ───────────────── */
+function toggleOverview(animalId){
+  const el=document.getElementById('overview-'+animalId);
+  const btn=document.getElementById('ovbtn-'+animalId);
+  if(!el)return;
+  const isOpen=el.classList.contains('open');
+  if(isOpen){
+    el.classList.remove('open'); el.innerHTML='';
+    if(btn)btn.classList.remove('on');
+  } else {
+    el.classList.add('open');
+    if(btn)btn.classList.add('on');
+    renderOverview(animalId, el);
+  }
+}
+
+function renderOverview(animalId, el){
+  const d=gD();
+  const a=d.animals.find(x=>x.id===animalId);
+  if(!a){el.innerHTML='<div class="atl-empty">Animal introuvable</div>';return;}
+
+  // Collecter tous les événements
+  const events=[];
+  (d.dailyLogs||[]).filter(l=>l.animal===animalId).forEach(l=>events.push({
+    date:l.date, type:'Saisie', ico:'📋',
+    title:`Poids ${l.weight?l.weight+'g':'—'} · Eau ${l.water?l.water+' mL':'—'}`,
+    meta:`Score NC3Rs: ${l.scoreTotal??'—'}/16${l.notes?' · '+l.notes.substring(0,60):''}`,
+    color:'#2196f3', id:l.id, rawType:'daily'
+  }));
+  (d.trainings||[]).filter(t=>t.animal===animalId).forEach(t=>{
+    const gain=t.condSpec?.gain??1;
+    let distStr=t.distanceM?t.distanceM.toFixed(1)+' m VR':'';
+    if(t.wheelDistanceM&&Math.abs(gain-1)>0.01) distStr+=' / '+t.wheelDistanceM.toFixed(1)+' m roue';
+    events.push({
+      date:t.date, type:'Training', ico:'🏃',
+      title:`${t.ar||'—'} AR · ${t.dur||'—'} min · ${t.cond||'—'}`,
+      meta:`${t.rate||'—'} AR/min${distStr?' · '+distStr:''}${t.notes?' · '+t.notes.substring(0,50):''}`,
+      color:'#4caf50', id:t.id, rawType:'training'
+    });
+  });
+  (d.chirurgies||[]).filter(c=>c.animal===animalId).forEach(c=>events.push({
+    date:c.date, type:'Chirurgie', ico:'🩺',
+    title:`${c.type||'—'} · ${c.weight||'—'}g`,
+    meta:`${c.anesthesia||'—'}${c.h1?' · '+c.h1+'→'+(c.h2||'?'):''}${c.notes?' · '+c.notes.substring(0,50):''}`,
+    color:'#ff9800', id:c.id, rawType:'chirurgie'
+  }));
+  (d.recordings||[]).filter(r=>r.animal===animalId).forEach(r=>events.push({
+    date:r.date, type:'Enregistrement', ico:'📡',
+    title:`${r.zone||'—'} · ${r.elec||'—'} · ${r.depth||'—'}µm`,
+    meta:`Signal: ${r.signal||'—'} · ${r.shanksOk??'?'}/${r.shanksTotal??'?'} shanks${r.notes?' · '+r.notes.substring(0,50):''}`,
+    color:'#9c27b0', id:r.id, rawType:'recording'
+  }));
+
+  events.sort((a,b)=>b.date.localeCompare(a.date));
+
+  // Stats
+  const nDaily=(d.dailyLogs||[]).filter(l=>l.animal===animalId).length;
+  const nTr=(d.trainings||[]).filter(t=>t.animal===animalId).length;
+  const nCh=(d.chirurgies||[]).filter(c=>c.animal===animalId).length;
+  const nRec=(d.recordings||[]).filter(r=>r.animal===animalId).length;
+
+  // Calcul période
+  const dates=events.map(e=>e.date).sort();
+  const periodeStr=dates.length>=2?fd(dates[0])+' → '+fd(dates[dates.length-1]):dates.length===1?fd(dates[0]):'—';
+
+  // Poids min/max
+  const poids=(d.dailyLogs||[]).filter(l=>l.animal===animalId&&l.weight).map(l=>l.weight);
+  const poidsStr=poids.length?`${Math.min(...poids).toFixed(1)}–${Math.max(...poids).toFixed(1)} g`:'—';
+
+  let html=`
+    <div class="atl-stats">
+      <div class="atl-stat"><strong>${nDaily}</strong>Saisies</div>
+      <div class="atl-stat"><strong>${nTr}</strong>Trainings</div>
+      <div class="atl-stat"><strong>${nCh}</strong>Chirurgies</div>
+      <div class="atl-stat"><strong>${nRec}</strong>Enreg.</div>
+      <div class="atl-stat"><strong>${poidsStr}</strong>Poids</div>
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin-bottom:10px">📅 Période : ${periodeStr}</div>
+    <button type="button" class="atl-goto" data-animal="${animalId}" onclick="gotoStats(this.dataset.animal)">📈 Voir les statistiques complètes →</button>`;
+
+  if(!events.length){
+    html+='<div class="atl-empty">Aucun événement enregistré pour cet animal.</div>';
+  } else {
+    // Afficher les 15 plus récents
+    const shown=events.slice(0,15);
+    html+=shown.map((e,i)=>`
+      <div class="atl-item">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="atl-dot" style="background:${e.color}"></div>
+          ${i<shown.length-1?'<div class="atl-connector"></div>':''}
+        </div>
+        <div class="atl-content">
+          <div class="atl-date">${fd(e.date)} · <span style="color:${e.color};font-weight:600">${e.ico} ${e.type}</span></div>
+          <div class="atl-title">${escHtml(e.title)}</div>
+          ${e.meta?`<div class="atl-meta">${escHtml(e.meta)}</div>`:''}
+        </div>
+      </div>`).join('');
+    if(events.length>15){
+      html+=`<div style="font-size:11px;color:var(--text3);text-align:center;margin-top:6px">… et ${events.length-15} événements plus anciens — voir les stats complètes</div>`;
+    }
+  }
+  el.innerHTML=html;
+}
+
+function gotoStats(animalId){
+  const d=gD();
+  const animal=d.animals.find(a=>a.id===animalId);
+  if(animal&&animal.proj&&animal.proj!==cp){
+    cp=animal.proj; sPC(animal.proj); pS();
+  }
+  // Navigation manuelle
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  const sec=document.getElementById('t-analysis');
+  if(!sec){ toast('Section stats introuvable — recharge la page'); return; }
+  sec.classList.add('on');
+  const mb=document.getElementById('nb-more');
+  if(mb) mb.classList.add('on');
+  const modeEl=document.getElementById('ana-mode');
+  if(modeEl){ modeEl.value='animal'; modeEl.dataset.initialized='1'; }
+  const winEl=document.getElementById('ana-window');
+  if(winEl) winEl.value='all';
+  window._gotoStatsAnimal=animalId;
+  if(typeof rAnalysis==='function'){
+    try{ rAnalysis(); window._gotoStatsAnimal=null; }
+    catch(e){ toast('Erreur affichage stats: '+e.message, 6000); console.error(e); }
+  }
+}
+
+/* ─── Sauvegarde en mode édition (formulaires natifs) ───── */
+function _resetFormBtn(tabId, originalText, originalOnclick){
+  const btn = document.querySelector('#'+tabId+' .btnp');
+  if(btn){ btn.textContent=originalText; btn.onclick=originalOnclick||null; btn.setAttribute('onclick', originalOnclick||''); }
+}
+
+function savDEdit(itemId){
+  // Récupérer les scores NC3Rs depuis la grille native
+  const d=gD(), res=findItem(d,'daily',itemId), it=res.item;
+  if(!it){toast('Saisie introuvable');return;}
+  // Poids
+  const rawW=parseFloat(document.getElementById('dw')?.value)||null;
+  const hw=hardwareWeight(d.animals.find(a=>a.id===it.animal));
+  const wBrut=rawW; const wReal=rawW!=null?Math.max(0,rawW-hw):null;
+  // Scores depuis la grille sg
+  const scEls=document.querySelectorAll('#sg [data-score-key]');
+  const sc={}; scEls.forEach(el=>sc[el.dataset.scoreKey]=parseInt(el.value||0));
+  Object.assign(it,{
+    date:document.getElementById('dd')?.value||it.date,
+    weightBrut:wBrut, weight:wReal,
+    water:parseFloat(document.getElementById('dea')?.value)||null,
+    restriction:document.getElementById('dr')?.value||'',
+    status:document.getElementById('d-status')?.value||'active',
+    statusNote:document.getElementById('d-status-note')?.value||'',
+    notes:document.getElementById('dn')?.value||'',
+    scores:sc, scoreTotal:Object.values(sc).reduce((a,b)=>a+b,0),
+    updatedAt:new Date().toISOString()
+  });
+  logAction(d,'edit','daily',it); sv(d);
+  // Remettre le bouton en mode normal
+  const btn=document.querySelector('#t-daily .btnp');
+  if(btn){btn.textContent='Enregistrer la saisie';btn.onclick=null;btn.setAttribute('onclick','savD()');}
+  window._editItemId=null; refreshAfterChange('daily');
+  toast('✓ Saisie journalière modifiée');
+}
+
+function savTrEdit(itemId){
+  const d=gD(), res=findItem(d,'training',itemId), it=res.item;
+  if(!it){toast('Training introuvable');return;}
+  const ar=parseInt(document.getElementById('trar')?.value)||null;
+  const dur=parseFloat(document.getElementById('trd2')?.value)||null;
+  const cond=document.getElementById('trc')?.value||it.cond;
+  const p=calcConditionPerf(cond,ar,dur);
+  Object.assign(it,{
+    date:document.getElementById('trd')?.value||it.date,
+    h1:document.getElementById('trh1')?.value||'',
+    h2:document.getElementById('trh2')?.value||'',
+    cond, ar, dur,
+    rate:p.arMin?parseFloat(p.arMin.toFixed(2)):null,
+    distanceM:p.distanceM, wheelDistanceM:p.wheelDistanceM, speedCms:p.speedCms, condSpec:p.spec,
+    weight:parseFloat(document.getElementById('trw')?.value)||null,
+    water:parseFloat(document.getElementById('trwa')?.value)||null,
+    notes:document.getElementById('trn')?.value||'',
+    updatedAt:new Date().toISOString()
+  });
+  logAction(d,'edit','training',it); sv(d);
+  const btn=document.querySelector('#t-training .btnp');
+  if(btn){btn.textContent='Enregistrer le training';btn.onclick=null;btn.setAttribute('onclick','savTr()');}
+  window._editItemId=null; refreshAfterChange('training');
+  toast('✓ Training modifié');
+}
+
+function savChEdit(itemId){
+  const d=gD(), res=findItem(d,'chirurgie',itemId), it=res.item;
+  if(!it){toast('Chirurgie introuvable');return;}
+  let ty=document.getElementById('cty')?.value||it.type;
+  if(ty==='custom') ty=document.getElementById('cty-custom')?.value||'Inconnu';
+  const hatVal=document.getElementById('c-hat')?.value==='1';
+  Object.assign(it,{
+    date:document.getElementById('cd')?.value||it.date,
+    type:ty,
+    weight:parseFloat(document.getElementById('cw')?.value)||null,
+    anesthesia:document.getElementById('can')?.value||it.anesthesia,
+    dose:parseFloat(document.getElementById('cad')?.value)||null,
+    bupre:parseFloat(document.getElementById('cb2')?.value)||null,
+    h1:document.getElementById('ch1')?.value||'',
+    h2:document.getElementById('ch2')?.value||'',
+    hat:hatVal,
+    hatWeight:hatVal?parseFloat(document.getElementById('c-hat-w')?.value)||null:null,
+    cementWeight:parseFloat(document.getElementById('c-cement-w')?.value)||null,
+    implantWeight:parseFloat(document.getElementById('c-implant-w')?.value)||null,
+    hardwareNote:document.getElementById('c-hardware-note')?.value||'',
+    notes:document.getElementById('cn')?.value||'',
+    updatedAt:new Date().toISOString()
+  });
+  logAction(d,'edit','chirurgie',it); sv(d);
+  const btn=document.querySelector('#t-chirurgie .btnp[onclick*="savCh"]');
+  if(btn){btn.textContent='Enregistrer';btn.onclick=null;btn.setAttribute('onclick','savCh()');}
+  window._editItemId=null; refreshAfterChange('chirurgie'); rChir&&rChir();
+  toast('✓ Chirurgie modifiée');
+}
+
+function savRecEdit(itemId){
+  const d=gD(), res=findItem(d,'recording',itemId), it=res.item;
+  if(!it){toast('Enregistrement introuvable');return;}
+  let elec=document.getElementById('re')?.value||it.elec;
+  if(elec==='custom') elec=document.getElementById('ec')?.value||'Inconnu';
+  let zone=document.getElementById('rz')?.value||it.zone;
+  if(zone==='custom') zone=document.getElementById('zc')?.value||'Autre';
+  // Recalculer les conditions avec les nouvelles valeurs
+  const proto=[...cL]; proto.forEach(c=>{
+    if(c.cond){
+      const p=calcConditionPerf(c.cond,c.ar,c.dur);
+      c.distanceM=p.distanceM; c.wheelDistanceM=p.wheelDistanceM;
+      c.speedCms=p.speedCms; c.condSpec=p.spec;
+    }
+  });
+  Object.assign(it,{
+    date:document.getElementById('rd')?.value||it.date,
+    elec, zone,
+    shanksTotal:parseInt(document.getElementById('rst')?.value)||null,
+    shanksOk:parseInt(document.getElementById('rsf')?.value)||null,
+    depth:parseInt(document.getElementById('rdp')?.value)||null,
+    engage:document.getElementById('ren')?.value||'',
+    ar:parseInt(document.getElementById('rar')?.value)||null,
+    dur:parseFloat(document.getElementById('rdur')?.value)||null,
+    signal:document.getElementById('rs2')?.value||'',
+    notes:document.getElementById('rn')?.value||'',
+    protocol:proto,
+    updatedAt:new Date().toISOString()
+  });
+  logAction(d,'edit','recording',it); sv(d);
+  const btn=document.querySelector('#t-recording .btnp[onclick*="savR"]');
+  if(btn){btn.textContent='Enregistrer';btn.onclick=null;btn.setAttribute('onclick','savR()');}
+  cL=[]; if(typeof rCL==='function')rCL();
+  window._editItemId=null; refreshAfterChange('recording');
+  toast('✓ Enregistrement modifié — distances recalculées');
+}
+
+/* ─── Filtre animal avec actifs/inactifs ───────────────── */
+function buildAnimalFilter(containerId, currentFilter, onclickFn){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  const d = gD();
+  const pa = d.animals.filter(a => a.proj === cp);
+  const actifs = pa.filter(a => !animalInactive(a));
+  const inactifs = pa.filter(a => animalInactive(a));
+  
+  let html = '<button class="fp'+(currentFilter===''?' on':'')+'" onclick="'+onclickFn+'(\'\',this)">Tous</button>';
+  
+  // Boutons pour les actifs
+  actifs.forEach(a => {
+    html += '<button class="fp'+(currentFilter===a.id?' on':'')+'" onclick="'+onclickFn+'(\''+a.id+'\',this)">'+a.id+'</button>';
+  });
+  
+  // Liste déroulante pour les inactifs
+  if(inactifs.length){
+    html += '<select style="font-size:11px;padding:3px 8px;border-radius:20px;border:.5px solid var(--border2);background:var(--bg3);color:var(--text2);font-family:var(--f);cursor:pointer;height:28px" onchange="'+onclickFn+'(this.value,this);this.value=\'\'" title="Animaux inactifs">'+
+      '<option value="">+ Inactifs</option>'+
+      inactifs.map(a => '<option value="'+a.id+'"'+(currentFilter===a.id?' selected':'')+'>'+a.id+' (inactif)</option>').join('')+
+      '</select>';
+  }
+  
+  el.innerHTML = html;
+}
+
+function fChFilter(id, el){
+  // Adapter : buildAnimalFilter passe id et el, fCh attend el et id
+  if(id==='') {chirF='Tous';} else {chirF=id;}
+  document.querySelectorAll('#cf .fp').forEach(b=>b.classList.remove('on'));
+  if(el&&el.classList) el.classList.add('on');
+  rCh();
 }
 
 </script>
