@@ -1851,9 +1851,9 @@ function syncProjects(){
 }
 function refreshProjectSelects(){
   const sel=document.getElementById('npr'); if(!sel)return;
-  const cur=sel.value||cp;
+  const cur=sel.value;
   sel.innerHTML='<option value="">— Sans projet (indépendant)</option>'+Object.keys(PR).map(code=>'<option value="'+code+'">'+code+(code==='PP'?' (Pierre-Pascal)':'')+'</option>').join('');
-  if(PR[cur]) sel.value=cur;
+  sel.value=cur;
 }
 function refreshSurgeryTypes(){
   const sel=document.getElementById('cty'); if(!sel)return;
