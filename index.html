@@ -4221,13 +4221,17 @@ async function pushToSupabase(data){
   if(ck===_lastSyncContent)return;           // contenu inchangé → rien à envoyer
   if(_sbBusy)return;                          // évite les envois concurrents
   _sbBusy=true;showSyncStatus('sync');
+  const ts=Date.now();                        // horodatage candidat, pas encore confirmé
   try{
-    data._syncTs=Date.now();                  // horodatage de cette modification
-    const body=JSON.stringify({id:'main',data:data});
+    const body=JSON.stringify({id:'main',data:Object.assign({},data,{_syncTs:ts})});
     const r=await sbFetchTimeout(SB_URL+'/rest/v1/'+SB_TABLE+'?on_conflict=id',{
       method:'POST',headers:sbHeaders({'Prefer':'resolution=merge-duplicates'}),body:body
     },12000);
-    if(r.ok){_lastSyncContent=ck;showSyncStatus('ok');}
+    if(r.ok){
+      data._syncTs=ts;                        // confirmé seulement si l'envoi a réussi
+      _lastSyncContent=ck;
+      showSyncStatus('ok');
+    }
     else{showSyncStatus('err');}
   }catch(e){showSyncStatus('err');}
   finally{_sbBusy=false;}
@@ -4278,9 +4282,11 @@ window.addEventListener('load',function(){
 // POLLING léger : récupère les changements des autres appareils toutes les 60s
 setInterval(async function(){
   if(location.protocol==='file:'||_sbBusy)return;
+  const local=gD();
+  // Réenvoi automatique si un envoi précédent n'avait jamais été confirmé (ex: coupure réseau)
+  if(contentKey(local)!==_lastSyncContent){ syncToSupabase(local); }
   const remote=await loadFromSupabase();
   if(!remote||!remote.data)return;
-  const local=gD();
   // on applique le distant seulement s'il est plus récent que le local
   if(syncTs(remote.data)>syncTs(local) && contentKey(remote.data)!==contentKey(local)){
     applyRemoteData(remote.data);
