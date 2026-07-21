@@ -4195,6 +4195,23 @@ function showSyncStatus(s){
   else if(s==='err'){el.title='Hors-ligne (données locales OK)';}
 }
 
+// Diagnostic : rend les échecs de synchro visibles (toast + console), au lieu d'un échec silencieux
+let _lastSyncErrorMsg='', _lastSyncErrorToastTs=0;
+function reportSyncError(context, detail){
+  const msg = context+' : '+detail;
+  console.error('[SuiviLab Sync]', msg);
+  const now=Date.now();
+  if(msg!==_lastSyncErrorMsg || now-_lastSyncErrorToastTs>120000){
+    if(typeof toast==='function') toast('⚠️ Synchro — '+msg, 7000);
+    _lastSyncErrorMsg=msg; _lastSyncErrorToastTs=now;
+  }
+}
+async function _sbReadErrorDetail(r){
+  let detail=r.status+' '+(r.statusText||'');
+  try{const t=await r.text(); if(t) detail+=' — '+t.slice(0,200);}catch(e){}
+  return detail;
+}
+
 // "contenu" = données sans le marqueur de temps, pour détecter les vrais changements
 function contentKey(d){
   if(!d)return '';
@@ -4207,11 +4224,11 @@ async function loadFromSupabase(){
   if(location.protocol==='file:')return null;
   try{
     const r=await sbFetchTimeout(SB_URL+'/rest/v1/'+SB_TABLE+'?id=eq.main&select=data',{headers:sbHeaders()},8000);
-    if(!r.ok)return null;
+    if(!r.ok){reportSyncError('Réception',await _sbReadErrorDetail(r));return null;}
     const rows=await r.json();
     if(rows&&rows[0]&&rows[0].data)return {data:rows[0].data};
     return null;
-  }catch(e){return null;}
+  }catch(e){reportSyncError('Réception',(e&&e.message)||String(e));return null;}
 }
 
 // PUSH : envoie la base (debounced, non bloquant). Dernière modif = gagnante.
@@ -4232,8 +4249,8 @@ async function pushToSupabase(data){
       _lastSyncContent=ck;
       showSyncStatus('ok');
     }
-    else{showSyncStatus('err');}
-  }catch(e){showSyncStatus('err');}
+    else{reportSyncError('Envoi',await _sbReadErrorDetail(r));showSyncStatus('err');}
+  }catch(e){reportSyncError('Envoi',(e&&e.message)||String(e));showSyncStatus('err');}
   finally{_sbBusy=false;}
 }
 // déclenché par sv() — envoie les données courantes 2,5s après la dernière modif
